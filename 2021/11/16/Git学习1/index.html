@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>UniversalVagrant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: Git学习1date: 2021-10-01 10:32:30tags: Git学习与技术    目录 目录 前言 资料   相关概念 HEAD 结点 分支 远程仓库   相关指令 本地Git操作 远程Git操作    前言Git作为一个开源的分布式版本控制系统，无需服务器端的软件支持，为很多项目的版本维护，更新提供了一个良好的维护系统。 本文章根据一些个人的理解对Git在命令行下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UniversalVagrant">
+<meta property="og:url" content="https://royenheart.com/2021/11/16/Git%E5%AD%A6%E4%B9%A01/index.html">
+<meta property="og:site_name" content="UniversalVagrant">
+<meta property="og:description" content="title: Git学习1date: 2021-10-01 10:32:30tags: Git学习与技术    目录 目录 前言 资料   相关概念 HEAD 结点 分支 远程仓库   相关指令 本地Git操作 远程Git操作    前言Git作为一个开源的分布式版本控制系统，无需服务器端的软件支持，为很多项目的版本维护，更新提供了一个良好的维护系统。 本文章根据一些个人的理解对Git在命令行下">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-16T11:51:24.156Z">
+<meta property="article:modified_time" content="2021-11-16T11:51:24.208Z">
+<meta property="article:author" content="RoyenHeart">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="UniversalVagrant" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">UniversalVagrant</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://royenheart.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Git学习1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/11/16/Git%E5%AD%A6%E4%B9%A01/" class="article-date">
+  <time datetime="2021-11-16T11:51:24.156Z" itemprop="datePublished">2021-11-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: Git学习1<br>date: 2021-10-01 10:32:30<br>tags: Git学习与技术  </p>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a><ul>
+<li><a href="#%E8%B5%84%E6%96%99">资料</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">相关概念</a><ul>
+<li><a href="#head">HEAD</a></li>
+<li><a href="#%E7%BB%93%E7%82%B9">结点</a></li>
+<li><a href="#%E5%88%86%E6%94%AF">分支</a></li>
+<li><a href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">远程仓库</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4">相关指令</a><ul>
+<li><a href="#%E6%9C%AC%E5%9C%B0git%E6%93%8D%E4%BD%9C">本地Git操作</a></li>
+<li><a href="#%E8%BF%9C%E7%A8%8Bgit%E6%93%8D%E4%BD%9C">远程Git操作</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Git作为一个开源的分布式版本控制系统，无需服务器端的软件支持，为很多项目的版本维护，更新提供了一个良好的维护系统。</p>
+<p>本文章根据一些个人的理解对Git在命令行下的实现以及一些基本的指令操作做了梳理，以此方便自己的学习使用。</p>
+<p>*为方便起见，部分内容以github平台的操作为准。</p>
+<h3 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h3><p>网上关于Git的资料有许多，这里列出几个供平时查阅，同时文中部分内容借鉴于此：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://docs.github.com/cn/github">Github官方文档(包括git的使用)</a></li>
+<li><a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">Git图形化动手操作训练</a></li>
+</ol>
+<h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h3><p>HEAD 是一个对当前检出记录的符号引用——也就是指向你正在其基础上进行工作的提交记录。</p>
+<p>HEAD 总是指向当前分支上最近一次提交记录。大多数修改提交树的 Git 命令都是从改变 HEAD 的指向开始的。</p>
+<p>HEAD 通常情况下是指向分支名的。在你提交时，改变了对应分支的状态，这一变化通过 HEAD 变得可见。</p>
+<p>从个人理解来看，若整个项目在Git中被组织成一棵树（并非真正的树，很多情况下性质类似），那么每一次提交或者对分支的更改产生、修改、删除新的或者已有的结点，head便是指向某一个结点即提交记录的指向性信息。</p>
+<h3 id="结点"><a href="#结点" class="headerlink" title="结点"></a>结点</h3><p>由<a href="#head">上文</a>所说，项目在Git中的组织类似于树，每一个结点对应于一次提交的记录。</p>
+<p>新生成的记录总是基于一个父节点（上一次的提交记录）或者当前指向的分支进行。若指向的结点已经拥有孩子，再次提交相当于生成了一个新的孩子，根据树的性质相当于一个新的分支。</p>
+<p>因此对Git来说，提交、修改、删除等操作很大程度上不会真正改动文件，而是改变分支等指向性信息，类似于将树中所有结点打散重构关系。这样使得资源的读取、修改变得更加高效，减少程序对系统的消耗。</p>
+<h3 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h3><p>分支指向的提交记录与用户操作有关。</p>
+<h3 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h3><p>远程仓库实际上可以理解为服务器上的分布式仓库，只不过这个仓库是公布在网络上的，本地和其他人都可以访问，借助Git的优势使得你的代码、项目可以分享给其他人甚至让他人帮助你一起进行修改，同时远程仓库也提供了一个项目的备份功能，便于数据的备份和保存。</p>
+<p>类似Github等网站便是借助Git工具和网络提供了远程仓库的可视化操作。</p>
+<h2 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h2><h3 id="本地Git操作"><a href="#本地Git操作" class="headerlink" title="本地Git操作"></a>本地Git操作</h3><p><strong>git信息管理：</strong></p>
+<blockquote>
+<p>git config &lt;修饰词&gt; &lt;参数&gt; &lt;属性值&gt; | 修饰词可以是<code>--global</code>,表示所有本地仓库均使用此参数</p>
+</blockquote>
+<p>此信息的修改只是表示本地仓库的信息，例如本地仓库的用户和邮箱。修饰词不添加时默认为当前仓库的信息</p>
+<blockquote>
+<p>git config -l | 显示当前所有信息(当前仓库信息和全局信息)</p>
+</blockquote>
+<p><strong>git分支操作：</strong></p>
+<blockquote>
+<p>git add | 将需要文件加入暂存，下次提交包括这些文件</p>
+</blockquote>
+<blockquote>
+<p>git commit | 提交当前的更改。</p>
+</blockquote>
+<blockquote>
+<p>git commit –amend | 对当前的结点做一点小的修改，即相当于在其父节点上进行了一些小的改动，之前的提交作废。</p>
+</blockquote>
+<blockquote>
+<p>git branch | 建立分支。</p>
+</blockquote>
+<blockquote>
+<p>git branch &lt; 分支名 &gt; &lt; 提交记录名（可使用相对引用） &gt; | 在对应的记录创建分支。</p>
+</blockquote>
+<blockquote>
+<p>git branch -f A B | 强制修改分支位置，指向一个提交记录，A分支指向B记录。</p>
+</blockquote>
+<blockquote>
+<p>git checkout | 切换分支。</p>
+</blockquote>
+<blockquote>
+<p>git checkout &lt; 哈希值 &gt; | 切换至对应哈希值的分支。</p>
+</blockquote>
+<blockquote>
+<p>git checkout 结点^ | 切换至给定分支的上一个父节点（^本身可以叠加，叠加的数量表示向上的次数）。</p>
+</blockquote>
+<blockquote>
+<p>git checkout 结点~(数字) | 切换至给定结点的向上（数字）个分支（包括自身）。</p>
+</blockquote>
+<blockquote>
+<p>^(num) 若当前结点有3个父节点（merge），num可以表示跳转至第几个父节点。</p>
+</blockquote>
+<blockquote>
+<p>^ ~ 可以单独使用，通过相对引用表示结点而无需通过复杂的提交结点的hash code。</p>
+</blockquote>
+<blockquote>
+<p>git merge A | 合并（将A快速合并至当前分支），当前分支的结点直接与给定分支A进行合并，两者同时作为新合并的结点的父节点，同时当前分支指向新合成的结点）。</p>
+</blockquote>
+<blockquote>
+<p>git rebase A | 合并（当前分支合并至A）（LCA，将与给定合并分支A与当前结点的最近公共祖先结点下当前分支上的所有线性的提交记录合并至A，在A上进行不在当前分支上进行）。</p>
+</blockquote>
+<blockquote>
+<p>git rebase A B | 将B以rebase的方式合并至A，同时当前结点（HEAD）指向B。</p>
+</blockquote>
+<p><strong>撤销变更：</strong></p>
+<p>和 <strong>提交</strong> 一样，撤销变更由底层部分（暂存区的独立文件或者片段）和上层部分（变更到底是通过哪种方式被撤销的）组成。</p>
+<blockquote>
+<p>git reset | 通过分支记录回退几个提交记录实现撤销改动（即改变分支的指向，看上去分支仍指向前几次的记录）。</p>
+</blockquote>
+<blockquote>
+<p>git revert | reset无法将更改和他人进行共享（本地修改分支的指向），使用revert可以将更改推送到远程仓库与别人进行分享。revert并非直接将结点指向之前的结点，而是新增一个结点表示与该结点对应的结点进行撤销。</p>
+</blockquote>
+<blockquote>
+<p>git revert &lt; 当前结点 &gt; | 表示撤销对当前提交结点的更改。</p>
+</blockquote>
+<p><strong>整理提交记录（不完全合并）：</strong></p>
+<blockquote>
+<p>git cherry-pick &lt; 提交号 &gt; | 将一些提交复制到当前所在的位置HEAD下面（即不用完全合并，将一些提交放至自己的分支下）。</p>
+</blockquote>
+<blockquote>
+<p>git rebase –interactive OR -i | 交互式rebase，即当不知道需要进行整理的提交记录的位置或者hash code时，使用交互式rebase，Git会打开UI界面并列出将要被复制到目标分支的备选提交记录，并显示每个提交记录的哈希值和提交说明，一般的UI界面会在文本编辑器中打开一个文件。HEAD<del>3 表示对HEAD</del>3 点（此节点除外）以下对应分支路径上的结点进行操作。</p>
+</blockquote>
+<p><strong>Git Tag：</strong></p>
+<p>Git Tag可以永久地将某个特定的提交命名为里程碑，并像分支一样进行引用。塔门并不会随着新的提交而移动，也不能检出到某个标签上面进行修改提交，它就像是提交树上的一个锚点，标识了某个特定的位置。类似于一个重大版本的标记。</p>
+<blockquote>
+<p>git tag &lt; tag名 &gt; | 提交记录标识。</p>
+</blockquote>
+<blockquote>
+<p>git describe | 用于描述离当前指向的提交记录最近的锚点，即标签。</p>
+</blockquote>
+<p>当需要复制的提交记录为当前分支的祖先结点时，会导致原有的路径被丢弃，使用新的路径。</p>
+<h3 id="远程Git操作"><a href="#远程Git操作" class="headerlink" title="远程Git操作"></a>远程Git操作</h3><p><strong>远程仓库的连接：</strong></p>
+<p>*github自2021年8月13日起取消了直接账户密码登录的登录方式，只能使用令牌(Token)或者SSH/RSA密钥方式进行连接，下面讲述SSH/RSA方式的连接方式</p>
+<blockquote>
+<p>ssh-keygen -t rsa -C &lt;信息&gt; | 生成rsa密钥，适用于ssh方式进行远程仓库的操作</p>
+</blockquote>
+<blockquote>
+<p>git remote -v | 查看当前仓库使用的提交地址。https协议表示使用令牌进行连接，<code>git@github.com:user/gitreponame.git</code> 表示使用SSH连接的方式进行远程仓库的更改</p>
+</blockquote>
+<blockquote>
+<p>git remote set-url origin ssh仓库地址 | 设置远程连接使用SSH/RSA方式，需要注意的是，若未特别指定，此后进行连接会默认以<code>~/.ssh/id_rsa</code>作为私钥进行连接。</p>
+</blockquote>
+<p><em>若不已id_rsa作为默认的rsa私钥</em></p>
+<p>在 <code>~/.ssh/config</code> 文件中添加如下文字</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">  HostName github.com # 指定主机名</span><br><span class="line">  User git # 指定用户名</span><br><span class="line">  IdentityFile path # 指定私钥文件存放地址</span><br><span class="line">  IdentitiesOnly yes</span><br></pre></td></tr></table></figure>
+
+<p>将公钥(keyname.pub)存放至远程仓库，可实现SSH密钥连接进行远程仓库的提交</p>
+<p><strong>创建远程仓库：</strong></p>
+<blockquote>
+<p>git clone &lt; 对应仓库的地址 &gt; | 在本地创建一个对应远程仓库的拷贝。</p>
+</blockquote>
+<p>clone来的本地仓库具有<strong>远程分支</strong>，反映了远程仓库在上一次和其通信的状态。</p>
+<p>远程分支的命名格式是：&lt; 远程仓库名 &gt;/&lt; 分支名 &gt;。</p>
+<p><strong>远程仓库的通信：</strong></p>
+<blockquote>
+<p>git fetch &lt; 仓库地址，http协议或git &gt; | 和远程仓库通信并更新当前指向的分支状态，可以理解为单纯的下载文件，但是本地的分支状态并没有进行改变，比如本地的main分支指向的提交结点无改变。</p>
+</blockquote>
+<p>可以理解为在本地仓库中存在本地分支和远程分支两种分支，由于是分布式版本管理，相当于本地和远程同时共存但是又相互分开，本地归本地操作管，远程与对应的远程仓库相关联，本地的修改并不影响（相当于自己的单方面改动是无法修改远程仓库，只有进行和远程仓库的通信并与本地的进行通信才可以进行改动）。</p>
+<p>参数：</p>
+<blockquote>
+<p>git fetch &lt; origin &gt; &lt; branch &gt; | git会到远程仓库的对应分支上，将所有本地不存在的分支放至对应分支上。</p>
+</blockquote>
+<p><strong>远程仓库到本地的合并：</strong></p>
+<blockquote>
+<p>git pull &lt; 远程仓库的合并 &gt; | 相当于先进行拉取再与本地对应的分支进行合并，即git fetch和git merge的结合（所以git fetch相当于只是下载了文件）。</p>
+</blockquote>
+<p>由于是和本地当前结点进行合并，所以要注意两个分支之间的关联。</p>
+<p><strong>本地到远程仓库的合并：</strong></p>
+<p>将自己的本地分支合并分享至远程仓库，发布自己的成果。</p>
+<blockquote>
+<p>git push &lt; 远程仓库地址 &gt; | 将更改提交至远程仓库上。</p>
+</blockquote>
+<p><code>git push</code> 将自己的变更上传到指定的远程仓库，在远程仓库上合并你的提交。</p>
+<p><code>git push</code> 不带参数时其行为与Git的push.default的配置有关，在使用该命令的时候需要修改一下配置。</p>
+<p>git push使用时：</p>
+<ol>
+<li>首先将对应的本地分支合并至远程对应的分支上。</li>
+<li>远程仓库的分支状态改变。</li>
+<li>本地的远程分支状态随远程仓库的变化一起进行变化。</li>
+</ol>
+<p>参数：</p>
+<blockquote>
+<p>git push &lt; remote &gt; &lt; place &gt; | 切换至本地place分支，获取所有的提交，在到远程仓库remote中找到place分支，将本地对应的提交记录添加至远程仓库对应分支（当前本地HEAD指向不进行变动，即不变动本地的提交记录的指向）。</p>
+</blockquote>
+<p><strong>远程分支版本回退：</strong></p>
+<p>*对于个人的远程分支可以这样粗暴点（</p>
+<blockquote>
+<p>git reflog | 查看当前提交结点前全部的提交id(自己的提交)</p>
+</blockquote>
+<blockquote>
+<p>git reset id | 回退</p>
+</blockquote>
+<blockquote>
+<p>git push -f | 远程强制推送</p>
+</blockquote>
+<p><strong>多人协同的本地至仓库提交：</strong></p>
+<p>当不另设新的分支且无需从某个特定结点进行提交操作时：</p>
+<ol>
+<li>使用git pull –rebase或git pull或git merge使本地的提交基于远程最新的提交结点。</li>
+<li>本地进行操作。</li>
+<li>使用git push进行提交。</li>
+</ol>
+<p><strong>远程与本地的分支关联（跟踪）：</strong></p>
+<p>在进行git push或者git pull时候，只有两个分支有关联（在树上表示为处在同一个路径上），此时两个分支才能进行对应的操作。默认情况下main对应于远程的o/main分支，因此在进行操作时默认两个分支进行操作，我们可以设置o/main远程分支关联与本地的自定义分支，使得两个分支能进行相应的操作。</p>
+<blockquote>
+<p>git checkout -b mine o/main | 使本地mine分支与远程的main分支进行关联（跟踪）。</p>
+</blockquote>
+<blockquote>
+<p>git branch -u o/main mine | 与上一个指令相同，若省略第二个参数则默认当前本地分支与对应的远程分支进行关联。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://royenheart.com/2021/11/16/Git%E5%AD%A6%E4%B9%A01/" data-id="ckw21d1gn0000scpf6orlhd10" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/11/16/Linux%E5%AD%A6%E4%B9%A01/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/11/16/%E6%B5%81%E6%B5%AA%E8%80%85%E6%97%A5%E5%BF%97002/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/11/16/%E6%B5%81%E6%B5%AA%E8%80%85%E6%97%A5%E5%BF%97003/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/16/%E6%B5%81%E6%B5%AA%E8%80%85%E6%97%A5%E5%BF%97001/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/16/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%87%AA%E6%9F%A5/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/16/%E5%B0%8F%E5%8F%91%E7%8E%B0%E6%97%B6%E9%97%B45/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/16/%E5%B0%8F%E5%8F%91%E7%8E%B0%E6%97%B6%E9%97%B44/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 RoyenHeart<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
