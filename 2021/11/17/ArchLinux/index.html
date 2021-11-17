@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="whoami">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        ArchLinux - RoyenHeart的日常
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> RoyenHeart_Existence </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar radius">
+            <img src="/img/avatar.jpg" />
+        </div>
+        <div class="name">
+            <i>RoyenHeart</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>HOME</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>TAGS</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>ARCHIVES</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>ABOUT</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>SEARCH</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">ArchLinux的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUEFI%EF%BC%8CBIOS"><span class="toc-text">什么是UEFI，BIOS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-filesystem"><span class="toc-text">什么是文件系统(filesystem)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%8C%BA%E8%A1%A8-MBR-GPT"><span class="toc-text">什么是分区表(MBR,GPT)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFgrub%EF%BC%8Csyslinux%EF%BC%88BootLoader%EF%BC%89"><span class="toc-text">什么是grub，syslinux（BootLoader）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%B0%E5%9C%A8%E6%9D%A5%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAArchLinux"><span class="toc-text">现在来安装一个ArchLinux</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">ArchLinux系统的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="toc-text">网络配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GRUB%E5%BC%95%E5%AF%BC%E5%A4%9A%E7%B3%BB%E7%BB%9F"><span class="toc-text">GRUB引导多系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%9F%B3%E9%A2%91%E6%94%AF%E6%8C%81"><span class="toc-text">安装音频支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BFlinux%E6%94%AF%E6%8C%81%E6%8C%82%E8%BD%BDntfs%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-%E5%BE%AE%E8%BD%AF%E4%BD%BF%E7%94%A8"><span class="toc-text">使linux支持挂载ntfs文件系统(微软使用)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">安装中文输入法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E6%97%B6%E9%97%B4"><span class="toc-text">同步时间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BE%8E%E5%8C%96"><span class="toc-text">ArchLinux系统的美化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#grub-theme"><span class="toc-text">grub theme</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%87%E5%AD%97%E4%BD%93%E7%9A%84%E6%94%AF%E6%8C%81%E5%92%8C%E5%AE%89%E8%A3%85"><span class="toc-text">中文字体的支持和安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%96%99%E5%BC%95%E7%94%A8"><span class="toc-text">资料引用</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">search</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> RoyenHeart_Existence </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        ArchLinux
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2021-11-17 09:59:47</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#Linux学习与技术" title="Linux学习与技术">Linux学习与技术</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#archlinux%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97">ArchLinux使用日志</a><ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a><ul>
+<li><a href="#archlinux%E7%9A%84%E5%AE%89%E8%A3%85">ArchLinux的安装</a><ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFuefibios">什么是UEFI，BIOS</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9Ffilesystem">什么是文件系统(filesystem)</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%8C%BA%E8%A1%A8mbrgpt">什么是分区表(MBR,GPT)</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFgrubsyslinuxbootloader">什么是grub，syslinux（BootLoader）</a></li>
+<li><a href="#%E7%8E%B0%E5%9C%A8%E6%9D%A5%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAarchlinux">现在来安装一个ArchLinux</a></li>
+</ul>
+</li>
+<li><a href="#archlinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%85%8D%E7%BD%AE">ArchLinux系统的配置</a><ul>
+<li><a href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE">网络配置</a></li>
+<li><a href="#grub%E5%BC%95%E5%AF%BC%E5%A4%9A%E7%B3%BB%E7%BB%9F">GRUB引导多系统</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E9%9F%B3%E9%A2%91%E6%94%AF%E6%8C%81">安装音频支持</a></li>
+<li><a href="#%E4%BD%BFlinux%E6%94%AF%E6%8C%81%E6%8C%82%E8%BD%BDntfs%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%BE%AE%E8%BD%AF%E4%BD%BF%E7%94%A8">使linux支持挂载ntfs文件系统(微软使用)</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95">安装中文输入法</a></li>
+<li><a href="#%E5%90%8C%E6%AD%A5%E6%97%B6%E9%97%B4">同步时间</a></li>
+</ul>
+</li>
+<li><a href="#archlinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BE%8E%E5%8C%96">ArchLinux系统的美化</a><ul>
+<li><a href="#grub-theme">grub theme</a></li>
+<li><a href="#%E4%B8%AD%E6%96%87%E5%AD%97%E4%BD%93%E7%9A%84%E6%94%AF%E6%8C%81%E5%92%8C%E5%AE%89%E8%A3%85">中文字体的支持和安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E8%B5%84%E6%96%99%E5%BC%95%E7%94%A8">资料引用</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来无事，准备将ArchLinux安装至自己的机子上作为备用系统使用，<br>也是用于更好地学习Linux系统</p>
+<hr>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="ArchLinux的安装"><a href="#ArchLinux的安装" class="headerlink" title="ArchLinux的安装"></a>ArchLinux的安装</h3><blockquote>
+<p>由于个人精力有限，因此其安装过程针对一定的安装环境，实际操作请对照<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Main_page_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">官方文档</a>进行安装</p>
+</blockquote>
+<p>其他相关链接：  </p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://archlinux.org/">ArchLinux社区</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e48bff8c94cc">一些Linux启动流程的解析</a></li>
+</ol>
+<h4 id="什么是UEFI，BIOS"><a href="#什么是UEFI，BIOS" class="headerlink" title="什么是UEFI，BIOS"></a>什么是UEFI，BIOS</h4><p>BIOS(基本输入输出系统，Basic I/O System)，是固化在计算机ROM上的一组程序，这组程序如其名字一样，作为操作系统启动前的步骤为操作系统的正式启动提供：  </p>
+<ol>
+<li>加电自检，检测CPU，计时芯片等各种计算机必需设备</li>
+<li>枚举设备，初始化各设备和设备资源</li>
+<li>从CMOS(可读写的RAM芯片，存储一些硬件配置和用户设定参数)中读取数据并进行有关系统设置<br>等功能</li>
+</ol>
+<p>UEFI(Unified Extensible Firmware Interface，统一可拓展固件接口)，其作为一个硬件接口，可用于系统启动，维护的硬件支持。</p>
+<p>UEFI的前身是EFI，作为BIOS方案的竞争者，由于早期没有如UEFI一样的接口标准，导致各个厂家的EFI千差万别。</p>
+<p>使用了UEFI固件支持的BIOS提供更多的功能如：  </p>
+<ol>
+<li>支持2TB以上的硬盘</li>
+<li>支持GPT分区(传统的MBR格式最多支持四个主分区，若要更多的分区需要逻辑分区)等</li>
+</ol>
+<p>同时UEFI并没有传统BIOS的自检流程(传统启动方式称为<strong>Legacy</strong>)，因此可以提供更为快速的启动速度。</p>
+<h4 id="什么是文件系统-filesystem"><a href="#什么是文件系统-filesystem" class="headerlink" title="什么是文件系统(filesystem)"></a>什么是文件系统(filesystem)</h4><p>文件系统的概念针对我们日常生活中所使用的各种存储设备如硬盘，USB，光盘等。</p>
+<p>无论是我们日常所编写的文本文档，还是计算机程序，抑或是操作系统本身，都是一个<strong>文件</strong>，存储在我们使用的存储设备当中。</p>
+<p>但是存储设备本身并没有特定的结构，整体就是存储单元的集合。而文件的调用，操作系统的引导都需要一种特定的结构去找到存储设备中对应的<strong>文件</strong>进行执行，例如索引结构等。</p>
+<p>因此我们需要各种不同组织文件的方式，这就是<strong>文件系统</strong>。</p>
+<p><strong>文件系统</strong>提供了各种文件在硬盘上的组织、存放方式，规定了文件本身的属性如文件名最大长度等。同时将数据结构的记录存储至存储设备上，使存储设备逻辑上具有所谓的<strong>文件系统</strong></p>
+<h4 id="什么是分区表-MBR-GPT"><a href="#什么是分区表-MBR-GPT" class="headerlink" title="什么是分区表(MBR,GPT)"></a>什么是分区表(MBR,GPT)</h4><p>现今存储设备的容量已经大大提高，1TB的硬盘已经变得司空见惯。</p>
+<p>而我们实际生活使用的过程中，由于各种需要，常对硬盘进行分区。</p>
+<p>比如重要文件存放至分区1，其余文件存放至分区2。又或者系统1(作为一个文件)存放至分区3，系统2存放至分区4。</p>
+<p>因此分区表就是为了对硬盘进行分区(逻辑意义上)，并提供分区索引，分区信息存储等功能。</p>
+<p>分区表存放于每一个分区的开始部分，提供了该分区的起始扇区，终止扇区，文件系统，下一个分区的索引等。</p>
+<p>mbr格式的分区表由于其所占存储空间有限，最多只能支持2TB的存储空间，且每一个设备最多划分出4个主分区。</p>
+<p>超出4个需要使用逻辑分区支持。</p>
+<p>而gpt格式的分区表存储空间更大，因此可以提供更多的信息，支持9.2ZB的存储空间，且可以存储更多的分区信息而无需划分出逻辑分区。</p>
+<h4 id="什么是grub，syslinux（BootLoader）"><a href="#什么是grub，syslinux（BootLoader）" class="headerlink" title="什么是grub，syslinux（BootLoader）"></a>什么是grub，syslinux（BootLoader）</h4><p>Grub和Syslinux(只能启动Linux系统)等都是一种系统引导程序(Bootloader)，本身也作为一个文件存储于设备之中。</p>
+<p>UEFI或者BIOS会识别对应的分区并加载对应的程序，当BootLoader加载之后可以根据已有的配置加载已有的系统</p>
+<p>类似Grub和Elilo等的BootLoader有针对UEFI和BIOS有相应的版本，安装时根据自己主板的型号进行选择。</p>
+<p>需要注意的是，BIOS版本的BootLoader存放于boot分区(fdisk)，UEFI版本的BootLoader存放于EFI分区(EFI文件系统，EFI System)</p>
+<h4 id="现在来安装一个ArchLinux"><a href="#现在来安装一个ArchLinux" class="headerlink" title="现在来安装一个ArchLinux"></a>现在来安装一个ArchLinux</h4><p>安装时间：2021.09.26</p>
+<p>本机安装环境：   </p>
+<ol>
+<li>系统存储于外置硬盘</li>
+<li>通过U盘启动盘安装</li>
+<li>x86_64芯片架构</li>
+</ol>
+<p><strong>下载ArchLinux镜像</strong></p>
+<p><a target="_blank" rel="noopener" href="https://archlinux.org/download/">下载地址：官网</a></p>
+<p><strong>制作启动盘</strong></p>
+<p><em>Windows下：</em></p>
+<p>可以使用<a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a>或者Windows自带的<strong>设备管理器</strong>进行分区</p>
+<p>分区完毕后可以使用<a target="_blank" rel="noopener" href="https://cn.ultraiso.net/">UltralISO</a>进行启动盘的制作</p>
+<p><em>Linux下：</em>  </p>
+<blockquote>
+<p>dd if=(source file name) of=(target file name) (Options)</p>
+</blockquote>
+<p>使用<code>dd</code>命令将镜像文件拷贝至对应U盘设备</p>
+<p><strong>根据主板型号进入BIOS/UEFI并选择U盘启动</strong></p>
+<p>通常使用<code>F2</code>，<code>Esc</code>进入，不同型号的主板可能有所差异，请以主板制造商说明为准。</p>
+<p><strong>存储设备分区</strong></p>
+<p>*注：若无特殊说明，<code>/dev/xxx</code>统一为与挂载，分区等操作对应的设备分区</p>
+<p>使用<code>fdisk -l</code>查看各个存储设备和编号</p>
+<p>若为UEFI启动：使用<code>gdisk /dev/xxx(设备编号)</code>命令进行gpt格式的分区</p>
+<p>同时需要注意预留500MB以上的EFI分区，swap分区建议为内存大小或者两倍内存大小</p>
+<p>若为BIOS启动：使用<code>fdisk /dev/xxx(设备编号)</code>命令进行mbr格式的分区</p>
+<p>需要启动一个boot分区</p>
+<p><strong>初始化文件系统</strong></p>
+<ul>
+<li><code>mkfs.vfat /dev/xxx</code> 或者 <code>mkfs.fat -F32 /dev/xxx</code> 设置EFI分区（若需要的话）</li>
+<li><code>mkfs.ext4 /dev/xxx</code> 对需挂载根目录等的分区进行<code>ext4</code>文件系统的格式化</li>
+<li><code>mkswap /dev/xxx</code> 设置交换分区</li>
+<li><code>swapon /dev/xxx</code> 开启交换分区</li>
+</ul>
+<p><strong>挂载分区</strong></p>
+<p>由于我们需要从U盘进入我们安装的系统进行操作，因此需要先进行分区的挂载</p>
+<p>我们挂载至<code>/mnt</code>分区下，此分区适用于挂载其他系统并对其进行操作。</p>
+<p>由于我们刚格式化分区，因此系统以及相关组件并未被安装，并没有类似<code>/home</code>等目录</p>
+<p>因此我们手动建立文件夹并进行相应的挂载</p>
+<ul>
+<li><code>mount /dev/xxx /mnt</code> 挂载根分区</li>
+<li><code>mkdir /mnt/boot</code> 建立boot目录，若为BIOS/MBR启动，此时可以进行<code>mount /dev/xxx /mnt/boot</code></li>
+<li><code>mkdir /mnt/boot/EFI</code> 建立EFI目录，若为UEFI/GPT启动，此时可以进行<code>mount /dev/xxx /mnt/boot/EFI</code></li>
+<li><code>mkdir ...</code></li>
+<li><code>mount ...</code></li>
+<li>直到全部分区正确挂载完毕</li>
+</ul>
+<p><strong>下载基本Linux系统和必要组件</strong></p>
+<p>格式化的分区并没有基本的Linux系统和组件，因此需要下载</p>
+<p>如果下载过程中遇到下载速度慢或者中断等问题，请查看源设置：</p>
+<p>打开 <code>/etc/pacman.d/mirrorlist</code> 并添加 </p>
+<ul>
+<li>兰大镜像源<br><code>Server = https://mirror.lzu.edu.cn/archlinux/$repo/os/$arch</code>  </li>
+<li>清华镜像源<br><code>Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch</code>  </li>
+</ul>
+<p>或者其他国内镜像源</p>
+<p>然后刷新源</p>
+<blockquote>
+<p>pacman -Syy</p>
+</blockquote>
+<p>下载基本系统和组件</p>
+<blockquote>
+<p>pacstrap /mnt base linux linux-firmware</p>
+</blockquote>
+<p><code>pacstrap</code> 是Arch提供的脚本，用于安装一些基础软件</p>
+<p>实际使用时可以再安装<code>vim</code> <code>nano</code>等文本编辑器软件方便之后的配置文件的更改</p>
+<p><strong>生成fstab</strong></p>
+<p><em>fstab</em>用于在加载linux系统时提供分区挂载的信息，缺少此文件或者配置出错将会导致系统无法进入甚至崩溃。</p>
+<p><em>ArchLinux</em>下提供了自动生成目录表的工具<code>genfstab</code></p>
+<p>具体使用：</p>
+<blockquote>
+<p>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</p>
+</blockquote>
+<p><em>-U</em> 参数表示使用设备的<strong>UUID</strong>进行挂载</p>
+<p>UUID是一个设备的绝对地址(理论上会产生冲突，但实际情况下发生冲突的可能性可以忽略不记)</p>
+<p><em>&gt;&gt;</em> 表示将前部分的输出写入后部分对应的文件</p>
+<p><strong>从U盘进入系统</strong></p>
+<blockquote>
+<p>arch-chroot /mnt</p>
+</blockquote>
+<p><strong>设置时间</strong></p>
+<p><em>设置时区</em>  </p>
+<blockquote>
+<p>ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+</blockquote>
+<p><em>同步时间</em>  </p>
+<blockquote>
+<p>hwclock –systohc</p>
+</blockquote>
+<p>可以使用<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Network_Time_Protocol_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ntp</a>进行时间的同步。</p>
+<p><strong>修改主机名</strong></p>
+<p>建立 <strong>/etc/hostname</strong> 文件写入主机名</p>
+<p><strong>更改语言</strong></p>
+<p>修改 <strong>/etc/locale.gen</strong> 文件将需要的字符集前的注释 <em>#</em> 删去</p>
+<p>建立 <strong>/etc/locale.conf</strong> 文件写入</p>
+<blockquote>
+<p>LANG=en_US.UTF-8</p>
+</blockquote>
+<p>*官方wiki中推荐的是先使用<code>en_US.UTF-8</code>，以便终端界面能够正常显示</p>
+<p>运行 <code>locale-gen</code> 使语言设置生效</p>
+<p><strong>修改网络设置</strong></p>
+<p>修改 <strong>/etc/hosts</strong> 文件写入</p>
+<blockquote>
+<p>127.0.0.1 localhost</p>
+</blockquote>
+<blockquote>
+<p>::1       localhost</p>
+</blockquote>
+<blockquote>
+<p>127.0.0.1 主机名.localdomain 主机名 </p>
+</blockquote>
+<p><strong>安装网络相关的包</strong></p>
+<p>由于ArchLinux秉持轻量化，因此基本系统中并未包括我们常用的网络资源管理相关的软件，需要自行下载。</p>
+<blockquote>
+<p>pacman -S iw wpa_supplicant dialog dhcpcd</p>
+</blockquote>
+<p>*dhcpcd 用于设置ip，如果使用 <code>ip</code> <code>wpa_supplicant</code> <code>dhcpcd</code> 方式配置网络需要安装</p>
+<p><strong>安装引导程序(bootloader)</strong></p>
+<p><em>BIOS/MBR</em></p>
+<blockquote>
+<p>grub-install –target=i386-pc /dev/xxx (这里为boot分区挂载的设备)  </p>
+</blockquote>
+<blockquote>
+<p>grub-mkconfig -o /boot/grub/grub.cfg 根据grub配置更改grub相应参数(可自定义)</p>
+</blockquote>
+<p><em>UEFI/GPT</em></p>
+<blockquote>
+<p>pacman -S grub efibootmgr</p>
+</blockquote>
+<blockquote>
+<p>grub-install –target=x86_64-efi –efi-directory=/boot/EFI –bootloader-id=grub</p>
+</blockquote>
+<blockquote>
+<p>grub-mkconfig -o /boot/grub/grub.cfg</p>
+</blockquote>
+<p><strong>initramfs生成</strong></p>
+<p>由于Linux系统的启动需要同时启动必要的组件，而某些组件之间又相互依赖，或者存在兼容性问题。</p>
+<p>为了解决这些问题，Linux在真正的系统启动前需要启动<code>initramfs</code>，即initram file system，用于提供一个用户态的环境以完成内核不易完成的操作，比如加载必要的模块等</p>
+<p>使用<code>mkinitcpio -P</code>打包initramfs</p>
+<p><em>关于/usr分区独立进行挂载的问题</em></p>
+<p>在目前的ArchLinux中，<code>/sbin</code> 链接至 <code>/usr/sbin</code> 当我们将<code>/usr</code>分区独立挂载后，会导致initramfs无法找到相应的文件导致启动失败</p>
+<p>解决方法：  </p>
+<ol>
+<li>修改<code>/etc/fstab</code>文件找到<code>/usr</code>分区一行，将<code>pass</code>参数设置为0</li>
+<li>修改<code>/etc/mkinitcpio.conf</code>文件，在<em>HOOK</em>中添加shutdown和usr</li>
+</ol>
+<p>然后重新打包initramfs</p>
+<blockquote>
+<p>mkinitcpio -P</p>
+</blockquote>
+<p><strong>修改root密码</strong></p>
+<blockquote>
+<p>passwd</p>
+</blockquote>
+<p><strong>退出当前系统</strong></p>
+<blockquote>
+<p>exit</p>
+</blockquote>
+<p><strong>解除挂载</strong></p>
+<blockquote>
+<p>umount -R /mnt (从根目录递归解除挂载)</p>
+</blockquote>
+<p><strong>重启进入系统</strong></p>
+<blockquote>
+<p>reboot</p>
+</blockquote>
+<h3 id="ArchLinux系统的配置"><a href="#ArchLinux系统的配置" class="headerlink" title="ArchLinux系统的配置"></a>ArchLinux系统的配置</h3><h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>*使用 <code>ip+wpa_supplicant+dhcpcd</code> 方式</p>
+<p><strong>启用网络接口</strong></p>
+<blockquote>
+<p>lspci | grep Network</p>
+</blockquote>
+<p>查看网卡设备是否能被识别到</p>
+<blockquote>
+<p>ip link</p>
+</blockquote>
+<p>查看网络借口名称</p>
+<p>*<code>lo</code>表示本地，<code>wl</code>开头表示无线网络接口，<code>en</code>开头表示有线网络接口</p>
+<blockquote>
+<p>ip link set 接口名称 up</p>
+</blockquote>
+<p>启用指定网络接口</p>
+<p><strong>使用wpa_supplicant连接无线网络</strong></p>
+<p>建立 <code>/etc/wpa_supplicant/wpa_supplicant.conf</code> 文件，写入</p>
+<blockquote>
+<p>ctrl_interface=/run/wpa_supplicant</p>
+</blockquote>
+<blockquote>
+<p>update_config=1</p>
+</blockquote>
+<p>查看网络设备<code>ifconfig</code></p>
+<p>*本人的网络设备是wlan0</p>
+<p>根据配置设置wpa_supplicant</p>
+<blockquote>
+<p>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</p>
+</blockquote>
+<p>网络设置</p>
+<p>*一下为需要执行的命令，具体参数请根据自己的网络状态配置</p>
+<blockquote>
+<p>wpa_cli  </p>
+<blockquote>
+<p>scan<br>scan_results<br>add_network<br>set_network 0 ssid “MYSSID”<br>set_network 0 psk “passphrase”<br>enable_network 0<br>save_config  </p>
+</blockquote>
+</blockquote>
+<p>由此配置完毕，之后可以于<code>/etc/wpa_supplicant/wpa_supplicant.conf</code>修改网络配置</p>
+<blockquote>
+<p>systemctl enable wpa_supplicant.service</p>
+</blockquote>
+<p>启用wpa_supplicant，当存在网络时自动连接，同时启用dhcpcd(<code>systemctl enable dhcpcd</code>)</p>
+<p><strong>dhcpcd设置ip</strong></p>
+<blockquote>
+<p>dhcpcd 接口名称</p>
+</blockquote>
+<p>自动获取ip</p>
+<h4 id="GRUB引导多系统"><a href="#GRUB引导多系统" class="headerlink" title="GRUB引导多系统"></a>GRUB引导多系统</h4><p><em>UEFI/GPT下引导Windows</em></p>
+<p>查看Win10启动分区(EFI分区)UUID，首先使用<code>fdisk -l</code>查看是哪个分区，比如是<code>/dev/sda1</code></p>
+<p>使用<code>blkid /dev/sda1</code>查看分区的UUID</p>
+<p>修改 <code>/boot/grub/grub.cfg</code> 文件</p>
+<p>找到 <code>### BEGIN /etc/grub.d/30_os-prober</code> </p>
+<p>添加Windows启动项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menuentry &#x27;Microsoft Windows 10&#x27;  &#123;</span><br><span class="line">	insmod part_gpt</span><br><span class="line">	insmod fat</span><br><span class="line">	insmod chain ## 链式加载</span><br><span class="line">	search --fs-uuid --no-floppy --set=root XXXX-XXXX ## EFI分区的UUID</span><br><span class="line">	chainloader ($&#123;root&#125;)/EFI/Microsoft/Boot/bootmgfw.efi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启进入Grub引导界面查看效果</p>
+<p>*如果没有发现Windows启动项，请试着修改 <code>/etc/default/grub</code> 文件</p>
+<p>在文件中添加  </p>
+<blockquote>
+<p>GRUB_DISABLE_OS_PROBER=false  </p>
+</blockquote>
+<p>之后重新配置grub(已被发现则无需配置)</p>
+<ol>
+<li>在Arch下是<code>grub-mkconfig -o /boot/grub/grub.cfg</code></li>
+<li>在一些系统下是<code>update-grub</code></li>
+</ol>
+<p>请以安装的系统提供的grub文档为准</p>
+<h4 id="安装音频支持"><a href="#安装音频支持" class="headerlink" title="安装音频支持"></a>安装音频支持</h4><p>*本人对音频安装需要解决：声卡内核驱动的安装，解除声卡静音，设置默认声卡</p>
+<p><strong>声卡内核驱动的安装</strong></p>
+<p>使用 <code>高级Linux声音体系（Advanced Linux Sound Architecture，ALSA）</code> 提供声卡的内核驱动</p>
+<blockquote>
+<p>pacman -S alsa-utils</p>
+</blockquote>
+<p>安装软件包，用来设置声音</p>
+<p><strong>解除声卡静音</strong></p>
+<blockquote>
+<p>alsamixer</p>
+</blockquote>
+<p>进入声音管理界面调节声音，MM表示静音，使用<code>m</code>命令接触静音</p>
+<blockquote>
+<p>speaker-test -c 8</p>
+</blockquote>
+<p>检查是否正常输出声音，若没有声音输出或错误，可能是默认声卡配置的原因</p>
+<blockquote>
+<p>aplay -L | grep :CARD</p>
+</blockquote>
+<p>获取声卡的信息，<code>:</code>后 <code>=</code>前的名称为声卡的名称</p>
+<blockquote>
+<p>speaker-test -D default:名称 -c 8</p>
+</blockquote>
+<p>由上面的信息指定使用声卡名称进行测试</p>
+<p><strong>设置默认声卡</strong></p>
+<p>我们通过上述步骤获取声卡信息，其中包括声卡的编号，此时我们需要设置默认的声卡</p>
+<p>建立 <code>/etc/asound.conf</code> 或者 <code>~/.asoundrc</code> 文件，在文件中键入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">defaults.pcm.card 编号</span><br><span class="line">defaults.ctl.card 编号</span><br></pre></td></tr></table></figure>
+
+<p>保存退出，再次测试可以更改默认声卡</p>
+<p>可以安装图形化音频调节<code>kmix</code></p>
+<p>目前我使用的音量调节程序：</p>
+<p><code>alsamixer</code> - cli界面调节音量</p>
+<p><code>amixer</code> - amixer set Master 50 , 调节主音量为50</p>
+<p><code>kmix</code> - 图形化界面调节音量</p>
+<h4 id="使linux支持挂载ntfs文件系统-微软使用"><a href="#使linux支持挂载ntfs文件系统-微软使用" class="headerlink" title="使linux支持挂载ntfs文件系统(微软使用)"></a>使linux支持挂载ntfs文件系统(微软使用)</h4><blockquote>
+<p>pacman -S ntfs-3g</p>
+</blockquote>
+<p>安装之后连接对应存储设备，可以直接使用<code>mount</code>命令挂载</p>
+<h4 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h4><p>首先安装输入法引擎，然后再安装对应语言的输入法。</p>
+<blockquote>
+<p>pacman -S fcitx</p>
+</blockquote>
+<p>安装fcitx输入法引擎</p>
+<blockquote>
+<p>pacman -S fcitx-sunpinyin</p>
+</blockquote>
+<p>安装一个中文输入法</p>
+<blockquote>
+<p>pacman -S fcitx-im</p>
+</blockquote>
+<p>安装输入法组件，以支持各种应用</p>
+<blockquote>
+<p>pacman -S fcitx-configtool</p>
+</blockquote>
+<p>图形化设置fcitx</p>
+<h4 id="同步时间"><a href="#同步时间" class="headerlink" title="同步时间"></a>同步时间</h4><blockquote>
+<p>pacman -S ntp</p>
+</blockquote>
+<p>安装ntp软件包</p>
+<blockquote>
+<p>ntpd -u ntp:ntp</p>
+</blockquote>
+<p>使用ntp</p>
+<blockquote>
+<p>ntpq -p</p>
+</blockquote>
+<p>启动时启用ntpd，用来同步时间</p>
+<h3 id="ArchLinux系统的美化"><a href="#ArchLinux系统的美化" class="headerlink" title="ArchLinux系统的美化"></a>ArchLinux系统的美化</h3><h4 id="grub-theme"><a href="#grub-theme" class="headerlink" title="grub theme"></a>grub theme</h4><p>grub作为引导程序，支持定制化，因此可以制作个性化的启动页面主题。</p>
+<p>grub主题资源：  </p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://gnome-look.org/">Gnome-look</a></li>
+<li><a target="_blank" rel="noopener" href="https://opendesktop.org/">Opendesktop.org</a></li>
+</ol>
+<p>自定义安装：  </p>
+<ol>
+<li>首先将主题文件放置到系统grub主题文件夹中</li>
+<li>Arch下可以是<code>/boot/grub/themes/</code>，也可以是<code>/usr/share/grub/themes/</code></li>
+<li>修改 <code>/etc/default/grub</code> 文件，修改<code>GRUB_THEME=对应主题目录/themes.txt</code></li>
+<li>重启系统查看效果</li>
+</ol>
+<h4 id="中文字体的支持和安装"><a href="#中文字体的支持和安装" class="headerlink" title="中文字体的支持和安装"></a>中文字体的支持和安装</h4><p>我们在<code>/etc/locale.gen</code>指定的是支持的字符集，但是除了字符集，我们还需要图形码来支持正常显示文字，也就是安装对应的字体。</p>
+<p>在<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Fonts_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E4%B8%AD%E6%96%87%E5%AD%97">Wiki ArchLinux的字体列表</a>中，我们可以查看相应的字体并进行查看。</p>
+<p>这里我下载安装两种字体，具体的应用会使用不同的字体。</p>
+<blockquote>
+<p>pacman -S wqy-zenhei adobe-source-han-sans-otc-fonts</p>
+</blockquote>
+<p>使用<code>fc</code>系列命令管理字体(请自行研究)</p>
+<hr>
+<h2 id="资料引用"><a href="#资料引用" class="headerlink" title="资料引用"></a>资料引用</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/alais/article/details/5129005">什么是UEFI和BIOS</a></li>
+<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1627358879605845999&wfr=spider&for=pc">简单分析UEFI</a></li>
+<li><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/4827215">文件系统</a></li>
+<li><a target="_blank" rel="noopener" href="http://linux.vbird.org/">鸟哥的Linux私房菜</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/99448314">ArchLinux安装(UEFI)</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Mkinitcpio_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上的mkinitcpio解释</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/94331255">Linux Grub引导程序的主题美化</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Wpa_supplicant_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上的wpa_supplicant解释</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43669969/article/details/110820419">Grub双系统配置</a></li>
+<li><a target="_blank" rel="noopener" href="https://clinux.co/d/167-os-prober-will-not-be-executed-to-detect-other-bootable-partitions">os-prober错误配置导致多系统引导出错</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%A3%B0%E5%8D%A1">ArchLinux Wiki上的声音设备配置教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Fcitx_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上输入法的安装</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Network_Time_Protocol_daemon_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上时间同步程序ntp的安装</a></li>
+</ol>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/royenheart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/RoyenHeart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62012302000279">浙ICP备2020042582号</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+
+
+</html>

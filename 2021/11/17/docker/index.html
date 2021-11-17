@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="whoami">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        docker - RoyenHeart的日常
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> RoyenHeart_Existence </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar radius">
+            <img src="/img/avatar.jpg" />
+        </div>
+        <div class="name">
+            <i>RoyenHeart</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>HOME</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>TAGS</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>ARCHIVES</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>ABOUT</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>SEARCH</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-text">三要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">docker常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">命令行使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#singularity"><span class="toc-text">singularity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#singularity%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">singularity常用指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">search</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> RoyenHeart_Existence </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        docker
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2021-11-17 10:00:44</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#容器技术" title="容器技术">容器技术</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <blockquote>
+<p>此为docker使用方法的一些笔记，个人记录使用</p>
+</blockquote>
+<h2 id="三要素"><a href="#三要素" class="headerlink" title="三要素"></a>三要素</h2><ul>
+<li>仓库：镜像仓库，镜像的存储库</li>
+<li>镜像：系统镜像等，封装了应用的环境、信息，相当于容器（实例）的类</li>
+<li>容器：由系统镜像（静态配置）生成的应用，可以直接运行镜像中的应用或者使用交互式（类似虚拟机，但占用资源更少）</li>
+</ul>
+<h2 id="docker常用指令"><a href="#docker常用指令" class="headerlink" title="docker常用指令"></a>docker常用指令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run 镜像名:tagname 指令</span><br></pre></td></tr></table></figure>
+
+<p>从制定镜像运行一个容器，若本地没有则从docker hub下载制定镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker tag local-image:tagname new-repo:tagname</span><br><span class="line">docker push new-repo:tagname</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过cli方式从本地推送自制的镜像至docker hub（类似于git仓库，可以设置公共仓库和私有仓库）。<br>不过因为类似一个云端存储，免费版docker用户公共镜像只能有一个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search 镜像名</span><br></pre></td></tr></table></figure>
+
+<p>在docker hub上查找有无公开的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull 镜像地址</span><br></pre></td></tr></table></figure>
+
+<p>从docker hub上拉取公开的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull</span><br><span class="line">docker commit</span><br><span class="line">docker push</span><br></pre></td></tr></table></figure>
+
+<p>这意味着我们可以像使用git一样使用docker处理、更新镜像、容器</p>
+<p>docker同时为我们提供了dockerfile，类似一个脚本，在脚本内填入创建镜像需要的指令，docker会自动帮助我们构建所需镜像。</p>
+<p>自动构建脚本，相当于自动处理脚本内容在容器内处理，我们再通过容器id提交一个我们自己的镜像（配置了我们的环境）</p>
+<p>push 用户名/docker镜像名:tag</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cat ubuntu-14.04-x86_64-minimal.tar.gz | docker import - ubuntu:14.04</span><br></pre></td></tr></table></figure>
+
+<p>从本地文件系统（本地系统镜像导入到docker镜像）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+
+<p>images列出当前所有镜像列表包括其id<br>ps列出当前实例化的容器以及其id，有助于我们构建自己的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm</span><br></pre></td></tr></table></figure>
+
+<p>删除容器</p>
+<h2 id="命令行使用"><a href="#命令行使用" class="headerlink" title="命令行使用"></a>命令行使用</h2><p>docker cli 的使用前需要先启动docker的守护进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
+
+<p>使用systemctl</p>
+<h2 id="singularity"><a href="#singularity" class="headerlink" title="singularity"></a>singularity</h2><p>和docker类似，singularity也提供了类似docker一样的容器服务，也有自己的<a target="_blank" rel="noopener" href="https://cloud.sylabs.io/library">容器仓库</a>，  </p>
+<p>不过singularity没有镜像的概念，我们运行的都是一个一个容器（容器和镜像不再单独分开）</p>
+<p>singularity容器有两种模式（只读、沙盒）</p>
+<p>sif文件：压缩后的只读的singularity镜像文件，生产使用主要形式<br>sandbox：可写的容器，常用于开发或者创建自己的容器</p>
+<p>singularity目前常用于高性能计算中，其容器名后缀名.sif。</p>
+<h3 id="singularity常用指令"><a href="#singularity常用指令" class="headerlink" title="singularity常用指令"></a>singularity常用指令</h3><p><strong>从外部源下载容器</strong></p>
+<p>*<code>docker</code> 为docker的镜像仓库 <code>library</code> 为singularity的容器仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">singularity -d build 容器名.sif 容器地址</span><br><span class="line">singularity pull 容器名.sif 容器地址</span><br></pre></td></tr></table></figure>
+
+<p><strong>构建沙盒容器</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">singularity build --sandbox 容器名 容器地址</span><br><span class="line">singularity shell -w[--writeable] 容器名</span><br><span class="line">singularity build 容器名.sif 容器本地地址/</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过Definition文件制作容器</strong></p>
+<p>文件名.def</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">singularity build 容器名.sif def文件名.def</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行容器</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">singularity exec 容器名.sif/simg bash -c &quot;指令&quot;</span><br><span class="line">singularity shell 容器名.sif - 交互式运行</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.redhat.com/zh/topics/containers/whats-a-linux-container">https://www.redhat.com/zh/topics/containers/whats-a-linux-container</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bigben0123/p/7592970.html">https://www.cnblogs.com/bigben0123/p/7592970.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1614385619899407709&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1614385619899407709&amp;wfr=spider&amp;for=pc</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kubernetes.org.cn/k8s">https://www.kubernetes.org.cn/k8s</a></li>
+<li><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.docker.com/">https://www.docker.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.docker.com/blog/">https://www.docker.com/blog/</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/">https://docs.docker.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/overview/">https://docs.docker.com/get-started/overview/</a></li>
+<li><a target="_blank" rel="noopener" href="https://sylabs.io/">https://sylabs.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0882e65c5e0e">https://www.jianshu.com/p/0882e65c5e0e</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1478616">https://cloud.tencent.com/developer/article/1478616</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.xtaohub.com/Container-Tech/Singularity-in-nutshell.html">http://www.xtaohub.com/Container-Tech/Singularity-in-nutshell.html</a></li>
+</ul>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/royenheart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/RoyenHeart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62012302000279">浙ICP备2020042582号</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+
+
+</html>
