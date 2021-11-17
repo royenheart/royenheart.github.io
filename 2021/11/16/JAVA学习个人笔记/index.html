@@ -707,6 +707,44 @@
 <li>记录错误以便之后进行判断</li>
 <li>进行操作补救，防止下一步的操作因为前面的错误再次出错</li>
 </ol>
+<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><p>JAVA中专门用于文件操作输入输出的包：java.io \ java.nio</p>
+<p>流是指数据以字节还是以字符的形式进行传输，依据其流向可分为输入流和输出流</p>
+<ul>
+<li>java.io.InputStream 字节输入流（抽象父类）</li>
+<li>java.io.OuputStream 字节输出流（抽象父类）</li>
+<li>java.io.Reader 字符输入流（抽象父类）</li>
+<li>java.io.Writer 字符输出流（抽象父类）</li>
+</ul>
+<p>按流向可分为：输入流和输出流<br>按输入输出的位置可分为：文件、进程或线程（管道流）、其他流（过滤流）<br>按输入输出的对象可分为：字节、字符、具体对象（逻辑类型数据）<br>按输入输出的阻塞可分为：非阻塞（面向缓存的buffer oriented）、阻塞</p>
+<h3 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h3><blockquote>
+<p>字节流用于直接读写二进制数据</p>
+</blockquote>
+<p>FileInputStream类：文件输入字节流</p>
+<p>FileOutputStream类：文件输出字节流</p>
+<p>ByteArrayInputStream类：字节数组输入流，从内存中存储的字节数组读取输入</p>
+<p>ByteArrayOutputStream类：字节数组输出流，向内存中存储的字节数组输出</p>
+<p>BufferedInputStream类：利用缓冲区读取数据，可以一次性读取多字节的数据</p>
+<p>BufferedOutputStream类：利用缓冲区存储输入流，使用flush()来将缓冲区的内容输出到外存</p>
+<p>PipedInputStream类：管道流，用于进程和线程之间的数据交换</p>
+<p>PipedOutputStream类：可以使用connect()与管道流建立连接，Output -&gt; Input</p>
+<p>DataInputStream类：过滤流，其父类为BufferedInputStream</p>
+<p>PrintStream类：其创建的输出流能输出格式化的数据</p>
+<p><strong>System类</strong></p>
+<p>可以通过setIn(),setOut(),setErr()来将输入输出重定向</p>
+<h3 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h3><p>java.io.Reader / java.io.Writer 字符流抽象类</p>
+<p>FileReader / FileWriter</p>
+<p>BufferedReader / BufferedWriter 可以使用readLine() , writeLine() 一次输入输出一行数据</p>
+<p>InputStreamReader / OutputStream Writer</p>
+<h3 id="随机访问流类"><a href="#随机访问流类" class="headerlink" title="随机访问流类"></a>随机访问流类</h3><p>RandomAccessFile</p>
+<h3 id="序列化和对象流"><a href="#序列化和对象流" class="headerlink" title="序列化和对象流"></a>序列化和对象流</h3><p>需要使用的类：ObjectInputStream / ObjectOutputStream</p>
+<p>java中，实现了Serializable接口的类的对象可以直接写入一个流或者从流中读出（序列化和反序列化），<br>即将一个对象的状态写入字节流，也可以是从字节流中读取对象的状态还原对象（反序列化）</p>
+<p>ObjectInputStream / ObjectOutputStream 本身是过滤流，可以和文件输入输出的字节流组成流链进行对象的读取和序列化</p>
+<h3 id="File类"><a href="#File类" class="headerlink" title="File类"></a>File类</h3><p>File类提供了对文件系统的访问和操作：</p>
+<ol>
+<li>判断文件是否存在</li>
+<li>判断文件大小</li>
+<li>创建目录等等</li>
+</ol>
 <hr>
 <h2 id="优质资源-amp-amp-资料引用"><a href="#优质资源-amp-amp-资料引用" class="headerlink" title="优质资源 &amp;&amp; 资料引用"></a>优质资源 &amp;&amp; 资料引用</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1252599548343744">廖雪峰的官方网站</a></li>
