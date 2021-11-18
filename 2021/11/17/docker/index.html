@@ -93,7 +93,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-text">三要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">docker常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">命令行使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#singularity"><span class="toc-text">singularity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#singularity%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">singularity常用指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-text">三要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="toc-text">docker常见误区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">docker常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">命令行使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker-%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%BB%86%E8%8A%82"><span class="toc-text">docker-一些小细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#singularity"><span class="toc-text">singularity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#singularity%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">singularity常用指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
 </div>
     
 </div>
@@ -143,44 +143,82 @@
     </div>
     <div class="post-content no-indent">
         <blockquote>
-<p>此为docker使用方法的一些笔记，个人记录使用</p>
+<p>此为docker/singularity使用方法的一些笔记，个人记录使用</p>
 </blockquote>
 <h2 id="三要素"><a href="#三要素" class="headerlink" title="三要素"></a>三要素</h2><ul>
 <li>仓库：镜像仓库，镜像的存储库</li>
 <li>镜像：系统镜像等，封装了应用的环境、信息，相当于容器（实例）的类</li>
 <li>容器：由系统镜像（静态配置）生成的应用，可以直接运行镜像中的应用或者使用交互式（类似虚拟机，但占用资源更少）</li>
 </ul>
-<h2 id="docker常用指令"><a href="#docker常用指令" class="headerlink" title="docker常用指令"></a>docker常用指令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run 镜像名:tagname 指令</span><br></pre></td></tr></table></figure>
+<h2 id="docker常见误区"><a href="#docker常见误区" class="headerlink" title="docker常见误区"></a>docker常见误区</h2><p>docker并非虚拟机，其本质相当与宿主机的一个进程。在使用docker容器的时候，我们一般一次只运行一个程序，<br>docker执行的程序相当于其第一个进程，当这个进程结束的时候。docker容器也就随之停止。</p>
+<p>因此运行docker容器时一定要注意第一个运行的程序一结束，容器便会停止，比如<code>/bin/sh -c command</code>，此时<code>/bin/sh</code>是第一个程序，<br>当此程序运作完毕时，容器也会停止。</p>
+<h2 id="docker常用指令"><a href="#docker常用指令" class="headerlink" title="docker常用指令"></a>docker常用指令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run 镜像名:tagname 指令1 &amp;&amp; [指令2 &amp;&amp; [指令3......]]</span><br></pre></td></tr></table></figure>
 
-<p>从制定镜像运行一个容器，若本地没有则从docker hub下载制定镜像</p>
+<p>从指定镜像运行一个容器，若本地没有则从docker hub下载制定镜像,<br>同时运行容器后的指令，可以通过<code>&amp;&amp;</code>连接符运行多个指令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker tag local-image:tagname new-repo:tagname</span><br><span class="line">docker push new-repo:tagname</span><br></pre></td></tr></table></figure>
 
 <p>也可以通过cli方式从本地推送自制的镜像至docker hub（类似于git仓库，可以设置公共仓库和私有仓库）。<br>不过因为类似一个云端存储，免费版docker用户公共镜像只能有一个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it 指定镜像 /bin/bash </span><br></pre></td></tr></table></figure>
+
+<p>交互式形式在指定镜像上生成容器并在容器内与容器进行交互。<br><code>/bin/bash</code>指定使用的shell类型</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search 镜像名</span><br></pre></td></tr></table></figure>
 
 <p>在docker hub上查找有无公开的镜像</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull 镜像地址</span><br></pre></td></tr></table></figure>
 
 <p>从docker hub上拉取公开的镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull</span><br><span class="line">docker commit</span><br><span class="line">docker push</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull</span><br><span class="line">docker commit - 可以提交一个正在运行的容器，通过该容器生成一个我们已经配置好环境的镜像</span><br><span class="line">docker push</span><br></pre></td></tr></table></figure>
 
 <p>这意味着我们可以像使用git一样使用docker处理、更新镜像、容器</p>
 <p>docker同时为我们提供了dockerfile，类似一个脚本，在脚本内填入创建镜像需要的指令，docker会自动帮助我们构建所需镜像。</p>
 <p>自动构建脚本，相当于自动处理脚本内容在容器内处理，我们再通过容器id提交一个我们自己的镜像（配置了我们的环境）</p>
 <p>push 用户名/docker镜像名:tag</p>
+<p>其中<code>docker commit</code>可以帮助我们从一个容器中构建出我们自己的镜像，<br>例如<code>docker commit containerName imageName</code>可以帮助我们使用制定的容器生成自定义的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t [父镜像名]:[镜像的tag] [Dockerfile所在的文件路径]</span><br></pre></td></tr></table></figure>
+
+<p>与Cmake，make一样，docker可以从dockerfile（自动构建，描述了使用的镜像还有构建环境需要的目录）中自动构建出一个配置了我们所需要环境的镜像。</p>
+<p><code>--no-cache</code>参数可以指定不使用缓存构建容器</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cat ubuntu-14.04-x86_64-minimal.tar.gz | docker import - ubuntu:14.04</span><br></pre></td></tr></table></figure>
 
 <p>从本地文件系统（本地系统镜像导入到docker镜像）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker ps / docker ps -a</span><br></pre></td></tr></table></figure>
 
 <p>images列出当前所有镜像列表包括其id<br>ps列出当前实例化的容器以及其id，有助于我们构建自己的镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls -a</span><br></pre></td></tr></table></figure>
 
-<p>删除容器</p>
+<p>列出当前所拥有的容器</p>
+<p>需要注意，当我们在交互模式的容器中使用exit或者是ctrl+d退出时，容器会立即终止。<br>此时我们可以通过<code>docker container start container_id/container_name</code>的方式来重新运行这个容器（之前终端已经退出，之前终端内运行的服务也已被终止）。</p>
+<p><code>docker container restart container_id/container_name</code>重新运行一个容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm container_id/container_name</span><br></pre></td></tr></table></figure>
+
+<p>删除指定的容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi image_id/image_name</span><br></pre></td></tr></table></figure>
+
+<p>删除指定的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -P image</span><br></pre></td></tr></table></figure>
+
+<p>运行一个镜像，随机映射端口</p>
+<p>使用<code>docker run -p host_port:container_port image</code>可以指定分配端口，<br>即我们可以将容器的端口映射至宿主机的端口，通过访问宿主机端口访问容器指定的端口</p>
+<p><code>docker run -d</code>，d参数可以使容器在后台运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect container_id/container_name</span><br></pre></td></tr></table></figure>
+
+<p>此命令可以获取容器的具体信息</p>
+<p>若搭配管道符和文本处理工具可以高效地获取我们需要的信息，<br>比如<code>docker inspect container_id/container_name | grep IPAddress</code>可以获取容器在宿主机中被分配的id</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v host_path/container_path</span><br></pre></td></tr></table></figure>
+
+<p>通过这个命令将宿主机的目录与容器的指定目录进行连接，相当于进行挂载，有助于数据的保存，可以通过这个命令来在宿主机中保存我们需要的日志信息等。</p>
 <h2 id="命令行使用"><a href="#命令行使用" class="headerlink" title="命令行使用"></a>命令行使用</h2><p>docker cli 的使用前需要先启动docker的守护进程</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
 
 <p>使用systemctl</p>
+<h2 id="docker-一些小细节"><a href="#docker-一些小细节" class="headerlink" title="docker-一些小细节"></a>docker-一些小细节</h2><p>很多时候我们不用root账户来运行docker的相关服务，因为安全性很难得到保证。<br>因此我们需要使用普通用户来使用docker的服务。</p>
+<p>在linux中，我们可以这么做：</p>
+<ol>
+<li>sudo gpasswd -a username docker</li>
+<li>newgrp docker</li>
+</ol>
+<p>即将用户添加至docker组，这样可以免去使用sudo，通过root账户运行docker</p>
+<p>在使用docker容器的时候，我们一些时候需要在交互模式下跑应用然后退出至我们的宿主机，很多时候我们并不想退出的时候关闭容器，因此我们可以使用快捷键<code>Ctrl+p+q</code>返回宿主机并保证容器能正常运行。</p>
 <h2 id="singularity"><a href="#singularity" class="headerlink" title="singularity"></a>singularity</h2><p>和docker类似，singularity也提供了类似docker一样的容器服务，也有自己的<a target="_blank" rel="noopener" href="https://cloud.sylabs.io/library">容器仓库</a>，  </p>
 <p>不过singularity没有镜像的概念，我们运行的都是一个一个容器（容器和镜像不再单独分开）</p>
 <p>singularity容器有两种模式（只读、沙盒）</p>
@@ -214,6 +252,14 @@
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0882e65c5e0e">https://www.jianshu.com/p/0882e65c5e0e</a></li>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1478616">https://cloud.tencent.com/developer/article/1478616</a></li>
 <li><a target="_blank" rel="noopener" href="http://www.xtaohub.com/Container-Tech/Singularity-in-nutshell.html">http://www.xtaohub.com/Container-Tech/Singularity-in-nutshell.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8c40e2d78e1b">docker如何制作自己的镜像</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36274515/article/details/87910704">制作自己的Docker镜像</a></li>
+<li><a target="_blank" rel="noopener" href="https://yeasy.gitbook.io/docker_practice/container/stop">Docker–从入门到实践</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">Dockerfile–菜鸟教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013870094/article/details/84929822">Docker 给运行中的容器设置端口映射的方法</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-image-usage.html">Docker-镜像使用–菜鸟教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45459911/article/details/108784341">如何退出docker但不关闭</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dongdong9223/article/details/52998375">如何进入、退出docker的container</a></li>
 </ul>
 
         
