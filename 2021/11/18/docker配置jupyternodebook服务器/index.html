@@ -145,8 +145,7 @@
 </span>
     </div>
     <div class="post-content no-indent">
-        <p>(待完善。。。)</p>
-<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>使用vps搭建jupyterNotebook服务器，设置域名和端口映射，已经映射容器内部目录与服务器目录</p>
+        <h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>使用vps搭建jupyterNotebook服务器，设置域名和端口映射，已经映射容器内部目录与服务器目录</p>
 <ul>
 <li>配置域名解析至服务器的公网ip，这样我们可以通过域名+端口的方式连接至jupyterNotebook</li>
 <li>设置端口映射，在运行构建好jupyter环境的docker容器时将其开启的端口与vps端口映射，以便访问</li>
@@ -161,7 +160,27 @@
 
 <h3 id="创建容器并配置相关环境"><a href="#创建容器并配置相关环境" class="headerlink" title="创建容器并配置相关环境"></a>创建容器并配置相关环境</h3><p><code>docker run -it --name djs ubuntu:latest</code></p>
 <p><code>$ cd &amp;&amp; wget </code></p>
-<h3 id="制成镜像并运行"><a href="#制成镜像并运行" class="headerlink" title="制成镜像并运行"></a>制成镜像并运行</h3><h3 id="配置网络并在浏览器中访问"><a href="#配置网络并在浏览器中访问" class="headerlink" title="配置网络并在浏览器中访问"></a>配置网络并在浏览器中访问</h3><h2 id="一些高效指令"><a href="#一些高效指令" class="headerlink" title="一些高效指令"></a>一些高效指令</h2><ol>
+<h3 id="制成镜像并运行"><a href="#制成镜像并运行" class="headerlink" title="制成镜像并运行"></a>制成镜像并运行</h3><p>首先更新系统<code>apt update</code>然后下载必要的软件<code>apt install wget vim</code>，<br>若使用dockerfile进行自动构建，可不下载vim</p>
+<p>下载anaconda官网提供的shell脚本安装<a target="_blank" rel="noopener" href="https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh">conda环境</a></p>
+<p>运行shell脚本安装conda（使用/bin/bash），当安装完毕后执行<code>conda init bash</code>并重启终端（exit），<br>执行conda create –name DJS &amp;&amp; conda activate DJS配置环境</p>
+<p>通过conda环境安装jupyter：<code>conda install -c conda-forge jupyter-lab</code></p>
+<p>生成jupyter-notebook的启动参数<code>jupyter-notebook --generate-config</code></p>
+<p>修改<code>~/.jupyter/jupyter_notebook_config.py</code>文件并添加以下参数：</p>
+<ol>
+<li>c.NotebookApp.ip = ‘<em>‘ - 配置允许远程访问的ip地址，</em>表示任何地址均有权限。可自行修改成想要开放的ip地址</li>
+<li>c.NotebookApp.notebook_dir = dir_name - 配置jupyter-notebook的工作目录，在此目录下修改、添加程序文件</li>
+<li>c.NotebookApp.token = ‘’ - 配置访问的token，也可以设置访问的密码</li>
+</ol>
+<p>创建dir_name目录，作为jupyter-notebook的工作目录</p>
+<p>至此容器环境设置完毕，之后可通过<code>docker build</code>命令加上对应参数从容器生成镜像</p>
+<h3 id="配置网络并在浏览器中访问"><a href="#配置网络并在浏览器中访问" class="headerlink" title="配置网络并在浏览器中访问"></a>配置网络并在浏览器中访问</h3><p>假设生成的镜像名字是djs:v1，我们可以通过<br><code>docker run -dit --name containerName -p 7777:8888 -v /hostWorkDir:/dir_name djs:v1 jupyter-notebook</code><br>后台运行docker容器，同时开启jupyter-notebook服务。<br>此命令将容器的8888端口（jupyter-notebook开启的默认端口）与宿主机的7777端口进行映射，<br>同时将宿主机的hostWorkDir目录挂载至容器中jupyter-notebook服务的工作目录，做到数据不在容器中存储。</p>
+<p>要在浏览器中访问，我们需要能通过ip、域名访问到服务器并开启7777端口</p>
+<p>可以通过<code>http://localhost:7777</code>本地访问</p>
+<p>若要设置ssl证书通过https协议进行访问，需要提供证书并修改相关参数</p>
+<blockquote>
+<p>不推荐使用root账户运行服务，建议开一个新的普通用户开启jupyter-notebook服务</p>
+</blockquote>
+<h2 id="一些高效指令"><a href="#一些高效指令" class="headerlink" title="一些高效指令"></a>一些高效指令</h2><ol>
 <li>批量删除编译错误或未指定名字的实验镜像</li>
 </ol>
 <p><code>docker rmi $(docker images | grep &quot;&lt;none&gt;&quot; | awk &#39;//&#123;print $3&#125;&#39;)</code></p>
