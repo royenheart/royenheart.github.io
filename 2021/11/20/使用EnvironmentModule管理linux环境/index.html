@@ -11,7 +11,7 @@
 
     <title>
         
-        RoyenHeart的日常
+        使用EnvironmentModule管理linux环境 - RoyenHeart的日常
         
     </title>
 
@@ -57,7 +57,7 @@
     </div>
     <div class="contents" id="nav-content">
         <ul>
-            <li  class=active >
+            <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
                     <span>HOME</span>
@@ -92,6 +92,10 @@
         </ul>
     </div>
     
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Environment-Module"><span class="toc-text">Environment Module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-text">设置模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9D%97"><span class="toc-text">自定义模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8envrionment-module%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="toc-text">使用envrionment module运行环境变量设置脚本配置环境</span></a></li></ol></li></ol>
+</div>
+    
 </div>
 
 
@@ -116,111 +120,46 @@
     <div class="index-middle">
         <!-- Main Content -->
         
-<div class="post-preview-container" style="min-height: 720px">
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志003/">
-                <h3>
-                    流浪者日志003
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+
+<div class="post-container">
+    <div class="post-title">
+        使用EnvironmentModule管理linux环境
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志002/">
-                <h3>
-                    流浪者日志002
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2021-11-20 22:13:27</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#linux学习与技术" title="linux学习与技术">linux学习与技术</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志001/">
-                <h3>
-                    流浪者日志001
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
+    <div class="post-content no-indent">
+        <blockquote>
+<p>在linux下环境设置是一个很重要的配置环节，特别是在多用户的情况下</p>
+</blockquote>
+<h1 id="Environment-Module"><a href="#Environment-Module" class="headerlink" title="Environment Module"></a>Environment Module</h1><p>简化shell初始化的工具。在设置环境的时候，<br>我们一般使用脚本批量设置或者主动在shell配置环境内设置环境</p>
+<p>Environment Module 使用modulefile文件进行环境的管理，相当于把环境设置模块化，<br>这样我们在进行不同用户，不同节点的环境设置时可以分别引入不同的模块管理，<br>简化工作。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><h2 id="设置模块"><a href="#设置模块" class="headerlink" title="设置模块"></a>设置模块</h2><h2 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h2><h2 id="使用envrionment-module运行环境变量设置脚本配置环境"><a href="#使用envrionment-module运行环境变量设置脚本配置环境" class="headerlink" title="使用envrionment module运行环境变量设置脚本配置环境"></a>使用envrionment module运行环境变量设置脚本配置环境</h2><p>module实质为tcl脚本文件，因此无法运行shell命令，<br>类似于使用source运行脚本也不行</p>
+
+        
+        <br />
+        <div id="comment-container">
         </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/九色鹿的故事/">
-                <h3>
-                    九色鹿的故事
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
-                <span>/</span>
-                
-                
-            </p>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
         </div>
+
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/网站迁移/">
-                <h3>
-                    网站迁移
-                </h3>
-            </a>
-            <p>
-                
-            </p>
-        </div>
-    </div>
-    
 </div>
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/page/2/">&larr; Newer Posts</a>
-    </li>
-    
-    
-</ul>
 
     </div>
 </div>
@@ -284,7 +223,7 @@
     // We expose some of the variables needed by the front end
     window.hexo_search_path = "search.json"
     window.hexo_root = "/"
-    window.isPost = false
+    window.isPost = true
 </script>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 
@@ -292,6 +231,25 @@
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
 
 
 
