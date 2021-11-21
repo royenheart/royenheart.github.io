@@ -93,7 +93,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-text">三要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="toc-text">docker常见误区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">docker常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">命令行使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker-%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%BB%86%E8%8A%82"><span class="toc-text">docker-一些小细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#singularity"><span class="toc-text">singularity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#singularity%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">singularity常用指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-text">docker三要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="toc-text">docker常见误区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">docker常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">命令行使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker-%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%BB%86%E8%8A%82"><span class="toc-text">docker-一些小细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#singularity"><span class="toc-text">singularity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#singularity%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">singularity常用指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
 </div>
     
 </div>
@@ -145,7 +145,7 @@
         <blockquote>
 <p>此为docker/singularity使用方法的一些笔记，个人记录使用</p>
 </blockquote>
-<h2 id="三要素"><a href="#三要素" class="headerlink" title="三要素"></a>三要素</h2><ul>
+<h2 id="docker三要素"><a href="#docker三要素" class="headerlink" title="docker三要素"></a>docker三要素</h2><ul>
 <li>仓库：镜像仓库，镜像的存储库</li>
 <li>镜像：系统镜像等，封装了应用的环境、信息，相当于容器（实例）的类</li>
 <li>容器：由系统镜像（静态配置）生成的应用，可以直接运行镜像中的应用或者使用交互式（类似虚拟机，但占用资源更少）</li>
@@ -158,6 +158,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker tag local-image:tagname new-repo:tagname</span><br><span class="line">docker push new-repo:tagname</span><br></pre></td></tr></table></figure>
 
 <p>也可以通过cli方式从本地推送自制的镜像至docker hub（类似于git仓库，可以设置公共仓库和私有仓库）。<br>不过因为类似一个云端存储，免费版docker用户公共镜像只能有一个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login</span><br></pre></td></tr></table></figure>
+
+<p>此命令可以登录至docker hub，<br>之后可以通过docker push发布自己的镜像不过镜像名字必须为<code>用户名/镜像名:标签名</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it 指定镜像 /bin/bash </span><br></pre></td></tr></table></figure>
 
 <p>交互式形式在指定镜像上生成容器并在容器内与容器进行交互。<br><code>/bin/bash</code>指定使用的shell类型</p>
@@ -244,9 +247,6 @@
 <li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1614385619899407709&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1614385619899407709&amp;wfr=spider&amp;for=pc</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.kubernetes.org.cn/k8s">https://www.kubernetes.org.cn/k8s</a></li>
 <li><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.docker.com/">https://www.docker.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.docker.com/blog/">https://www.docker.com/blog/</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.docker.com/">https://docs.docker.com/</a></li>
 <li><a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/overview/">https://docs.docker.com/get-started/overview/</a></li>
 <li><a target="_blank" rel="noopener" href="https://sylabs.io/">https://sylabs.io/</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0882e65c5e0e">https://www.jianshu.com/p/0882e65c5e0e</a></li>

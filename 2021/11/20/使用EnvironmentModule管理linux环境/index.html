@@ -93,7 +93,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Environment-Module"><span class="toc-text">Environment Module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-text">设置模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9D%97"><span class="toc-text">自定义模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8envrionment-module%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="toc-text">使用envrionment module运行环境变量设置脚本配置环境</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Environment-Module"><span class="toc-text">Environment Module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-text">设置模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9D%97"><span class="toc-text">自定义模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8envrionment-module%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="toc-text">使用envrionment module运行环境变量设置脚本配置环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%96%99%E5%BC%95%E7%94%A8"><span class="toc-text">资料引用</span></a></li></ol></li></ol>
 </div>
     
 </div>
@@ -145,9 +145,52 @@
         <blockquote>
 <p>在linux下环境设置是一个很重要的配置环节，特别是在多用户的情况下</p>
 </blockquote>
+<p>先上<a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/">官方教程</a></p>
 <h1 id="Environment-Module"><a href="#Environment-Module" class="headerlink" title="Environment Module"></a>Environment Module</h1><p>简化shell初始化的工具。在设置环境的时候，<br>我们一般使用脚本批量设置或者主动在shell配置环境内设置环境</p>
 <p>Environment Module 使用modulefile文件进行环境的管理，相当于把环境设置模块化，<br>这样我们在进行不同用户，不同节点的环境设置时可以分别引入不同的模块管理，<br>简化工作。</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><h2 id="设置模块"><a href="#设置模块" class="headerlink" title="设置模块"></a>设置模块</h2><h2 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h2><h2 id="使用envrionment-module运行环境变量设置脚本配置环境"><a href="#使用envrionment-module运行环境变量设置脚本配置环境" class="headerlink" title="使用envrionment module运行环境变量设置脚本配置环境"></a>使用envrionment module运行环境变量设置脚本配置环境</h2><p>module实质为tcl脚本文件，因此无法运行shell命令，<br>类似于使用source运行脚本也不行</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>上<a target="_blank" rel="noopener" href="http://modules.sourceforge.net/">官网</a>下载源代码进行编译安装</p>
+<p>下载得到源代码modules-xxx</p>
+<p>解压进行安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf modules-xxx</span><br><span class="line"></span><br><span class="line">cd modules-xxx</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<p>在安装之前请确保相关依赖(tclsh)已经配置完毕</p>
+<h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><p>source /InstallFolder/modules-xxx/init/bash</p>
+<p>为bash设置module，也可以为其他shell设置，<br>init里面提供了针对多种shell设置其应用环境变量的脚本</p>
+<p>之后可执行<code>module</code>命令进行环境变量的维护。</p>
+<h2 id="设置模块"><a href="#设置模块" class="headerlink" title="设置模块"></a>设置模块</h2><blockquote>
+<p>$ module avail</p>
+</blockquote>
+<p>列出当前可用模块</p>
+<blockquote>
+<p>$ module load use.own</p>
+</blockquote>
+<p>加载自带模块<code>use.own</code>，加载后会在用户家目录建立<code>privatemodules</code>目录，<br>之后可在此目录下添加自定义的模块配置文件</p>
+<blockquote>
+<p>$ module list</p>
+</blockquote>
+<p>列出当前已经加载的模块</p>
+<blockquote>
+<p>$ module load </p>
+</blockquote>
+<p>加载指定模块</p>
+<blockquote>
+<p>$ module unload </p>
+</blockquote>
+<p>卸载指定模块</p>
+<blockquote>
+<p>$ module help</p>
+</blockquote>
+<p>列出帮助</p>
+<h2 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">%Module -*- tcl -*-</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module <span class="built_in">help</span> 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module help xxx 列出此模块的帮助内容</span></span></span><br><span class="line">proc ModulesHelp &#123; &#125; &#123;</span><br><span class="line">        puts stderr &quot;main contents&quot; </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module whatis 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module whatis xxx 列出此模块的信息</span></span></span><br><span class="line">module-whatis &quot;main contents&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 此模块加载前需要加载的模块类，加载失败会报错</span></span><br><span class="line">prereq xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 声明与此模块冲突的模块，也可以是存放冲突模块的文件名</span></span><br><span class="line">conflict xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加载此模块的同时加载其他模块</span></span><br><span class="line">module load xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置环境变量（设置为xxx）</span></span><br><span class="line">setenv something xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加环境变量（添加xxx）</span></span><br><span class="line">append-path PATH xxx</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用envrionment-module运行环境变量设置脚本配置环境"><a href="#使用envrionment-module运行环境变量设置脚本配置环境" class="headerlink" title="使用envrionment module运行环境变量设置脚本配置环境"></a>使用envrionment module运行环境变量设置脚本配置环境</h2><p>module实质为tcl脚本文件，无法运行shell命令</p>
+<p>因此无法通过<code>source xxx.sh</code>脚本的方式添加环境变量</p>
+<p>可以先获取xxx.sh内定义的环境变量，再加到我们的模块文件中</p>
+<hr>
+<h2 id="资料引用"><a href="#资料引用" class="headerlink" title="资料引用"></a>资料引用</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/env2/">Environment Modules 简明教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/">Environment Modules 官方文档</a></li>
+</ul>
 
         
         <br />
