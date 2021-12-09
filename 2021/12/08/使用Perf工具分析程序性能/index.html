@@ -11,7 +11,7 @@
 
     <title>
         
-        RoyenHeart的日常
+        使用Perf工具分析程序性能 - RoyenHeart的日常
         
     </title>
 
@@ -57,7 +57,7 @@
     </div>
     <div class="contents" id="nav-content">
         <ul>
-            <li  class=active >
+            <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
                     <span>HOME</span>
@@ -92,6 +92,10 @@
         </ul>
     </div>
     
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#perf"><span class="toc-text">perf</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-%E5%BC%80%E5%90%AFperf"><span class="toc-text">安装&#x2F;开启perf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-text">一些使用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></li></ol>
+</div>
+    
 </div>
 
 
@@ -116,131 +120,64 @@
     <div class="index-middle">
         <!-- Main Content -->
         
-<div class="post-preview-container" style="min-height: 720px">
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/小发现时间1/">
-                <h3>
-                    小发现时间1
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#每日小发现" title="每日小发现">每日小发现</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+
+<div class="post-container">
+    <div class="post-title">
+        使用Perf工具分析程序性能
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志003/">
-                <h3>
-                    流浪者日志003
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2021-12-08 23:15:46</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#Linux学习与技术" title="Linux学习与技术">Linux学习与技术</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志002/">
-                <h3>
-                    流浪者日志002
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/流浪者日志001/">
-                <h3>
-                    流浪者日志001
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#银河系流浪者日志" title="银河系流浪者日志">银河系流浪者日志</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/九色鹿的故事/">
-                <h3>
-                    九色鹿的故事
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2021-11-16</div>
-        <div class="post-info">
-            <a href="/2021/11/16/网站迁移/">
-                <h3>
-                    网站迁移
-                </h3>
-            </a>
-            <p>
-                
-            </p>
-        </div>
-    </div>
-    
-</div>
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/page/2/">&larr; Newer Posts</a>
-    </li>
-    
-    
+    <div class="post-content no-indent">
+        <p>仅个人学习与记录</p>
+<h1 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h1><p>perf是Linux内核提供的一个性能分析工具，可以跟踪程序的运行并分析其各种性能比如CPU负载、内存占用等</p>
+<h2 id="安装-开启perf"><a href="#安装-开启perf" class="headerlink" title="安装/开启perf"></a>安装/开启perf</h2><ol>
+<li>debian</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install linux-perf</span><br><span class="line">sudo apt install linux-perf-$(uname -r)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>ubuntu</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install linux-tools-$(uname -r) linux-cloud-tools-$(uname -r)</span><br></pre></td></tr></table></figure>
+
+<h2 id="一些使用问题"><a href="#一些使用问题" class="headerlink" title="一些使用问题"></a>一些使用问题</h2><ol>
+<li>Accesss to performance monitoring and observability operations is limited</li>
+</ol>
+<p>解决方法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -w kernel.perf_event_paranoid=-1</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><blockquote>
+<p>perf stat ls - 打印出程序使用硬件的情况</p>
+</blockquote>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.eastonman.com/blog/2021/02/use-perf/">Easton’s Man’s Blog</a></li>
 </ul>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
 
     </div>
 </div>
@@ -304,7 +241,7 @@
     // We expose some of the variables needed by the front end
     window.hexo_search_path = "search.json"
     window.hexo_root = "/"
-    window.isPost = false
+    window.isPost = true
 </script>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 
@@ -312,6 +249,25 @@
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
 
 
 
