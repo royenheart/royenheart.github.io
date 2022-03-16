@@ -93,7 +93,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What"><span class="toc-text">What</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mode"><span class="toc-text">Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vim-Command"><span class="toc-text">Vim Command</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Movement"><span class="toc-text">Movement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Text-Command"><span class="toc-text">Text Command</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Special-Text"><span class="toc-text">Special Text</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Normal-Mode"><span class="toc-text">Normal Mode</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Visual-Mode"><span class="toc-text">Visual Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special-Command"><span class="toc-text">Special Command</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Expand-Reading"><span class="toc-text">Expand Reading</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What"><span class="toc-text">What</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mode"><span class="toc-text">Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vim-Command"><span class="toc-text">Vim Command</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Movement"><span class="toc-text">Movement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Text-Command"><span class="toc-text">Text Command</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Special-Text"><span class="toc-text">Special Text</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Normal-Mode"><span class="toc-text">Normal Mode</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Visual-Mode"><span class="toc-text">Visual Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special-Command"><span class="toc-text">Special Command</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Expand-Reading"><span class="toc-text">Expand Reading</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Settings-for-VIM"><span class="toc-text">Settings for VIM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
 </div>
     
 </div>
@@ -198,8 +198,15 @@
 <h2 id="Expand-Reading"><a href="#Expand-Reading" class="headerlink" title="Expand Reading"></a>Expand Reading</h2><p>Vim offers 12 clipboards which are “0,”1,”2……”9,”” ,<br>we can use ‘:reg’ in normal to check the content in clipboard,<br>the default clipboard is “” and “0,<br>we can use ‘“Ny’ in Visual Mode(^V) to copy the selected text to a clipboard</p>
 <p>In conclusion, we can place ‘p’, ‘y’ or something else with ‘“Np’…,<br>the meaning is that we can copy or paste to and from different clipboards.</p>
 <hr>
+<h2 id="Settings-for-VIM"><a href="#Settings-for-VIM" class="headerlink" title="Settings for VIM"></a>Settings for VIM</h2><p>There are ways to set the VIM:</p>
+<ol>
+<li>System setting files are located in <code>/etc/.vimrc</code></li>
+<li>User setting files are located in <code>~/.vimrc</code> (priority is higher than system)</li>
+</ol>
+<p>We can use command <code>:set all</code> in VIM to check the settings. </p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://liushiming.cn/article/copy-and-paste-in-vim.html">About Vim Copy and Paste</a></li>
+<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3024.html">Some usual VIM settings</a></li>
 </ul>
 
         
