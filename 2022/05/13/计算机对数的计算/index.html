@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="whoami">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        计算机对数的计算 - RoyenHeart的日常
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> RoyenHeart_Existence </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar radius">
+            <img src="/img/avatar.jpg" />
+        </div>
+        <div class="name">
+            <i>RoyenHeart</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>HOME</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>TAGS</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>ARCHIVES</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>ABOUT</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>SEARCH</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="toc-text">各种数的表示方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%A7%84%E6%A0%BC%E5%8C%96%E8%A1%A8%E7%A4%BA%E7%89%B9%E6%AE%8A%E5%80%BC%EF%BC%88%E5%AF%B9%E4%BA%8E%E8%AE%A1%E7%AE%97%E5%BC%82%E5%B8%B8%E7%AD%89%E6%9B%B4%E6%96%B9%E4%BE%BF%EF%BC%89"><span class="toc-text">浮点数规格化表示特殊值（对于计算异常等更方便）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%A4%E6%B3%95"><span class="toc-text">除法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%95%86%E7%9A%84%E6%A0%A1%E6%AD%A3"><span class="toc-text">商的校正</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97"><span class="toc-text">浮点数运算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E6%A6%82%E5%BF%B5"><span class="toc-text">运算概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%AE%A1%E7%AE%97%E5%AE%9E%E8%B4%A8"><span class="toc-text">浮点数计算实质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E5%8F%AF%E8%83%BD%E7%BB%93%E6%9E%9C"><span class="toc-text">浮点数运算可能结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%84%E5%8A%A0%E4%BD%8D"><span class="toc-text">附加位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%88%8D%E5%85%A5"><span class="toc-text">舍入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%A2%E5%87%BA%E6%97%B6%E5%88%A4%E6%96%AD%E5%92%8C%E5%A4%84%E7%90%86%EF%BC%88%E5%B0%BE%E6%95%B0%E8%A1%A5%E7%A0%81%E8%A1%A8%E7%A4%BA%EF%BC%8C%E7%9C%8B%E7%AC%A6%E5%8F%B7%E4%BD%8D%EF%BC%89"><span class="toc-text">溢出时判断和处理（尾数补码表示，看符号位）</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">search</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> RoyenHeart_Existence </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        计算机对数的计算
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">Post：<span>2022-05-13 16:49:45</span></span>
+        
+        <span class="attr">Tags：/
+        
+        <a class="tag" href="/tags/#计算机组成原理" title="计算机组成原理">计算机组成原理</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <blockquote>
+<p>个人机组学习记录 </p>
+</blockquote>
+<h2 id="各种数的表示方法"><a href="#各种数的表示方法" class="headerlink" title="各种数的表示方法"></a>各种数的表示方法</h2><ol>
+<li>原码（机器码），以此表示的数最高位不代表数值而是符号，运算时符号位和数值位分开运算</li>
+<li>反码，负数时原码除符号位外取反，正数不变，运算时（+/-）符号位和数值位可一起进行运算，但会产生-0和+0</li>
+<li>补码，负数时原码除符号位外取反+1，正数不变，运算时（+/-）符号位和数值位可一起进行运算，符号位即可表示符号又可以当作数值位进行运算，表示范围多一个（4位可表示-8~7）</li>
+<li>移码/增码，补码最高位取反，最高位1表示正数，0表示负数。这样做可以使移码和原码（真值）在$-2^{n-1}$ ~ $2^{n-1}-1$区间呈线性正比关系，本质上是补码+偏置值，对于8位补码，偏置值为$2^{7}$。另一种移码和真值在$-2^{n-1}+1$ ~ $2^{n-1}-1$区间呈线性正比关系，偏置值是$2^{n-1} - 1$，这样的好处是留出指数$-2^{n-1}$（指数全为1）和$-2^{n-1}+1$（指数全为0）用作其他用途（特殊值）。</li>
+<li>规格化浮点数，类似科学计数法：$+/-1.xxxxx_2 x 2^{E}$，1隐含，不用写在尾数位。</li>
+</ol>
+<h3 id="浮点数规格化表示特殊值（对于计算异常等更方便）"><a href="#浮点数规格化表示特殊值（对于计算异常等更方便）" class="headerlink" title="浮点数规格化表示特殊值（对于计算异常等更方便）"></a>浮点数规格化表示特殊值（对于计算异常等更方便）</h3><ol>
+<li>表示0：指数为0（负指数超出最小允许值）；尾数为0；符号位0为+0，1为-0</li>
+<li>表示无穷：指数为1（正指数超出最大允许值）；尾数为0；符号位0为正无穷，1为负无穷。</li>
+<li>表示非数（NaN）：指数为1；尾数非0；符号位0/1</li>
+</ol>
+<h2 id="除法"><a href="#除法" class="headerlink" title="除法"></a>除法</h2><p>除法最重要的是比较（绝对值）的步骤，要以比较的结果来判断商取0还是1。</p>
+<p>对于X，Y的绝对值比较，可以通过|x|和|y|取绝对值后比较，也可以通过x+y(异号)=r/x-y(同号)=r的方法比较，当异号时r与y同号表示y的绝对值大，当同号时r与y同号表示y绝对值小。</p>
+<p>并且注意，由于补码运算得到的商相当于以反码进行运算，因此x，y异号，商为负数，若够减时上商1会导致原码不正确，因此x，y异号够减时上商0。</p>
+<p>补码运算最后的余数是以补码表示的。</p>
+<p>在补码运算中，其绝对值比较就可以有下述的关系：</p>
+<table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+    <caption>
+        补码运算绝对值关系
+    </caption>
+    <tr>
+        <td style="border-top: 2px solid rgb(0, 0, 0); border-bottom: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            [x]_补与[y]_补
+        </td>
+        <td style="border-top: 2px solid rgb(0, 0, 0); border-bottom: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            比较操作
+            <br>
+        </td>
+        <td style="border-top: 2px solid rgb(0, 0, 0); border-bottom: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            余数[r]_补与除数[y]_补
+        </td>
+        <td style="border-top: 2px solid rgb(0, 0, 0); border-bottom: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            商
+        </td>
+        <td style="border-top: 2px solid rgb(0, 0, 0); border-bottom: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            操作
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2" style="border-top: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            同号
+        </td>
+        <td rowspan="2" style="border-top: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            [x]_补+[-y]_补
+        </td>
+        <td style="border-top: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            同号，表示够减，或者说y绝对值大
+        </td>
+        <td style="border-top: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            1
+        </td>
+        <td style="border-top: 2px double rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            当作[x]_补，左移+[-y]_补
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            异号，不够减
+        </td>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            0
+        </td>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            不恢复余数法左移+[y]_补
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2" style="border-bottom: 2px solid rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            异号
+        </td>
+        <td rowspan="2" style="border-bottom: 2px solid rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            [x]_补+[y]_补
+        </td>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            同号，不够减
+        </td>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            1
+        </td>
+        <td style="padding-right: 3pt; padding-left: 3pt;">
+            不恢复余数法左移+[-y]_补
+        </td>
+    </tr>
+    <tr>
+        <td style="border-bottom: 2px solid rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            异号，够减
+        </td>
+        <td style="border-bottom: 2px solid rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            0
+        </td>
+        <td style="border-bottom: 2px solid rgb(0, 0, 0); padding-right: 3pt; padding-left: 3pt;">
+            当作[x]_补，左移+[y]_补
+        </td>
+    </tr>
+</table>
+
+<p>实际运算中商的精度一般与x，y精度相同，余数最后乘上$2^{-n}$，n为左移次数</p>
+<h3 id="商的校正"><a href="#商的校正" class="headerlink" title="商的校正"></a>商的校正</h3><p>前面商的取值实际上是按照反码的方式进行的，当商最后得出为负，则会因反码与补码之间末位1的区别导致误差，因此有下列两种方式解决：</p>
+<ol>
+<li>末位恒置1法</li>
+</ol>
+<p>最后的商末位固定为1，即运算至最后的位数时，此时余数左移，商末位固定为1，除法结束</p>
+<ol start="2">
+<li>校正法</li>
+</ol>
+<p>即运算至最后的位数时，仍按表格进行正常操作得到余数和商，之后商若为负，则加$2^{-n}$矫正，n为左移的次数，余数若和除数补码呈不够减的关系，则需要恢复余数，对于x、y同号，则加上[y]_补，若x、y异号，加上[-y]_补</p>
+<h2 id="浮点数运算"><a href="#浮点数运算" class="headerlink" title="浮点数运算"></a>浮点数运算</h2><h3 id="运算概念"><a href="#运算概念" class="headerlink" title="运算概念"></a>运算概念</h3><ol>
+<li>舍入，类似十进制计算的四舍五入</li>
+<li>对阶，使两数阶码相等以方便运算</li>
+<li>规格化，使浮点数符合科学计数法（$(1.xxx)_2 x 2^{E-127}$）</li>
+</ol>
+<h3 id="浮点数计算实质"><a href="#浮点数计算实质" class="headerlink" title="浮点数计算实质"></a>浮点数计算实质</h3><p>规格化浮点数：</p>
+<p>$A=M_a \cdot 2^{E_a}$ 和 $B=M_b \cdot 2^{E_b}$</p>
+<ol>
+<li>$A \pm B = (M_a \pm M_b \cdot 2^{-(E_a-E_b)}) \cdot 2^{E_a}$</li>
+<li>$A * B = (M_a * M_b) \cdot 2^{E_a + E_b}$</li>
+<li>$A / B = (M_a / M_b) \cdot 2^{E_a - E_b}$</li>
+</ol>
+<h3 id="浮点数运算可能结果"><a href="#浮点数运算可能结果" class="headerlink" title="浮点数运算可能结果"></a>浮点数运算可能结果</h3><ol>
+<li>阶码上溢：无穷。</li>
+<li>阶码下溢：0。</li>
+<li>尾数溢出：尾数最高有效位进位，则右规将进位加入，指数增加。此时计算的尾数（补码表示）连同符号位右移，将移出的位放入附加位作为</li>
+<li>非规格化尾数：数值部分高位0，左规，指数减少。浮点数运算时加上隐含的1，若运算后高位为0，就进行左规。左规尾数左移，附加位移出对应位数至尾数</li>
+<li>右规、对阶有效位缺失：类似四舍五入，有效位优先，进行尾数舍入。参考<a href="#%E8%88%8D%E5%85%A5">舍入规则</a></li>
+</ol>
+<p>上溢和下溢也是为什么指数使用移码且偏置常量为$2^{n-1} - 1$的原因。</p>
+<h3 id="附加位"><a href="#附加位" class="headerlink" title="附加位"></a>附加位</h3><p>为提高浮点数精度，IEEE754规定附加位（中间结果右边加2个附加位）：</p>
+<ol>
+<li>Guard（保护位）：significand（mantissa，尾数）右边的位</li>
+<li>Round（舍入位）：保护位右边的位</li>
+<li>Stick（粘连位）：舍入位右边有任何非0数，粘连位为1，否则0。</li>
+</ol>
+<p>作用：</p>
+<ol>
+<li>保护对阶右移、运算中间结果。</li>
+<li>左规使移到尾数。</li>
+<li>舍入依据。</li>
+</ol>
+<h3 id="舍入"><a href="#舍入" class="headerlink" title="舍入"></a>舍入</h3><p>用于计算最后进行舍入</p>
+<p>IEEE 754规定的浮点数右规只需要1次。</p>
+<p>舍入规则（看附加位）：</p>
+<ul>
+<li>01：舍</li>
+<li>11：入</li>
+<li>10：强迫结果偶数</li>
+</ul>
+<ol>
+<li>就近舍入（0舍1入法）</li>
+<li>朝正无穷舍入（离待舍入尾数最近的数）</li>
+<li>朝负无穷舍入</li>
+<li>朝0方向舍入：直接截去</li>
+</ol>
+<h2 id="溢出时判断和处理（尾数补码表示，看符号位）"><a href="#溢出时判断和处理（尾数补码表示，看符号位）" class="headerlink" title="溢出时判断和处理（尾数补码表示，看符号位）"></a>溢出时判断和处理（尾数补码表示，看符号位）</h2><ol>
+<li>单符号位：Cf最高数值位进位，Cs符号位进位。相同时结果正确，不同时溢出。</li>
+<li>双符号位：第一符号位$S_{f1}$和第二符号位$S_{f2}$不相同溢出。最高符号位$S_{f1}$代表真正的符号。</li>
+</ol>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/royenheart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/RoyenHeart">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62012302000279">浙ICP备2020042582号</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        if( '' || '')
+        var disqus_config = function () {
+            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+
+
+</html>
