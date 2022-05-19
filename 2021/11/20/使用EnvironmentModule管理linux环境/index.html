@@ -60,32 +60,32 @@
             <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
-                    <span>홈</span>
+                    <span>HOME</span>
                 </a>
             </li>
             <li >
                 <a href="/tags">
                     <i class="iconfont icon-biaoqian1"></i>
-                    <span>태그</span>
+                    <span>TAGS</span>
                 </a>
             </li>
             <li >
                 <a href="/archives">
                     <i class="iconfont icon-guidang2"></i>
-                    <span>아카이브</span>
+                    <span>ARCHIVES</span>
                 </a>
             </li>
             <li >
                 <a href="/about/">
                     <i class="iconfont icon-guanyu2"></i>
-                    <span>about</span>
+                    <span>ABOUT</span>
                 </a>
             </li>
             
             <li>
                 <a id="search">
                     <i class="iconfont icon-sousuo1"></i>
-                    <span>검색</span>
+                    <span>SEARCH</span>
                 </a>
             </li>
             
@@ -93,7 +93,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Environment-Module"><span class="toc-text">Environment Module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-text">设置模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9D%97"><span class="toc-text">自定义模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8envrionment-module%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="toc-text">使用envrionment module运行环境变量设置脚本配置环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%96%99%E5%BC%95%E7%94%A8"><span class="toc-text">资料引用</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Environment-Module"><span class="toc-text">Environment Module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-text">设置模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9D%97"><span class="toc-text">自定义模块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%88%E6%B7%BB%E5%8A%A0xxx%EF%BC%89"><span class="toc-text">添加环境变量（添加xxx）</span></a></li></ol>
 </div>
     
 </div>
@@ -104,7 +104,7 @@
         <div class="search-input">
             <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
             <input id="search-input"/>
-            <span id="begin-search">검색</span>
+            <span id="begin-search">search</span>
         </div>
         <div class="search-result-container" id="search-result-container">
 
@@ -128,16 +128,16 @@
     </div>
 
     <div class="post-meta">
-        <span class="attr">등록시간：<span>2021-11-20 22:13:27</span></span>
+        <span class="attr">Post：<span>2021-11-20 22:13:27</span></span>
         
-        <span class="attr">태그：/
+        <span class="attr">Tags：/
         
         <a class="tag" href="/tags/#linux学习与技术" title="linux学习与技术">linux学习与技术</a>
         <span>/</span>
         
         
         </span>
-        <span class="attr">방문：<span id="busuanzi_value_page_pv"></span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
 </span>
 </span>
     </div>
@@ -185,16 +185,25 @@
 <p>$ module use &lt; folder &gt;</p>
 </blockquote>
 <p>增加模块查找的目录，使用<code>module avail</code>将列出增加的目录下可用的模块，不使用时使用命令<code>module unuse &lt; folder &gt;</code>即可。</p>
-<h2 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">%Module -*- tcl -*-</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module <span class="built_in">help</span> 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module help xxx 列出此模块的帮助内容</span></span></span><br><span class="line">proc ModulesHelp &#123; &#125; &#123;</span><br><span class="line">        puts stderr &quot;main contents&quot; </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module whatis 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module whatis xxx 列出此模块的信息</span></span></span><br><span class="line">module-whatis &quot;main contents&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 此模块加载前需要加载的模块类，加载失败会报错</span></span><br><span class="line">prereq xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 声明与此模块冲突的模块，也可以是存放冲突模块的文件名</span></span><br><span class="line">conflict xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加载此模块的同时加载其他模块</span></span><br><span class="line">module load xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置环境变量（设置为xxx）</span></span><br><span class="line">setenv something xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加环境变量（添加xxx）</span></span><br><span class="line">append-path PATH xxx</span><br></pre></td></tr></table></figure>
+<h2 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">%Module -*- tcl -*-</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module <span class="built_in">help</span> 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module help xxx 列出此模块的帮助内容</span></span></span><br><span class="line">proc ModulesHelp &#123; &#125; &#123;</span><br><span class="line">        puts stderr &quot;main contents&quot; </span><br><span class="line">&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示 module whatis 主要内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 设置之后可以使用 module whatis xxx 列出此模块的信息</span></span></span><br><span class="line">module-whatis &quot;main contents&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 此模块加载前需要加载的模块类，加载失败会报错</span></span><br><span class="line">prereq xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> module 声明与此模块冲突的模块，也可以是存放冲突模块的文件名</span></span><br><span class="line">conflict xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加载此模块的同时加载其他模块</span></span><br><span class="line">module load xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置环境变量（设置为xxx）</span></span><br><span class="line">setenv something xxx</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> MODULEPATH</span></span><br><span class="line"></span><br><span class="line">此环境变量用于设置module查找模块的路径，若通过包管理器默认安装，可于`/usr/share/modules/init/bash`文件中添加：</span><br><span class="line"></span><br><span class="line">```shell</span><br><span class="line">export MODULEPATH=xxx:xxx</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用envrionment-module运行环境变量设置脚本配置环境"><a href="#使用envrionment-module运行环境变量设置脚本配置环境" class="headerlink" title="使用envrionment module运行环境变量设置脚本配置环境"></a>使用envrionment module运行环境变量设置脚本配置环境</h2><p>module实质为tcl脚本文件，无法运行shell命令</p>
-<p>因此无法通过<code>source xxx.sh</code>脚本的方式添加环境变量</p>
-<p>可以先获取xxx.sh内定义的环境变量，再加到我们的模块文件中</p>
-<hr>
-<h2 id="资料引用"><a href="#资料引用" class="headerlink" title="资料引用"></a>资料引用</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/env2/">Environment Modules 简明教程</a></li>
-<li><a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/">Environment Modules 官方文档</a></li>
-</ul>
+<p>该语句设置后source该文件可重新设置module查找模块路径</p>
+<h1 id="添加环境变量（添加xxx）"><a href="#添加环境变量（添加xxx）" class="headerlink" title="添加环境变量（添加xxx）"></a>添加环境变量（添加xxx）</h1><p>append-path PATH xxx</p>
+<pre><code>
+## 使用envrionment module运行环境变量设置脚本配置环境
+
+module实质为tcl脚本文件，无法运行shell命令
+
+因此无法通过`source xxx.sh`脚本的方式添加环境变量
+
+可以先获取xxx.sh内定义的环境变量，再加到我们的模块文件中
+
+- - -
+## 资料引用
+
+- [Environment Modules 简明教程](https://sourceforge.net/projects/env2/)
+- [Environment Modules 官方文档](https://modules.readthedocs.io/en/latest/)
+</code></pre>
 
         
         <br />
