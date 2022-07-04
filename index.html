@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title> Hexo</title>
+      <title> UniversalVagrant</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/img/avatar.jpg" />
@@ -36,17 +36,14 @@
 
       <!-- mermaid -->
       
-<<<<<<< HEAD
       <script src="https://cdn.staticfile.org/mermaid/8.14.0/mermaid.min.js"></script>
       
-=======
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="UniversalVagrant" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -65,7 +62,7 @@
       <img src="/img/ff14Me.png" alt="image frame" />
     </div>
     <div class="cover-inner text-center text-white">
-      <h1><a href="/">Hexo</a></h1>
+      <h1><a href="/">UniversalVagrant</a></h1>
       <div id="subtitle-box">
         
         <span id="subtitle"></span>
@@ -1235,7 +1232,6 @@
 
     
  
-<<<<<<< HEAD
     
 </article>
 
@@ -1249,21 +1245,6 @@
 >
   <div class="article-inner">
     
-=======
-    
-</article>
-
-    
-    <article
-  id="post-VimLearn"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
     <header class="article-header">
        
 <h2 itemprop="name">
@@ -1292,7 +1273,6 @@
 <p>The normal mode in Vim is like a language, that we have different operations,<br>hava different concepts and commands,<br>and we can combine them to better edit our file in command line mode.</p>
 <ul>
 <li>the conclusion from the <a target="_blank" rel="noopener" href="https://youtu.be/a6Q8Na575qc">video</a> that introduces the Vim</li>
-<<<<<<< HEAD
 </ul>
 <p>The combination of commands are like [extra_param][command]</p>
 <h2 id="Mode"><a href="#Mode" class="headerlink" title="Mode"></a>Mode</h2><ul>
@@ -1350,65 +1330,6 @@
 <li><a target="_blank" rel="noopener" href="https://liushiming.cn/article/copy-and-paste-in-vim.html">About Vim Copy and Paste</a></li>
 <li><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3024.html">Some usual VIM settings</a></li>
 </ul>
-=======
-</ul>
-<p>The combination of commands are like [extra_param][command]</p>
-<h2 id="Mode"><a href="#Mode" class="headerlink" title="Mode"></a>Mode</h2><ul>
-<li>Normal Mode -&gt; with key ‘i’ -&gt; Insert Mode</li>
-<li>Normal Mode -&gt; with key ‘R’ -&gt; Replace Mode</li>
-<li>Normal Mode -&gt; with key ‘v’ -&gt; Visual Mode</li>
-<li>Normal Mode -&gt; with key ‘Shift V’ -&gt; Visual Mode lmo</li>
-<li>Normal Mode -&gt; with key ‘Ctrl V’ -&gt; Visual Mode block</li>
-<li>Normal Mode -&gt; with key ‘:’ -&gt; Command-line Mode</li>
-</ul>
-<h2 id="Vim-Command"><a href="#Vim-Command" class="headerlink" title="Vim Command"></a>Vim Command</h2><p>‘:help command’ - list the introductions of the command</p>
-<p>We should know that in Vim, the command ‘:w’ and the command ‘w’ is different.<br>The first is the vim command, and the second is just a command in normal mode</p>
-<p>When we enter the introduction, we can use ‘:q’ to quit and back to our open file.<br>Like we open another file which includes the introductions of the command.</p>
-<p>‘:w’ - save the file</p>
-<p>‘:q’ or ‘:quit’ - quit the current window not the whole vim</p>
-<p>In vim, there is concept of ‘window’ such as when we use ‘:sp’ command to split window,<br>or use ‘:help’ to open the window which contents the introduction of the command.<br>When we open this window, we can use ‘:q’ to quit them and back to our open file.</p>
-<p>‘:qa’ - quit all, this is the command to quit the vim, or we can say, quit all windows.</p>
-<p>‘:set number’ - set line number</p>
-<p>This is a vim command to put line number to better edit the file,<br>the usage of this we can use ‘: set number’ to temporary set the number,<br>once we need to put line number every time we open the file with vim,<br>we can add a file named ‘.vimrc’ (vim reconfigure) in our home directory ‘~&#x2F;.vimrc’,<br>and put ‘set number’ to it, then next time we use vim we will find the line number.</p>
-<p>‘:sp’ - split screen, split the current text screen so we can see mutil screens that shows the text.</p>
-<p>‘:set sw’ - set the spaces which indent includes</p>
-<p>‘&#x2F;search’ - search command ‘&#x2F;‘ can help us move to the position of searched words.<br>For example, ‘&#x2F;is’ is to search the words “is”</p>
-<h2 id="Movement"><a href="#Movement" class="headerlink" title="Movement"></a>Movement</h2><blockquote>
-<p>these movements command can be used in normal mode</p>
-</blockquote>
-<p>‘j’ - moves down<br>‘K’ - moves up<br>‘h’ - moves left<br>‘g’ - moves right<br>‘b’ - moves one word backward<br>‘e’ - moves to the end of a word<br>‘0’ - moves to the head of the line<br>‘^’ - the same effect as ‘0’ does<br>‘$’ - moves to the end of the line<br>‘^U’ - hold up, switch to up page<br>‘^D’ - hold down, swicth to down page<br>‘G’ - moves to the end of the buffers(file)<br>‘gg’ - moves to the head of the buffers(file)<br>‘L’ - Lowest, moves to the end of current page<br>‘M’ - Middle, moves to the middle of current page<br>‘H’ - Highest, moves to the top of current page<br>‘F[word to be found]’ - find the fisrt word that equals to the find param we give,<br>and the moves to that place. Note that this command’s range is limited to the current line.</p>
-<p>Like we see in the conclusion,<br>this command abstracts our moving operations as commands in normal mode.</p>
-<p>Thus we can combine these with other operations to help us move faster in the file,<br>such ‘3j’ command in normal mode can help us move 3 lines one time.</p>
-<h2 id="Text-Command"><a href="#Text-Command" class="headerlink" title="Text Command"></a>Text Command</h2><h3 id="Special-Text"><a href="#Special-Text" class="headerlink" title="Special Text"></a>Special Text</h3><p>‘^’ - The start of one line<br>‘$’ - The end of one line</p>
-<h3 id="Normal-Mode"><a href="#Normal-Mode" class="headerlink" title="Normal Mode"></a>Normal Mode</h3><p>‘X’ - Delete one Character where cursor is on.</p>
-<p>‘v’ + cursor move - select the text you have selected</p>
-<p>‘y(yank)’ - copy the select text</p>
-<p>It’s a command which we can use it to copy the text, we can also use ‘yy’ to copy the whole line.<br>‘[number]yy’ is a special command which can help us copy the next [number] lines from the current line(includes the current line).<br>‘yw’ can copy the current word.</p>
-<p>‘p(paste)’ - paste the copy line to the current position</p>
-<p>‘o’ - add a new line after the line where the cursor locates.</p>
-<p>‘O’ - add a new line as command ‘o’ and change into the insert mode</p>
-<p>‘dd’ - delete the current line</p>
-<p>‘u’ - undo the last change you did including actions in insert mode</p>
-<p>‘di[parentheses]’ - for example, when cursor is in words “[htt&#x2F;&#x2F;sfsdfdfa]”,<br>we can use ‘di[‘ command to delete the content which is included in the “[]”</p>
-<p>‘da[parentheses]’ - delete all include the parenthese itself</p>
-<h2 id="Visual-Mode"><a href="#Visual-Mode" class="headerlink" title="Visual Mode"></a>Visual Mode</h2><p>When we enter the key ‘v’ in normal mode, we will be in the state of ‘Visual Mode’.<br>This mode can help us select mutil words, then we can use ‘y’ or ‘p’ to operate on these words.<br>Or we can just operate one word one time.</p>
-<p>‘V’ - when we use this command in Visual Mode or Normal Mode,<br>we can now select a whole line once we move</p>
-<p>‘^V’ - when we use this command, we will enter the ‘visual block mode’,<br>which we can select a rectangular blocks of text.</p>
-<h2 id="Special-Command"><a href="#Special-Command" class="headerlink" title="Special Command"></a>Special Command</h2><p>^V : Ctrl-V : <C-V></p>
-<h2 id="Expand-Reading"><a href="#Expand-Reading" class="headerlink" title="Expand Reading"></a>Expand Reading</h2><p>Vim offers 12 clipboards which are “0,”1,”2……”9,”” ,<br>we can use ‘:reg’ in normal to check the content in clipboard,<br>the default clipboard is “” and “0,<br>we can use ‘“Ny’ in Visual Mode(^V) to copy the selected text to a clipboard</p>
-<p>In conclusion, we can place ‘p’, ‘y’ or something else with ‘“Np’…,<br>the meaning is that we can copy or paste to and from different clipboards.</p>
-<hr>
-<h2 id="Settings-for-VIM"><a href="#Settings-for-VIM" class="headerlink" title="Settings for VIM"></a>Settings for VIM</h2><p>There are ways to set the VIM:</p>
-<ol>
-<li>System setting files are located in <code>/etc/.vimrc</code></li>
-<li>User setting files are located in <code>~/.vimrc</code> (priority is higher than system)</li>
-</ol>
-<p>We can use command <code>:set all</code> in VIM to check the settings. </p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://liushiming.cn/article/copy-and-paste-in-vim.html">About Vim Copy and Paste</a></li>
-<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3024.html">Some usual VIM settings</a></li>
-</ul>
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
  
       <!-- reward -->
       
@@ -1428,7 +1349,6 @@
  
     
 </article>
-<<<<<<< HEAD
 
     
     <article
@@ -1448,27 +1368,6 @@
 </h2>
  
 
-=======
-
-    
-    <article
-  id="post-正则表达式自查"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/11/16/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%87%AA%E6%9F%A5/"
-    >正则表达式自查</a> 
-</h2>
- 
-
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       
     </header>
      
@@ -1549,19 +1448,11 @@
     
   </article>
   
-<<<<<<< HEAD
 
   
 </section>
 </div>
 
-=======
-
-  
-</section>
-</div>
-
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       <footer class="footer">
   <div class="outer">
     <ul>
@@ -1578,13 +1469,8 @@
     </ul>
     <ul>
       <li>
-<<<<<<< HEAD
         
         
-=======
-        
-        
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
         <span>
   <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
   <span class="division">|</span>
@@ -1627,7 +1513,7 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/img/aislingAvatar.jpg" alt="Hexo"></a>
+    <a href="/"><img src="/img/aislingAvatar.jpg" alt="UniversalVagrant"></a>
   </div>
   
   <ul class="nav nav-main">
@@ -1639,7 +1525,6 @@
     <li class="nav-item">
       <a class="nav-item-link" href="/archives">归档</a>
     </li>
-<<<<<<< HEAD
     
     <li class="nav-item">
       <a class="nav-item-link" href="/tags">标签</a>
@@ -1649,17 +1534,6 @@
       <a class="nav-item-link" href="/about/index.html">关于我</a>
     </li>
     
-=======
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/about/index.html">关于我</a>
-    </li>
-    
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
   </ul>
 </nav>
 <nav class="navbar navbar-bottom">
@@ -1752,47 +1626,6 @@
                 <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
 
                 <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-<<<<<<< HEAD
-=======
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
-                <!-- element will get class pswp__preloader--active when preloader is running -->
-                <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                        <div class="pswp__preloader__cut">
-                            <div class="pswp__preloader__donut"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                <div class="pswp__share-tooltip"></div>
-            </div>
-
-            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-            </button>
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
-<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
 
                 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
@@ -1887,7 +1720,6 @@
 <script src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js"></script>
 <script src="https://cdn.staticfile.org/mathjax/2.7.7/config/TeX-AMS-MML_HTMLorMML-full.js"></script>
 <script>
-<<<<<<< HEAD
   var ayerConfig = {
     mathjax: true,
   };
@@ -1965,115 +1797,6 @@
  
 <!-- CanvasBackground -->
 
-=======
-    function viewer_init() {
-        let pswpElement = document.querySelectorAll('.pswp')[0];
-        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
-
-        $imgArr.forEach(($em, i) => {
-            $em.onclick = () => {
-                // slider展开状态
-                // todo: 这样不好，后面改成状态
-                if (document.querySelector('.left-col.show')) return
-                let items = []
-                $imgArr.forEach(($em2, i2) => {
-                    let img = $em2.getAttribute('data-idx', i2)
-                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
-                    let title = $em2.getAttribute('alt')
-                    // 获得原图尺寸
-                    const image = new Image()
-                    image.src = src
-                    items.push({
-                        src: src,
-                        w: image.width || $em2.width,
-                        h: image.height || $em2.height,
-                        title: title
-                    })
-                })
-                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
-                    index: parseInt(i)
-                });
-                gallery.init()
-            }
-        })
-    }
-    viewer_init()
-</script> 
-<!-- MathJax -->
-
-<!-- Katex -->
-
-<!-- busuanzi  -->
- 
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
- 
-<!-- ClickLove -->
-
-<!-- ClickBoom1 -->
-
-<!-- ClickBoom2 -->
-
-<!-- CodeCopy -->
- 
-<link rel="stylesheet" href="/css/clipboard.css">
- <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
-<script>
-  function wait(callback, seconds) {
-    var timelag = null;
-    timelag = window.setTimeout(callback, seconds);
-  }
-  !function (e, t, a) {
-    var initCopyCode = function(){
-      var copyHtml = '';
-      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
-      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
-      copyHtml += '</button>';
-      $(".highlight .code pre").before(copyHtml);
-      $(".article pre code").before(copyHtml);
-      var clipboard = new ClipboardJS('.btn-copy', {
-        target: function(trigger) {
-          return trigger.nextElementSibling;
-        }
-      });
-      clipboard.on('success', function(e) {
-        let $btn = $(e.trigger);
-        $btn.addClass('copied');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-checkbox-circle-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPIED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-checkbox-circle-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-      clipboard.on('error', function(e) {
-        e.clearSelection();
-        let $btn = $(e.trigger);
-        $btn.addClass('copy-failed');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-time-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPY FAILED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-time-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-    }
-    initCopyCode();
-  }(window, document);
-</script>
- 
-<!-- CanvasBackground -->
-
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
 <script>
   if (window.mermaid) {
     mermaid.initialize({ theme: "forest" });

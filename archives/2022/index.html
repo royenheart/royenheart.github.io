@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Archives: 2022 |  Hexo</title>
+      <title>Archives: 2022 |  UniversalVagrant</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/img/avatar.jpg" />
@@ -36,17 +36,14 @@
 
       <!-- mermaid -->
       
-<<<<<<< HEAD
       <script src="https://cdn.staticfile.org/mermaid/8.14.0/mermaid.min.js"></script>
       
-=======
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="UniversalVagrant" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -121,7 +118,6 @@
     </ul>
     <ul>
       <li>
-<<<<<<< HEAD
         
         
         <span>
@@ -130,16 +126,6 @@
   <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
 </span>
         
-=======
-        
-        
-        <span>
-  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
-  <span class="division">|</span>
-  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
-</span>
-        
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       </li>
     </ul>
     <ul>
@@ -176,7 +162,7 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/img/aislingAvatar.jpg" alt="Hexo"></a>
+    <a href="/"><img src="/img/aislingAvatar.jpg" alt="UniversalVagrant"></a>
   </div>
   
   <ul class="nav nav-main">
@@ -309,7 +295,6 @@
 
             <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
             </button>
-<<<<<<< HEAD
 
             <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
             </button>
@@ -324,22 +309,6 @@
 
 </div>
 
-=======
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
 <link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
 <link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
 <script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
@@ -380,7 +349,6 @@
     viewer_init()
 </script> 
 <!-- MathJax -->
-<<<<<<< HEAD
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
       tex2jax: {
@@ -413,90 +381,9 @@
 <script src="/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
-=======
-
-<!-- Katex -->
-
-<!-- busuanzi  -->
- 
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
- 
-<!-- ClickLove -->
 
 <!-- ClickBoom1 -->
 
-<!-- ClickBoom2 -->
-
-<!-- CodeCopy -->
- 
-<link rel="stylesheet" href="/css/clipboard.css">
- <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
-<script>
-  function wait(callback, seconds) {
-    var timelag = null;
-    timelag = window.setTimeout(callback, seconds);
-  }
-  !function (e, t, a) {
-    var initCopyCode = function(){
-      var copyHtml = '';
-      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
-      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
-      copyHtml += '</button>';
-      $(".highlight .code pre").before(copyHtml);
-      $(".article pre code").before(copyHtml);
-      var clipboard = new ClipboardJS('.btn-copy', {
-        target: function(trigger) {
-          return trigger.nextElementSibling;
-        }
-      });
-      clipboard.on('success', function(e) {
-        let $btn = $(e.trigger);
-        $btn.addClass('copied');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-checkbox-circle-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPIED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-checkbox-circle-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-      clipboard.on('error', function(e) {
-        e.clearSelection();
-        let $btn = $(e.trigger);
-        $btn.addClass('copy-failed');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-time-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPY FAILED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-time-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-    }
-    initCopyCode();
-  }(window, document);
-</script>
- 
-<!-- CanvasBackground -->
-
-<script>
-  if (window.mermaid) {
-    mermaid.initialize({ theme: "forest" });
-  }
-</script>
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
-
-<!-- ClickBoom1 -->
-
-<<<<<<< HEAD
 <!-- ClickBoom2 -->
 
 <!-- CodeCopy -->
@@ -572,12 +459,4 @@
   </div>
 </body>
 
-=======
-    
-    
-
-  </div>
-</body>
-
->>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
 </html>
