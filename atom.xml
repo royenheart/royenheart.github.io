@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Hexo</title>
+  
+  <subtitle>[object Object]</subtitle>
+  <link href="https://royenheart.com/atom.xml" rel="self"/>
+  
+  <link href="https://royenheart.com/"/>
+  <updated>2022-05-17T09:05:39.877Z</updated>
+  <id>https://royenheart.com/</id>
+  
+  <author>
+    <name>John Doe</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>计算机对数的计算</title>
+    <link href="https://royenheart.com/2022/05/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AF%B9%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97/"/>
+    <id>https://royenheart.com/2022/05/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AF%B9%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97/</id>
+    <published>2022-05-13T08:49:45.000Z</published>
+    <updated>2022-05-17T09:05:39.877Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;个人计算机组成原理学习记录 &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;各种数的表示方法&quot;&gt;&lt;a href=&quot;#各种数的表示方法&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="计算机组成原理" scheme="https://royenheart.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Perf工具分析程序性能</title>
+    <link href="https://royenheart.com/2021/12/08/%E4%BD%BF%E7%94%A8Perf%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD/"/>
+    <id>https://royenheart.com/2021/12/08/%E4%BD%BF%E7%94%A8Perf%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD/</id>
+    <published>2021-12-08T15:15:46.000Z</published>
+    <updated>2021-12-08T15:37:38.505Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;仅个人学习与记录&lt;/p&gt;
+&lt;h1 id=&quot;perf&quot;&gt;&lt;a href=&quot;#perf&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Linux学习与技术" scheme="https://royenheart.com/tags/Linux%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用EnvironmentModule管理linux环境</title>
+    <link href="https://royenheart.com/2021/11/20/%E4%BD%BF%E7%94%A8EnvironmentModule%E7%AE%A1%E7%90%86linux%E7%8E%AF%E5%A2%83/"/>
+    <id>https://royenheart.com/2021/11/20/%E4%BD%BF%E7%94%A8EnvironmentModule%E7%AE%A1%E7%90%86linux%E7%8E%AF%E5%A2%83/</id>
+    <published>2021-11-20T14:13:27.000Z</published>
+    <updated>2022-06-05T03:52:35.705Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;在linux下环境设置是一个很重要的配置环节，特别是在多用户的情况下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;先上&lt;a</summary>
+        
+      
+    
+    
+    
+    
+    <category term="linux学习与技术" scheme="https://royenheart.com/tags/linux%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker配置JupyterNoteBook服务器</title>
+    <link href="https://royenheart.com/2021/11/18/Docker%E9%85%8D%E7%BD%AEJupyterNoteBook%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>https://royenheart.com/2021/11/18/Docker%E9%85%8D%E7%BD%AEJupyterNoteBook%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+    <published>2021-11-18T07:27:34.000Z</published>
+    <updated>2022-05-18T10:11:31.285Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;设计思路&quot;&gt;&lt;a href=&quot;#设计思路&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="容器技术" scheme="https://royenheart.com/tags/%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="python学习与技术" scheme="https://royenheart.com/tags/python%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker</title>
+    <link href="https://royenheart.com/2021/11/17/Docker/"/>
+    <id>https://royenheart.com/2021/11/17/Docker/</id>
+    <published>2021-11-17T02:00:44.000Z</published>
+    <updated>2022-07-04T12:26:50.262Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;此为docker&amp;#x2F;singularity使用方法的一些笔记，个人记录使用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;docker三要素&quot;&gt;&lt;a href=&quot;#docker三要素&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="容器技术" scheme="https://royenheart.com/tags/%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ArchLinux</title>
+    <link href="https://royenheart.com/2021/11/17/ArchLinux/"/>
+    <id>https://royenheart.com/2021/11/17/ArchLinux/</id>
+    <published>2021-11-17T01:59:47.000Z</published>
+    <updated>2021-11-20T15:52:14.226Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;近来无事，准备将ArchLinux安装至自己的机子上作为备用系统使用，&lt;br&gt;也是用于更好地学习Linux系统&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Linux学习与技术" scheme="https://royenheart.com/tags/Linux%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>VimLearn</title>
+    <link href="https://royenheart.com/2021/11/16/VimLearn/"/>
+    <id>https://royenheart.com/2021/11/16/VimLearn/</id>
+    <published>2021-11-16T13:14:12.000Z</published>
+    <updated>2022-03-15T15:39:26.256Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Just for personal learning and some notes&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;What&quot;&gt;&lt;a href=&quot;#What&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Vim学习与使用" scheme="https://royenheart.com/tags/Vim%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>正则表达式自查</title>
+    <link href="https://royenheart.com/2021/11/16/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%87%AA%E6%9F%A5/"/>
+    <id>https://royenheart.com/2021/11/16/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%87%AA%E6%9F%A5/</id>
+    <published>2021-11-16T13:13:00.000Z</published>
+    <updated>2021-11-20T16:08:30.750Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;正则表达式&quot;&gt;&lt;a href=&quot;#正则表达式&quot; class=&quot;headerlink&quot; title=&quot;正则表达式&quot;&gt;&lt;/a&gt;正则表达式&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;regular</summary>
+        
+      
+    
+    
+    
+    
+    <category term="正则表达式" scheme="https://royenheart.com/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+  </entry>
+  
+</feed>
