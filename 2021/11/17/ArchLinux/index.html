@@ -1,148 +1,113 @@
 <!DOCTYPE html>
+
+
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="whoami">
-    <meta name="keyword"  content="">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+  
 
-    <title>
+    <head>
+      <meta charset="utf-8" />
         
-        ArchLinux - RoyenHeart的日常
-        
-    </title>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>ArchLinux |  Hexo</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/avatar.jpg" />
+       
+<link rel="stylesheet" href="/dist/main.css">
 
-    <!-- Custom CSS -->
-    
-<link rel="stylesheet" href="/css/aircloud.css">
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-    
-<link rel="stylesheet" href="/css/gitment.css">
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
 
-    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
-    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
-    <!-- ga & ba script hoook -->
-    <script></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <script src="https://cdn.staticfile.org/mermaid/8.14.0/mermaid.min.js"></script>
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
 
 <body>
-
-<div class="site-nav-toggle" id="site-nav-toggle">
-    <button>
-        <span class="btn-bar"></span>
-        <span class="btn-bar"></span>
-        <span class="btn-bar"></span>
-    </button>
-</div>
-
-<div class="index-about">
-    <i> RoyenHeart_Existence </i>
-</div>
-
-<div class="index-container">
+  <div id="app">
     
-    <div class="index-left">
-        
-<div class="nav" id="nav">
-    <div class="avatar-name">
-        <div class="avatar radius">
-            <img src="/img/avatar.jpg" />
-        </div>
-        <div class="name">
-            <i>RoyenHeart</i>
-        </div>
-    </div>
-    <div class="contents" id="nav-content">
-        <ul>
-            <li >
-                <a href="/">
-                    <i class="iconfont icon-shouye1"></i>
-                    <span>HOME</span>
-                </a>
-            </li>
-            <li >
-                <a href="/tags">
-                    <i class="iconfont icon-biaoqian1"></i>
-                    <span>TAGS</span>
-                </a>
-            </li>
-            <li >
-                <a href="/archives">
-                    <i class="iconfont icon-guidang2"></i>
-                    <span>ARCHIVES</span>
-                </a>
-            </li>
-            <li >
-                <a href="/about/">
-                    <i class="iconfont icon-guanyu2"></i>
-                    <span>ABOUT</span>
-                </a>
-            </li>
-            
-            <li>
-                <a id="search">
-                    <i class="iconfont icon-sousuo1"></i>
-                    <span>SEARCH</span>
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-ArchLinux"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-        <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">ArchLinux的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUEFI%EF%BC%8CBIOS"><span class="toc-text">什么是UEFI，BIOS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-filesystem"><span class="toc-text">什么是文件系统(filesystem)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%8C%BA%E8%A1%A8-MBR-GPT"><span class="toc-text">什么是分区表(MBR,GPT)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFgrub%EF%BC%8Csyslinux%EF%BC%88BootLoader%EF%BC%89"><span class="toc-text">什么是grub，syslinux（BootLoader）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%B0%E5%9C%A8%E6%9D%A5%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAArchLinux"><span class="toc-text">现在来安装一个ArchLinux</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">ArchLinux系统的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="toc-text">网络配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GRUB%E5%BC%95%E5%AF%BC%E5%A4%9A%E7%B3%BB%E7%BB%9F"><span class="toc-text">GRUB引导多系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%9F%B3%E9%A2%91%E6%94%AF%E6%8C%81"><span class="toc-text">安装音频支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BFlinux%E6%94%AF%E6%8C%81%E6%8C%82%E8%BD%BDntfs%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-%E5%BE%AE%E8%BD%AF%E4%BD%BF%E7%94%A8"><span class="toc-text">使linux支持挂载ntfs文件系统(微软使用)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">安装中文输入法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E6%97%B6%E9%97%B4"><span class="toc-text">同步时间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArchLinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BE%8E%E5%8C%96"><span class="toc-text">ArchLinux系统的美化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#grub-theme"><span class="toc-text">grub theme</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%87%E5%AD%97%E4%BD%93%E7%9A%84%E6%94%AF%E6%8C%81%E5%92%8C%E5%AE%89%E8%A3%85"><span class="toc-text">中文字体的支持和安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%96%99%E5%BC%95%E7%94%A8"><span class="toc-text">资料引用</span></a></li></ol>
-</div>
-    
-</div>
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  ArchLinux
+</h1>
+ 
 
-
-<div class="search-field" id="search-field">
-    <div class="search-container">
-        <div class="search-input">
-            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
-            <input id="search-input"/>
-            <span id="begin-search">search</span>
-        </div>
-        <div class="search-result-container" id="search-result-container">
-
-        </div>
-    </div>
-</div>
-
-        <div class="index-about-mobile">
-            <i> RoyenHeart_Existence </i>
-        </div>
-    </div>
-    
-    <div class="index-middle">
-        <!-- Main Content -->
-        
-
-
-<div class="post-container">
-    <div class="post-title">
-        ArchLinux
-    </div>
-
-    <div class="post-meta">
-        <span class="attr">Post：<span>2021-11-17 09:59:47</span></span>
-        
-        <span class="attr">Tags：/
-        
-        <a class="tag" href="/tags/#Linux学习与技术" title="Linux学习与技术">Linux学习与技术</a>
-        <span>/</span>
-        
-        
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/11/17/ArchLinux/" class="article-date">
+  <time datetime="2021-11-17T01:59:47.000Z" itemprop="datePublished">2021-11-17</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4k</span>
         </span>
-        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
-</span>
-</span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">15 min</span>
+        </span>
+    </span>
+</div>
+ 
     </div>
-    <div class="post-content no-indent">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来无事，准备将ArchLinux安装至自己的机子上作为备用系统使用，<br>也是用于更好地学习Linux系统</p>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来无事，准备将ArchLinux安装至自己的机子上作为备用系统使用，<br>也是用于更好地学习Linux系统</p>
 <hr>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="ArchLinux的安装"><a href="#ArchLinux的安装" class="headerlink" title="ArchLinux的安装"></a>ArchLinux的安装</h3><blockquote>
 <p>由于个人精力有限，因此其安装过程针对一定的安装环境，实际操作请对照<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Main_page_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">官方文档</a>进行安装</p>
@@ -152,7 +117,7 @@
 <li><a target="_blank" rel="noopener" href="https://archlinux.org/">ArchLinux社区</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e48bff8c94cc">一些Linux启动流程的解析</a></li>
 </ol>
-<h4 id="什么是UEFI，BIOS"><a href="#什么是UEFI，BIOS" class="headerlink" title="什么是UEFI，BIOS"></a>什么是UEFI，BIOS</h4><p>BIOS(基本输入输出系统，Basic I/O System)，是固化在计算机ROM上的一组程序，这组程序如其名字一样，作为操作系统启动前的步骤为操作系统的正式启动提供：  </p>
+<h4 id="什么是UEFI，BIOS"><a href="#什么是UEFI，BIOS" class="headerlink" title="什么是UEFI，BIOS"></a>什么是UEFI，BIOS</h4><p>BIOS(基本输入输出系统，Basic I&#x2F;O System)，是固化在计算机ROM上的一组程序，这组程序如其名字一样，作为操作系统启动前的步骤为操作系统的正式启动提供：  </p>
 <ol>
 <li>加电自检，检测CPU，计时芯片等各种计算机必需设备</li>
 <li>枚举设备，初始化各设备和设备资源</li>
@@ -198,10 +163,10 @@
 <p>分区完毕后可以使用<a target="_blank" rel="noopener" href="https://cn.ultraiso.net/">UltralISO</a>进行启动盘的制作</p>
 <p><em>Linux下：</em>  </p>
 <blockquote>
-<p>dd if=(source file name) of=(target file name) (Options)</p>
+<p>dd if&#x3D;(source file name) of&#x3D;(target file name) (Options)</p>
 </blockquote>
 <p>使用<code>dd</code>命令将镜像文件拷贝至对应U盘设备</p>
-<p><strong>根据主板型号进入BIOS/UEFI并选择U盘启动</strong></p>
+<p><strong>根据主板型号进入BIOS&#x2F;UEFI并选择U盘启动</strong></p>
 <p>通常使用<code>F2</code>，<code>Esc</code>进入，不同型号的主板可能有所差异，请以主板制造商说明为准。</p>
 <p><strong>存储设备分区</strong></p>
 <p>*注：若无特殊说明，<code>/dev/xxx</code>统一为与挂载，分区等操作对应的设备分区</p>
@@ -224,8 +189,8 @@
 <p>因此我们手动建立文件夹并进行相应的挂载</p>
 <ul>
 <li><code>mount /dev/xxx /mnt</code> 挂载根分区</li>
-<li><code>mkdir /mnt/boot</code> 建立boot目录，若为BIOS/MBR启动，此时可以进行<code>mount /dev/xxx /mnt/boot</code></li>
-<li><code>mkdir /mnt/boot/EFI</code> 建立EFI目录，若为UEFI/GPT启动，此时可以进行<code>mount /dev/xxx /mnt/boot/EFI</code></li>
+<li><code>mkdir /mnt/boot</code> 建立boot目录，若为BIOS&#x2F;MBR启动，此时可以进行<code>mount /dev/xxx /mnt/boot</code></li>
+<li><code>mkdir /mnt/boot/EFI</code> 建立EFI目录，若为UEFI&#x2F;GPT启动，此时可以进行<code>mount /dev/xxx /mnt/boot/EFI</code></li>
 <li><code>mkdir ...</code></li>
 <li><code>mount ...</code></li>
 <li>直到全部分区正确挂载完毕</li>
@@ -236,7 +201,7 @@
 <p>打开 <code>/etc/pacman.d/mirrorlist</code> 并添加 </p>
 <ul>
 <li>兰大镜像源<br><code>Server = https://mirror.lzu.edu.cn/archlinux/$repo/os/$arch</code>  </li>
-<li>清华镜像源<br><code>Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch</code>  </li>
+<li>清华镜像源<br><code>Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch</code></li>
 </ul>
 <p>或者其他国内镜像源</p>
 <p>然后刷新源</p>
@@ -245,7 +210,7 @@
 </blockquote>
 <p>下载基本系统和组件</p>
 <blockquote>
-<p>pacstrap /mnt base linux linux-firmware</p>
+<p>pacstrap &#x2F;mnt base linux linux-firmware</p>
 </blockquote>
 <p><code>pacstrap</code> 是Arch提供的脚本，用于安装一些基础软件</p>
 <p>实际使用时可以再安装<code>vim</code> <code>nano</code>等文本编辑器软件方便之后的配置文件的更改</p>
@@ -254,19 +219,19 @@
 <p><em>ArchLinux</em>下提供了自动生成目录表的工具<code>genfstab</code></p>
 <p>具体使用：</p>
 <blockquote>
-<p>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</p>
+<p>genfstab -U &#x2F;mnt &gt;&gt; &#x2F;mnt&#x2F;etc&#x2F;fstab</p>
 </blockquote>
 <p><em>-U</em> 参数表示使用设备的<strong>UUID</strong>进行挂载</p>
 <p>UUID是一个设备的绝对地址(理论上会产生冲突，但实际情况下发生冲突的可能性可以忽略不记)</p>
 <p><em>&gt;&gt;</em> 表示将前部分的输出写入后部分对应的文件</p>
 <p><strong>从U盘进入系统</strong></p>
 <blockquote>
-<p>arch-chroot /mnt</p>
+<p>arch-chroot &#x2F;mnt</p>
 </blockquote>
 <p><strong>设置时间</strong></p>
 <p><em>设置时区</em>  </p>
 <blockquote>
-<p>ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p>ln -sf &#x2F;usr&#x2F;share&#x2F;zoneinfo&#x2F;Asia&#x2F;Shanghai &#x2F;etc&#x2F;localtime</p>
 </blockquote>
 <p><em>同步时间</em>  </p>
 <blockquote>
@@ -274,17 +239,17 @@
 </blockquote>
 <p>可以使用<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Network_Time_Protocol_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ntp</a>进行时间的同步。</p>
 <p><strong>修改主机名</strong></p>
-<p>建立 <strong>/etc/hostname</strong> 文件写入主机名</p>
+<p>建立 <strong>&#x2F;etc&#x2F;hostname</strong> 文件写入主机名</p>
 <p><strong>更改语言</strong></p>
-<p>修改 <strong>/etc/locale.gen</strong> 文件将需要的字符集前的注释 <em>#</em> 删去</p>
-<p>建立 <strong>/etc/locale.conf</strong> 文件写入</p>
+<p>修改 <strong>&#x2F;etc&#x2F;locale.gen</strong> 文件将需要的字符集前的注释 <em>#</em> 删去</p>
+<p>建立 <strong>&#x2F;etc&#x2F;locale.conf</strong> 文件写入</p>
 <blockquote>
-<p>LANG=en_US.UTF-8</p>
+<p>LANG&#x3D;en_US.UTF-8</p>
 </blockquote>
 <p>*官方wiki中推荐的是先使用<code>en_US.UTF-8</code>，以便终端界面能够正常显示</p>
 <p>运行 <code>locale-gen</code> 使语言设置生效</p>
 <p><strong>修改网络设置</strong></p>
-<p>修改 <strong>/etc/hosts</strong> 文件写入</p>
+<p>修改 <strong>&#x2F;etc&#x2F;hosts</strong> 文件写入</p>
 <blockquote>
 <p>127.0.0.1 localhost</p>
 </blockquote>
@@ -301,28 +266,28 @@
 </blockquote>
 <p>*dhcpcd 用于设置ip，如果使用 <code>ip</code> <code>wpa_supplicant</code> <code>dhcpcd</code> 方式配置网络需要安装</p>
 <p><strong>安装引导程序(bootloader)</strong></p>
-<p><em>BIOS/MBR</em></p>
+<p><em>BIOS&#x2F;MBR</em></p>
 <blockquote>
-<p>grub-install –target=i386-pc /dev/xxx (这里为boot分区挂载的设备)  </p>
+<p>grub-install –target&#x3D;i386-pc &#x2F;dev&#x2F;xxx (这里为boot分区挂载的设备)  </p>
 </blockquote>
 <blockquote>
-<p>grub-mkconfig -o /boot/grub/grub.cfg 根据grub配置更改grub相应参数(可自定义)</p>
+<p>grub-mkconfig -o &#x2F;boot&#x2F;grub&#x2F;grub.cfg 根据grub配置更改grub相应参数(可自定义)</p>
 </blockquote>
-<p><em>UEFI/GPT</em></p>
+<p><em>UEFI&#x2F;GPT</em></p>
 <blockquote>
 <p>pacman -S grub efibootmgr</p>
 </blockquote>
 <blockquote>
-<p>grub-install –target=x86_64-efi –efi-directory=/boot/EFI –bootloader-id=grub</p>
+<p>grub-install –target&#x3D;x86_64-efi –efi-directory&#x3D;&#x2F;boot&#x2F;EFI –bootloader-id&#x3D;grub</p>
 </blockquote>
 <blockquote>
-<p>grub-mkconfig -o /boot/grub/grub.cfg</p>
+<p>grub-mkconfig -o &#x2F;boot&#x2F;grub&#x2F;grub.cfg</p>
 </blockquote>
 <p><strong>initramfs生成</strong></p>
 <p>由于Linux系统的启动需要同时启动必要的组件，而某些组件之间又相互依赖，或者存在兼容性问题。</p>
 <p>为了解决这些问题，Linux在真正的系统启动前需要启动<code>initramfs</code>，即initram file system，用于提供一个用户态的环境以完成内核不易完成的操作，比如加载必要的模块等</p>
 <p>使用<code>mkinitcpio -P</code>打包initramfs</p>
-<p><em>关于/usr分区独立进行挂载的问题</em></p>
+<p><em>关于&#x2F;usr分区独立进行挂载的问题</em></p>
 <p>在目前的ArchLinux中，<code>/sbin</code> 链接至 <code>/usr/sbin</code> 当我们将<code>/usr</code>分区独立挂载后，会导致initramfs无法找到相应的文件导致启动失败</p>
 <p>解决方法：  </p>
 <ol>
@@ -343,7 +308,7 @@
 </blockquote>
 <p><strong>解除挂载</strong></p>
 <blockquote>
-<p>umount -R /mnt (从根目录递归解除挂载)</p>
+<p>umount -R &#x2F;mnt (从根目录递归解除挂载)</p>
 </blockquote>
 <p><strong>重启进入系统</strong></p>
 <blockquote>
@@ -367,16 +332,16 @@
 <p><strong>使用wpa_supplicant连接无线网络</strong></p>
 <p>建立 <code>/etc/wpa_supplicant/wpa_supplicant.conf</code> 文件，写入</p>
 <blockquote>
-<p>ctrl_interface=/run/wpa_supplicant</p>
+<p>ctrl_interface&#x3D;&#x2F;run&#x2F;wpa_supplicant</p>
 </blockquote>
 <blockquote>
-<p>update_config=1</p>
+<p>update_config&#x3D;1</p>
 </blockquote>
 <p>查看网络设备<code>ifconfig</code></p>
 <p>*本人的网络设备是wlan0</p>
 <p>根据配置设置wpa_supplicant</p>
 <blockquote>
-<p>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</p>
+<p>wpa_supplicant -B -i wlan0 -c &#x2F;etc&#x2F;wpa_supplicant&#x2F;wpa_supplicant.conf</p>
 </blockquote>
 <p>网络设置</p>
 <p>*一下为需要执行的命令，具体参数请根据自己的网络状态配置</p>
@@ -396,7 +361,7 @@
 <p>dhcpcd 接口名称</p>
 </blockquote>
 <p>自动获取ip</p>
-<h4 id="GRUB引导多系统"><a href="#GRUB引导多系统" class="headerlink" title="GRUB引导多系统"></a>GRUB引导多系统</h4><p><em>UEFI/GPT下引导Windows</em></p>
+<h4 id="GRUB引导多系统"><a href="#GRUB引导多系统" class="headerlink" title="GRUB引导多系统"></a>GRUB引导多系统</h4><p><em>UEFI&#x2F;GPT下引导Windows</em></p>
 <p>查看Win10启动分区(EFI分区)UUID，首先使用<code>fdisk -l</code>查看是哪个分区，比如是<code>/dev/sda1</code></p>
 <p>使用<code>blkid /dev/sda1</code>查看分区的UUID</p>
 <p>修改 <code>/boot/grub/grub.cfg</code> 文件</p>
@@ -408,7 +373,7 @@
 <p>*如果没有发现Windows启动项，请试着修改 <code>/etc/default/grub</code> 文件</p>
 <p>在文件中添加  </p>
 <blockquote>
-<p>GRUB_DISABLE_OS_PROBER=false  </p>
+<p>GRUB_DISABLE_OS_PROBER&#x3D;false  </p>
 </blockquote>
 <p>之后重新配置grub(已被发现则无需配置)</p>
 <ol>
@@ -520,109 +485,525 @@
 <li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Fcitx_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上输入法的安装</a></li>
 <li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Network_Time_Protocol_daemon_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">ArchLinux Wiki上时间同步程序ntp的安装</a></li>
 </ol>
+ 
+      <!-- reward -->
+      
+    </div>
+    
 
-        
-        <br />
-        <div id="comment-container">
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
         </div>
-        <div id="disqus_thread"></div>
+      </div>
+</div>
 
-        <div id="lv-container">
-        </div>
-
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://royenheart.com/2021/11/17/ArchLinux/" alt="微信分享二维码">
     </div>
 </div>
 
-    </div>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8A%80%E6%9C%AF/" rel="tag">Linux学习与技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/11/17/Docker/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Docker
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/11/16/VimLearn/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">VimLearn</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
 </div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "6KKswwPsDUmxxsof6nlKwaPS-gzGzoHsz",
+    app_key: "Eol8OKa2SwlI3F3yoDTqfljF",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "Welcome",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
 
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
 
-<footer class="footer">
-    <ul class="list-inline text-center">
-        
-        <li>
-            <a target="_blank" href="https://twitter.com/royenheart">
-                            <span class="fa-stack fa-lg">
-                                <i class="iconfont icon-twitter"></i>
-                            </span>
-            </a>
-        </li>
-        
-        
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
 
-        
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
 
-        
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
 
-        
-        <li>
-            <a target="_blank"  href="https://github.com/RoyenHeart">
-                            <span class="fa-stack fa-lg">
-                                <i class="iconfont icon-github"></i>
-                            </span>
-            </a>
-        </li>
-        
+ 
+   
+     
+</article>
 
-        
-
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021-2022
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
     </ul>
-    
-    <p>
-        <span>/</span>
+    <ul>
+      <li>
         
-        <span><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62012302000279">浙ICP备2020042582号</a></span>
-        <span>/</span>
+      </li>
+    </ul>
+    <ul>
+      <li>
         
-    </p>
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+        <li>
+          <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62012302000279" target="_black" rel="nofollow">浙ICP备2020042582号</a>
+        </li>
+        
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/aislingAvatar.jpg" alt="Hexo"></a>
+  </div>
+  
+  <ul class="nav nav-main">
     
-    <p>
-        <span id="busuanzi_container_site_pv">
-            <span id="busuanzi_value_site_pv"></span>PV
-        </span>
-        <span id="busuanzi_container_site_uv">
-            <span id="busuanzi_value_site_uv"></span>UV
-        </span>
-        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
-</footer>
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/index.html">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
 
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
 
-
-
-</body>
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
 
 <script>
-    // We expose some of the variables needed by the front end
-    window.hexo_search_path = "search.json"
-    window.hexo_root = "/"
-    window.isPost = true
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
 </script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 
-<script src="/js/index.js"></script>
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js"></script>
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/config/TeX-AMS-MML_HTMLorMML-full.js"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true,
+  };
+</script>
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
 
 
-    <script>
-        /**
-         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-        */
-        if( '' || '')
-        var disqus_config = function () {
-            this.page.url = '';  // Replace PAGE_URL with your page's canonical URL variable
-            this.page.identifier = ''; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
+    
+    
 
-        (function() { // DON'T EDIT BELOW THIS LINE
-            var d = document, s = d.createElement('script');
-            s.src = 'https://https-royenheart-com.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-    </script>
-
-
+  </div>
+</body>
 
 </html>
