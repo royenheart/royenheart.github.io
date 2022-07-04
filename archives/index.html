@@ -36,8 +36,11 @@
 
       <!-- mermaid -->
       
+<<<<<<< HEAD
       <script src="https://cdn.staticfile.org/mermaid/8.14.0/mermaid.min.js"></script>
       
+=======
+>>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
@@ -359,6 +362,7 @@
   <div class="local-search local-search-plugin">
   <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
   <div id="local-search-result" class="local-search-result"></div>
+<<<<<<< HEAD
 </div>
 </div>
     </aside>
@@ -383,6 +387,32 @@
     
   </div>
 </div>
+=======
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+>>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
     
 <script src="/js/jquery-3.6.0.min.js"></script>
  
@@ -507,6 +537,7 @@
     viewer_init()
 </script> 
 <!-- MathJax -->
+<<<<<<< HEAD
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
       tex2jax: {
@@ -531,6 +562,9 @@
     mathjax: true,
   };
 </script>
+
+<!-- Katex -->
+=======
 
 <!-- Katex -->
 
@@ -609,6 +643,84 @@
     mermaid.initialize({ theme: "forest" });
   }
 </script>
+>>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<<<<<<< HEAD
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
 
 
     
@@ -617,4 +729,12 @@
   </div>
 </body>
 
+=======
+    
+    
+
+  </div>
+</body>
+
+>>>>>>> 60554fb916c7ff458a81b607e6f499747adfbe7d
 </html>
