@@ -122,7 +122,7 @@
     <link href="https://royenheart.com/2021/11/17/Docker/"/>
     <id>https://royenheart.com/2021/11/17/Docker/</id>
     <published>2021-11-17T02:00:44.000Z</published>
-    <updated>2022-07-04T12:26:50.262Z</updated>
+    <updated>2022-07-07T11:52:36.835Z</updated>
     
     
       
@@ -130,9 +130,9 @@
         
         
     <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;此为docker&amp;#x2F;singularity使用方法的一些笔记，个人记录使用&lt;/p&gt;
+&lt;p&gt;此为docker&amp;#x2F;singularity（apptainer）使用方法的一些笔记，个人记录使用。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&quot;docker三要素&quot;&gt;&lt;a href=&quot;#docker三要素&quot; class=&quot;headerlink&quot;</summary>
+&lt;h2 id=&quot;docker三要素&quot;&gt;&lt;a href=&quot;#docker三要素&quot;</summary>
         
       
     

@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.9k</span>
+            <span class="post-count">2k</span>
         </span>
     </span>
 
@@ -108,15 +108,15 @@
     <div class="article-entry" itemprop="articleBody">
        
   <blockquote>
-<p>此为docker&#x2F;singularity使用方法的一些笔记，个人记录使用</p>
+<p>此为docker&#x2F;singularity（apptainer）使用方法的一些笔记，个人记录使用。</p>
 </blockquote>
 <h2 id="docker三要素"><a href="#docker三要素" class="headerlink" title="docker三要素"></a>docker三要素</h2><ul>
-<li>仓库：镜像仓库，镜像的存储库</li>
-<li>镜像：系统镜像等，封装了应用的环境、信息，相当于容器（实例）的类</li>
-<li>容器：由系统镜像（静态配置）生成的应用，可以直接运行镜像中的应用或者使用交互式（类似虚拟机，但占用资源更少）</li>
+<li>仓库：镜像仓库，镜像的存储库。</li>
+<li>镜像：系统镜像等，封装了应用的环境、信息，相当于容器（实例）的类。</li>
+<li>容器：由系统镜像（静态配置）生成的应用，可以直接运行镜像中的应用或者使用交互式（类似虚拟机，但占用资源更少）。</li>
 </ul>
-<h2 id="docker常见误区"><a href="#docker常见误区" class="headerlink" title="docker常见误区"></a>docker常见误区</h2><p>docker并非虚拟机，其本质相当与宿主机的一个进程。在使用docker容器的时候，我们一般一次只运行一个程序，<br>docker执行的程序相当于其第一个进程，当这个进程结束的时候。docker容器也就随之停止。</p>
-<p>因此运行docker容器时一定要注意第一个运行的程序一结束，容器便会停止，比如<code>/bin/sh -c command</code>，此时<code>/bin/sh</code>是第一个程序，<br>当此程序运作完毕时，容器也会停止。</p>
+<h2 id="docker常见误区"><a href="#docker常见误区" class="headerlink" title="docker常见误区"></a>docker常见误区</h2><p>docker并非虚拟机，其本质相当与宿主机的一个进程。在使用docker容器的时候，我们一般一次只运行一个程序，docker执行的程序相当于其第一个进程，当这个进程结束的时候。docker容器也就随之停止。</p>
+<p>因此运行docker容器时一定要注意第一个运行的程序一结束，容器便会停止，比如<code>/bin/sh -c command</code>，此时<code>/bin/sh</code>是第一个程序，当此程序运作完毕时，容器也会停止。</p>
 <h2 id="docker常用指令"><a href="#docker常用指令" class="headerlink" title="docker常用指令"></a>docker常用指令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run 镜像名:tagname 指令1 &amp;&amp; [指令2 &amp;&amp; [指令3......]]</span><br></pre></td></tr></table></figure>
 
 <p>从指定镜像运行一个容器，若本地没有则从docker hub下载制定镜像,<br>同时运行容器后的指令，可以通过<code>&amp;&amp;</code>连接符运行多个指令</p>
@@ -128,7 +128,11 @@
 <p>此命令可以登录至docker hub，<br>之后可以通过docker push发布自己的镜像不过镜像名字必须为<code>用户名/镜像名:标签名</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it 指定镜像 /bin/bash </span><br></pre></td></tr></table></figure>
 
-<p>交互式形式在指定镜像上生成容器并在容器内与容器进行交互。<br><code>/bin/bash</code>指定使用的shell类型</p>
+<p>交互式形式在指定镜像上生成容器并在容器内与容器进行交互。</p>
+<p><code>/bin/bash</code>指定使用的解释器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it 容器名 /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>以交互式形式在指定容器上重新运行指定的解释器。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search 镜像名</span><br></pre></td></tr></table></figure>
 
 <p>在docker hub上查找有无公开的镜像</p>
@@ -144,7 +148,7 @@
 <p>其中<code>docker commit</code>可以帮助我们从一个容器中构建出我们自己的镜像，<br>例如<code>docker commit containerName imageName</code>可以帮助我们使用制定的容器生成自定义的镜像</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t [父镜像名]:[镜像的tag] [Dockerfile所在的文件路径]</span><br></pre></td></tr></table></figure>
 
-<p>与Cmake，make一样，docker可以从dockerfile（自动构建，描述了使用的镜像还有构建环境需要的目录）中自动构建出一个配置了我们所需要环境的镜像。</p>
+<p>docker可以从dockerfile（自动构建，描述了使用的镜像还有构建环境需要的目录）中自动构建出一个配置了我们所需要环境的镜像。</p>
 <p><code>--no-cache</code>参数可以指定不使用缓存构建容器</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cat ubuntu-14.04-x86_64-minimal.tar.gz | docker import - ubuntu:14.04</span><br></pre></td></tr></table></figure>
 
@@ -172,9 +176,9 @@
 
 <p>此命令可以获取容器的具体信息</p>
 <p>若搭配管道符和文本处理工具可以高效地获取我们需要的信息，<br>比如<code>docker inspect container_id/container_name | grep IPAddress</code>可以获取容器在宿主机中被分配的id</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v host_path/container_path</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v host_path/container_path [ -v /other/path:/other/container_path... ]</span><br></pre></td></tr></table></figure>
 
-<p>通过这个命令将宿主机的目录与容器的指定目录进行连接，相当于进行挂载，有助于数据的保存，可以通过这个命令来在宿主机中保存我们需要的日志信息等。</p>
+<p>通过这个命令将宿主机的目录与容器的指定目录进行连接，相当于进行挂载，有助于数据的保存，可以通过这个命令来在宿主机中保存我们需要的日志信息等。多次挂载需要多次进行声明。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o &lt; target_image_name.tar &gt; &lt; current_image_name &gt;</span><br></pre></td></tr></table></figure>
 
 <p>以压缩包保存已经拉取的镜像</p>
@@ -184,8 +188,8 @@
 <h2 id="命令行使用"><a href="#命令行使用" class="headerlink" title="命令行使用"></a>命令行使用</h2><p>docker cli 的使用前需要先启动docker的守护进程</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
 
-<p>使用systemctl</p>
-<h2 id="docker-一些小细节"><a href="#docker-一些小细节" class="headerlink" title="docker-一些小细节"></a>docker-一些小细节</h2><p>很多时候我们不用root账户来运行docker的相关服务，因为安全性很难得到保证。<br>因此我们需要使用普通用户来使用docker的服务。</p>
+<p>使用systemctl启动docker和启用docker服务开机自启</p>
+<h2 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h2><p>很多时候我们不用root账户来运行docker的相关服务，因为安全性很难得到保证。<br>因此我们需要使用普通用户来使用docker的服务。</p>
 <p>在linux中，我们可以这么做：</p>
 <ol>
 <li>sudo gpasswd -a username docker</li>
