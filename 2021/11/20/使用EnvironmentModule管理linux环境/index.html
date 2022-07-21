@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">799</span>
+            <span class="post-count">838</span>
         </span>
     </span>
 
@@ -118,7 +118,11 @@
 <p>解压进行安装</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y autoconf tclsh tcl-dev tk-dev mesa-common-dev libjpeg-dev libtogl-dev</span><br><span class="line">tar -xvf modules-xxx</span><br><span class="line"></span><br><span class="line">cd modules-xxx</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
+<p>CentOS使用包管理器安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y environment-modules</span><br></pre></td></tr></table></figure>
+
 <h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>Environt-Module为多个Shell解释器提供了环境变量设置脚本，需要使用这些脚本初始化软件的环境变量</p>
+<p>tips：若是包管理器安装的，环境配置文件在&#x2F;usr&#x2F;share&#x2F;Modules下</p>
 <p><code>source /InstallFolder/modules-xxx/init/bash</code></p>
 <p>可以添加到bashrc</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;source /path/to/modules-xxx/init/bash&quot; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
