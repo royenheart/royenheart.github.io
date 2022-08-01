@@ -474,6 +474,15 @@
 </ol>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install linux-tools-$(uname -r) linux-cloud-tools-$(uname -r)</span><br></pre></td></tr></table></figure>
 
+<ol start="3">
+<li>CentOS&#x2F;openEuler</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install perf</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用flamegraph输出热点图"><a href="#使用flamegraph输出热点图" class="headerlink" title="使用flamegraph输出热点图"></a>使用flamegraph输出热点图</h2><p><a target="_blank" rel="noopener" href="https://github.com/brendangregg/FlameGraph">flamegraph地址</a></p>
+<p>下载安装后可配合perf输出的数据生成程序直观的热点函数图进行进一步的分析：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">benchmark() &#123;</span><br><span class="line">    fileName=$1</span><br><span class="line">    outputName=$2    </span><br><span class="line">    perf record -e cpu-clock -g -o $&#123;fileName&#125;.data ./$&#123;fileName&#125; </span><br><span class="line">    perf script -i ./$&#123;fileName&#125;.data &amp;&gt; ./$&#123;fileName&#125;.unfold</span><br><span class="line">    stackcollapse-perf.pl ./$&#123;fileName&#125;.unfold &amp;&gt; ./$&#123;fileName&#125;.folded</span><br><span class="line">    flamegraph.pl ./$&#123;fileName&#125;.folded &gt; ./benchmarks/$&#123;fileName&#125;.svg</span><br><span class="line">    mv $&#123;fileName&#125;.data $&#123;fileName&#125;.unfold $&#123;fileName&#125;.folded ./data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">files=(&quot;matrix_no_optimize&quot; &quot;matrix_o1&quot; &quot;matrix_o2&quot; &quot;matrix_o3&quot; &quot;matrix_of&quot;)</span><br><span class="line"></span><br><span class="line">for file in $&#123;files[@]&#125;</span><br><span class="line">do</span><br><span class="line">    benchmark $&#123;file&#125; $&#123;file&#125;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
 <h2 id="一些使用问题"><a href="#一些使用问题" class="headerlink" title="一些使用问题"></a>一些使用问题</h2><ol>
 <li>Accesss to performance monitoring and observability operations is limited</li>
 </ol>
