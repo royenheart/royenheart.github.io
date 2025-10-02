@@ -1,3 +1,10 @@
+---
+title: AI2MinecraftBuilds
+date: 2025-10-02 10:17
+categories: [AIGC, Minecraft, Building]
+tags: [log]
+---
+
 # 1. 图片编辑
 
 - 去除背景：gemini（使用 NanoBanana 模型）。提示词：
