@@ -1,8 +1,8 @@
 ---
 title: AI2MinecraftBuilds
-date: 2025-10-02 10:17
-categories: [AIGC, Minecraft, Building]
-tags: [log]
+date: 2025-10-02 10:17 +0800
+categories: [AIGC, 随心记]
+tags: [游戏，Minecraft]
 ---
 
 # 1. 图片编辑

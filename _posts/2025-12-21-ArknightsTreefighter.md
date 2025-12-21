@@ -1,6 +1,6 @@
 ---
 title: （同人）明日方舟 伐木工的猜想
-date: 2025-12-21
+date: 2025-12-21 16:49 +0800
 categories: [幻想集，随心记]
 tags: [游戏, 同人]     # TAG names should always be lowercase
 ---
