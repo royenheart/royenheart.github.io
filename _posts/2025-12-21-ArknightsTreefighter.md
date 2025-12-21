@@ -1,7 +1,7 @@
 ---
 title: （同人）明日方舟 伐木工的猜想
 date: 2025-12-21 16:49 +0800
-categories: [幻想集，随心记]
+categories: [随心记]
 tags: [游戏, 同人]     # TAG names should always be lowercase
 ---
 
@@ -28,7 +28,7 @@ tags: [游戏, 同人]     # TAG names should always be lowercase
 
 陆地上逐渐诞生了纯黑的生命，紧接着部分个体进化出了发光器官。这些魑魅魍魉在因能量而起伏的地面上匍匐前进，陆地上只有火山、蠕动的生命和点缀其间的微弱光芒，除此之外只有黑暗。
 
-<center> <img style="width:95%;border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/assets/img/gemini/arknights_treefighter1.png" alt="蜿蜒数亿光年的生命"> <br> <div style="color:orange; border-bottom: 1px solid #d9d9d9; display: inline-block; color: #999; padding: 2px;margin-bottom:1em">蜿蜒数亿光年的生命</div> </center>
+<center> <img style="width:95%;border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://img.royenheart.com/arknights_treefighter1.png" alt="蜿蜒数亿光年的生命"> <br> <div style="color:orange; border-bottom: 1px solid #d9d9d9; display: inline-block; color: #999; padding: 2px;margin-bottom:1em">蜿蜒数亿光年的生命</div> </center>
 
 当智慧萌发，它们掌握了光的本源，并开始尝试向外探索。然而，受限于亘古以来的喜暗习性与失败的星空实验，它们将“光”视为一种反抗命运与追寻自由的消遣，而非必需：
 
@@ -50,7 +50,7 @@ tags: [游戏, 同人]     # TAG names should always be lowercase
 
 而这种绝对的能量级差，在伐木工与外界文明之间筑起了一道无法逾越的交流禁区。对于伐木工而言，他们则又一次陷入了无边的孤寂。
 
-<center> <img style="width:95%;border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/assets/img/gemini/arknights_treefighter2.png" alt="永恒的光芒、无尽的愤怒"> <br> <div style="color:orange; border-bottom: 1px solid #d9d9d9; display: inline-block; color: #999; padding: 2px;margin-bottom:1em">永恒的光芒、无尽的愤怒</div> </center>
+<center> <img style="width:95%;border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://img.royenheart.com/arknights_treefighter2.png" alt="永恒的光芒、无尽的愤怒"> <br> <div style="color:orange; border-bottom: 1px solid #d9d9d9; display: inline-block; color: #999; padding: 2px;margin-bottom:1em">永恒的光芒、无尽的愤怒</div> </center>
 
 逃避并非终点。在最后泰拉和其他无数文明一样汇聚了无垠的能量，以星空为载体发射出**“视界探针”**，试图刺穿这道永恒的毁灭之光。意外的是，它们汇聚的能量也最终触及了伐木工的层级，并产生了共鸣。但他们也再没有回头路，最终一起驶离了这个伤痕累累的宇宙，在下一个终结后进入了崭新的存在。
 
