@@ -1,0 +1,22 @@
+# config.toml
+
+[meta]
+title = "My Audio Space"
+beian_icp = "京ICP备12345678号"
+beian_police = "京公网安备11010102000000号"
+
+[links]
+blog = "https://yourblog.com"
+twitter = "https://twitter.com/yourhandle"
+github = "https://github.com/yourhandle"
+
+[music]
+# 直接填入网易云 iframe 代码
+# 注意：为了美观，我们在前端 CSS 里会把它定位在底部
+iframe = '''<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=30953026&auto=1&height=66"></iframe>'''
+
+[visual]
+bg_color = "#050510"
+cube_color = "#1a2a6c"
+highlight_color = "#ff0055"
+ambient_color = "#2b32b2"
