@@ -1,201 +1,215 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{TITLE}}</title>
     <style>
-      body { margin: 0; overflow: hidden; background-color: {{COLOR_BG}}; color: #fff; font-family: sans-serif; }
-      #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        /* 🔍 重点修改：确保 body 和 html 占满 100% 且无滚动条 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 禁止滚动条出现 */
+            background-color: {{COLOR_BG}};
+            color: #fff;
+            font-family: sans-serif;
+        }
 
-      /* UI 层 */
-      #ui-layer {
-          position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
-          pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;
-      }
-      .header { padding: 20px; text-align: right; pointer-events: auto; }
-      .social-link {
-          color: rgba(255,255,255,0.6); text-decoration: none; margin-left: 15px;
-          border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px;
-          font-size: 14px; transition: 0.3s;
-      }
-      .social-link:hover { background: {{COLOR_HIGHLIGHT}}; border-color: {{COLOR_HIGHLIGHT}}; color: #fff; box-shadow: 0 0 10px {{COLOR_HIGHLIGHT}}; }
+        /* 🔍 重点修改：使用 viewport 单位确保画布占满屏幕 */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
 
-      /* 音乐播放器容器 */
-      .player-container {
-          pointer-events: auto;
-          align-self: center;
-          margin-bottom: 20px;
-          /* 给 iframe 加一个半透明背景玻璃效果 */
-          background: rgba(0,0,0,0.5);
-          backdrop-filter: blur(5px);
-          border-radius: 8px;
-          padding: 5px;
-          border: 1px solid rgba(255,255,255,0.1);
-      }
+        /* UI 层 */
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
+            pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .header { padding: 20px; text-align: right; pointer-events: auto; }
+        .social-link {
+            color: rgba(255,255,255,0.6); text-decoration: none; margin-left: 15px;
+            border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px;
+            font-size: 14px; transition: 0.3s;
+        }
+        .social-link:hover { background: {{COLOR_HIGHLIGHT}}; border-color: {{COLOR_HIGHLIGHT}}; color: #fff; box-shadow: 0 0 10px {{COLOR_HIGHLIGHT}}; }
 
-      .footer {
-          padding: 10px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); pointer-events: auto;
-          background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-      }
-      .footer a { color: inherit; text-decoration: none; margin: 0 10px; }
+        /* 音乐播放器容器 */
+        .player-container {
+            pointer-events: auto;
+            align-self: center;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            padding: 5px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer {
+            padding: 10px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); pointer-events: auto;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+        .footer a { color: inherit; text-decoration: none; margin: 0 10px; }
     </style>
     <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
         }
-      }
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="canvas-container"></div>
 
     <div id="ui-layer">
-      <div class="header">
-        <a href="{{LINK_BLOG}}" target="_blank" class="social-link">Blog</a>
-        <a href="{{LINK_TWITTER}}" target="_blank" class="social-link"
-          >Twitter</a
-        >
-        <a href="{{LINK_GITHUB}}" target="_blank" class="social-link">GitHub</a>
-      </div>
+        <div class="header">
+            <a href="{{LINK_BLOG}}" target="_blank" class="social-link">Blog</a>
+            <!-- <a href="{{LINK_TWITTER}}" target="_blank" class="social-link">Twitter</a> -->
+            <a href="{{LINK_GITHUB}}" target="_blank" class="social-link">GitHub</a>
+        </div>
 
-      <div class="player-container">{{MUSIC_IFRAME}}</div>
+        <div class="player-container">
+            {{MUSIC_IFRAME}}
+        </div>
 
-      <div class="footer">
-        <a href="https://beian.miit.gov.cn/" target="_blank">{{BEIAN_ICP}}</a>
-        <a href="#" target="_blank">{{BEIAN_POLICE}}</a>
-      </div>
+        <div class="footer">
+            <a href="https://beian.miit.gov.cn/" target="_blank">{{BEIAN_ICP}}</a>
+            <a href="#" target="_blank">{{BEIAN_POLICE}}</a>
+        </div>
     </div>
 
     <script type="module">
-      import * as THREE from "three";
-      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-      // --- 1. 场景 ---
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2("{{COLOR_BG}}", 0.035);
-      scene.background = new THREE.Color("{{COLOR_BG}}");
+        // --- 1. 场景 ---
+        const scene = new THREE.Scene();
+        // 🔍 重点修改：减弱雾气密度，让远处的物体更清晰变亮
+        scene.fog = new THREE.FogExp2('{{COLOR_BG}}', 0.025);
+        scene.background = new THREE.Color('{{COLOR_BG}}');
 
-      const camera = new THREE.PerspectiveCamera(
-        70,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        100
-      );
-      camera.position.set(0, 5, 20);
-      camera.lookAt(0, 0, 0);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: false });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      document
-        .getElementById("canvas-container")
-        .appendChild(renderer.domElement);
-
-      // --- 2. 灯光 ---
-      const ambientLight = new THREE.AmbientLight("{{COLOR_AMBIENT}}", 2.0);
-      scene.add(ambientLight);
-
-      const redLight = new THREE.PointLight("{{COLOR_HIGHLIGHT}}", 150, 50);
-      redLight.position.set(10, 5, 10);
-      scene.add(redLight);
-
-      const blueLight = new THREE.PointLight("{{COLOR_CUBE}}", 100, 50);
-      blueLight.position.set(-10, -5, 10);
-      scene.add(blueLight);
-
-      // --- 3. 立方体矩阵 ---
-      const amount = 30;
-      const count = amount * amount;
-      const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-      const material = new THREE.MeshStandardMaterial({
-        color: "{{COLOR_CUBE}}",
-        roughness: 0.4,
-        metalness: 0.8,
-      });
-      const mesh = new THREE.InstancedMesh(geometry, material, count);
-
-      const dummy = new THREE.Object3D();
-      let i = 0;
-      const offset = (amount - 1) / 2;
-
-      for (let x = 0; x < amount; x++) {
-        for (let z = 0; z < amount; z++) {
-          dummy.position.set(offset - x, 0, offset - z);
-          dummy.updateMatrix();
-          mesh.setMatrixAt(i++, dummy.matrix);
-        }
-      }
-      mesh.position.y = -5;
-      scene.add(mesh);
-
-      // --- 4. Bloom 发光 ---
-      const renderScene = new RenderPass(scene, camera);
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        1.5,
-        0.4,
-        0.85
-      );
-      bloomPass.threshold = 0.1;
-      bloomPass.strength = 1.0;
-      bloomPass.radius = 0.5;
-
-      const composer = new EffectComposer(renderer);
-      composer.addPass(renderScene);
-      composer.addPass(bloomPass);
-
-      // --- 5. 动画循环 (自动波浪模式) ---
-      const timeScale = 0.002;
-
-      function animate() {
-        requestAnimationFrame(animate);
-        const time = Date.now() * timeScale;
-
-        let i = 0;
-        for (let x = 0; x < amount; x++) {
-          for (let z = 0; z < amount; z++) {
-            // 算法：创建复杂的正弦波干涉，模拟液体表面
-            // 这种效果不依赖音频，但看起来很有节奏感
-            let y = Math.sin(x * 0.5 + time) * Math.cos(z * 0.5 + time) * 2;
-            y += Math.sin(x * 0.2 + time * 2) * 1.5; // 叠加第二层波浪
-
-            dummy.position.set(offset - x, y, offset - z);
-
-            // 缓慢自转
-            dummy.rotation.x = time * 0.5 + x * 0.1;
-            dummy.rotation.z = time * 0.5 + z * 0.1;
-
-            dummy.updateMatrix();
-            mesh.setMatrixAt(i++, dummy.matrix);
-          }
-        }
-        mesh.instanceMatrix.needsUpdate = true;
-
-        // 呼吸灯效果
-        redLight.intensity = 150 + Math.sin(time * 5) * 50;
-
-        // 镜头环绕
-        const camTime = Date.now() * 0.0001;
-        camera.position.x = Math.sin(camTime) * 18;
-        camera.position.z = Math.cos(camTime) * 18;
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 5, 20);
         camera.lookAt(0, 0, 0);
 
-        composer.render();
-      }
-
-      animate();
-
-      window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+        const renderer = new THREE.WebGLRenderer({ antialias: false });
+        // 🔍 重点修改：确保初始化时就是全屏尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);
-        composer.setSize(window.innerWidth, window.innerHeight);
-      });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // --- 2. 灯光 (🔍 重点修改：大幅提高亮度) ---
+
+        // 提高环境光，照亮暗部 (原 2.0 -> 现 3.5)
+        const ambientLight = new THREE.AmbientLight('{{COLOR_AMBIENT}}', 3.5);
+        scene.add(ambientLight);
+
+        // 提高红色主光源强度 (原 150 -> 现 400)
+        const redLight = new THREE.PointLight('{{COLOR_HIGHLIGHT}}', 400, 50);
+        redLight.position.set(10, 5, 10);
+        scene.add(redLight);
+
+        // 提高蓝色辅助光源强度 (原 100 -> 现 300)
+        const blueLight = new THREE.PointLight('{{COLOR_CUBE}}', 300, 50);
+        blueLight.position.set(-10, -5, 10);
+        scene.add(blueLight);
+
+        // --- 3. 立方体矩阵 ---
+        const amount = 30;
+        const count = amount * amount;
+        const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+        // 材质保持不变，依靠更强的灯光来照亮它
+        const material = new THREE.MeshStandardMaterial({
+            color: '{{COLOR_CUBE}}', roughness: 0.4, metalness: 0.8
+        });
+        const mesh = new THREE.InstancedMesh(geometry, material, count);
+
+        const dummy = new THREE.Object3D();
+        let i = 0;
+        const offset = (amount - 1) / 2;
+
+        for (let x = 0; x < amount; x++) {
+            for (let z = 0; z < amount; z++) {
+                dummy.position.set(offset - x, 0, offset - z);
+                dummy.updateMatrix();
+                mesh.setMatrixAt(i++, dummy.matrix);
+            }
+        }
+        mesh.position.y = -5;
+        scene.add(mesh);
+
+        // --- 4. Bloom 发光后期 (🔍 重点修改：增强发光感) ---
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        // 降低阈值，让更多原本稍暗的地方也开始发光 (原 0.1 -> 现 0.05)
+        bloomPass.threshold = 0.05;
+        // 提高强度 (原 1.0 -> 现 1.8)
+        bloomPass.strength = 1.8;
+        bloomPass.radius = 0.5;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // --- 5. 动画循环 ---
+        const timeScale = 0.002;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * timeScale;
+
+            let i = 0;
+            for (let x = 0; x < amount; x++) {
+                for (let z = 0; z < amount; z++) {
+                    let y = Math.sin(x * 0.5 + time) * Math.cos(z * 0.5 + time) * 2;
+                    y += Math.sin(x * 0.2 + time * 2) * 1.5;
+
+                    dummy.position.set(offset - x, y, offset - z);
+                    dummy.rotation.x = time * 0.5 + x * 0.1;
+                    dummy.rotation.z = time * 0.5 + z * 0.1;
+
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(i++, dummy.matrix);
+                }
+            }
+            mesh.instanceMatrix.needsUpdate = true;
+
+            // 呼吸灯效果也随基础亮度提高 (原 150基数 -> 现 400基数)
+            redLight.intensity = 400 + Math.sin(time * 5) * 100;
+
+            const camTime = Date.now() * 0.0001;
+            camera.position.x = Math.sin(camTime) * 18;
+            camera.position.z = Math.cos(camTime) * 18;
+            camera.lookAt(0, 0, 0);
+
+            composer.render();
+        }
+
+        animate();
+
+        // --- 🔍 重点修改：窗口尺寸变化监听 ---
+        window.addEventListener('resize', () => {
+            // 1. 更新摄像机长宽比
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            // 2. 更新渲染器尺寸
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // 3. 重要：同时更新后期处理合成器的尺寸，否则画面会拉伸变形
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
-  </body>
+</body>
 </html>
