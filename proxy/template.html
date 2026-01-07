@@ -59,6 +59,26 @@
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
         }
         .footer a { color: inherit; text-decoration: none; margin: 0 10px; }
+
+        #switch-btn {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #switch-btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
     </style>
     <script type="importmap">
         {
@@ -74,6 +94,7 @@
 
     <div id="ui-layer">
         <div class="header">
+            <button id="switch-btn" style="margin-right: 20px;">Switch Scene</button>
             <a href="{{LINK_BLOG}}" target="_blank" class="social-link">Blog</a>
             <!-- <a href="{{LINK_TWITTER}}" target="_blank" class="social-link">Twitter</a> -->
             <a href="{{LINK_GITHUB}}" target="_blank" class="social-link">GitHub</a>
@@ -94,53 +115,74 @@
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { gsap } from 'https://unpkg.com/gsap@3.12.5/index.js'; // 引入 GSAP 用于平滑过渡颜色
 
-        // --- 1. 场景 ---
+        // --- 配置参数 (你可以根据需要调整原场景的颜色占位符) ---
+        const CONFIG = {
+            scene1: {
+                bg: '{{COLOR_BG}}', // 替换为具体颜色，如 #050505
+                ambient: '{{COLOR_AMBIENT}}', // 如 #111111
+                highlight: '{{COLOR_HIGHLIGHT}}', // 如 #ff0055
+                cube: '{{COLOR_CUBE}}', // 如 #0055ff
+                fogDensity: 0.025
+            },
+            scene2: {
+                bg: '#1a0b00', // 深褐色背景
+                ambient: '#ffaa00', // 金色环境光
+                highlight: '#ffdd00', // 明亮的金黄色
+                cube: '#ff8800', // 橙色方块
+                fogDensity: 0.015 // 视野更开阔
+            }
+        };
+
+        // 默认回退颜色 (防止模板字符串未替换报错)
+        if (CONFIG.scene1.bg.includes('{{')) CONFIG.scene1.bg = '#020205';
+        if (CONFIG.scene1.ambient.includes('{{')) CONFIG.scene1.ambient = '#111111';
+        if (CONFIG.scene1.highlight.includes('{{')) CONFIG.scene1.highlight = '#ff0044';
+        if (CONFIG.scene1.cube.includes('{{')) CONFIG.scene1.cube = '#0044ff';
+
+        // --- 1. 场景初始化 ---
         const scene = new THREE.Scene();
-        // 🔍 重点修改：减弱雾气密度，让远处的物体更清晰变亮
-        scene.fog = new THREE.FogExp2('{{COLOR_BG}}', 0.025);
-        scene.background = new THREE.Color('{{COLOR_BG}}');
+        scene.fog = new THREE.FogExp2(CONFIG.scene1.bg, CONFIG.scene1.fogDensity);
+        scene.background = new THREE.Color(CONFIG.scene1.bg);
 
-        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000); // 视距加大以容纳太阳
         camera.position.set(0, 5, 20);
-        camera.lookAt(0, 0, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: false });
-        // 🔍 重点修改：确保初始化时就是全屏尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ReinhardToneMapping; // 使得高亮部分更柔和
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // --- 2. 灯光 (🔍 重点修改：大幅提高亮度) ---
-
-        // 提高环境光，照亮暗部 (原 2.0 -> 现 3.5)
-        const ambientLight = new THREE.AmbientLight('{{COLOR_AMBIENT}}', 3.5);
+        // --- 2. 灯光系统 ---
+        const ambientLight = new THREE.AmbientLight(CONFIG.scene1.ambient, 3.5);
         scene.add(ambientLight);
 
-        // 提高红色主光源强度 (原 150 -> 现 400)
-        const redLight = new THREE.PointLight('{{COLOR_HIGHLIGHT}}', 400, 50);
-        redLight.position.set(10, 5, 10);
-        scene.add(redLight);
+        const mainLight = new THREE.PointLight(CONFIG.scene1.highlight, 400, 100);
+        mainLight.position.set(10, 10, 10);
+        scene.add(mainLight);
 
-        // 提高蓝色辅助光源强度 (原 100 -> 现 300)
-        const blueLight = new THREE.PointLight('{{COLOR_CUBE}}', 300, 50);
-        blueLight.position.set(-10, -5, 10);
-        scene.add(blueLight);
+        const auxLight = new THREE.PointLight(CONFIG.scene1.cube, 300, 100);
+        auxLight.position.set(-10, -5, 10);
+        scene.add(auxLight);
 
-        // --- 3. 立方体矩阵 ---
-        const amount = 30;
+        // --- 3. 基础场景：方块矩阵 (波浪) ---
+        const amount = 40; // 稍微增加数量让海面更宽阔
         const count = amount * amount;
         const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-        // 材质保持不变，依靠更强的灯光来照亮它
         const material = new THREE.MeshStandardMaterial({
-            color: '{{COLOR_CUBE}}', roughness: 0.4, metalness: 0.8
+            color: CONFIG.scene1.cube,
+            roughness: 0.2, // 降低粗糙度，更像水面反光
+            metalness: 0.9
         });
         const mesh = new THREE.InstancedMesh(geometry, material, count);
 
         const dummy = new THREE.Object3D();
-        let i = 0;
         const offset = (amount - 1) / 2;
 
+        // 初始化矩阵位置
+        let i = 0;
         for (let x = 0; x < amount; x++) {
             for (let z = 0; z < amount; z++) {
                 dummy.position.set(offset - x, 0, offset - z);
@@ -151,12 +193,44 @@
         mesh.position.y = -5;
         scene.add(mesh);
 
-        // --- 4. Bloom 发光后期 (🔍 重点修改：增强发光感) ---
+        // --- 4. 第二场景专属物体：黑洞环与旭日 ---
+        const specialGroup = new THREE.Group();
+        specialGroup.visible = false; // 初始隐藏
+        scene.add(specialGroup);
+
+        // 4.1 旭日 (巨大的发光球体)
+        const sunGeo = new THREE.SphereGeometry(12, 64, 64);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 }); // Basic材质不受光照影响，配合Bloom发光
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        sun.position.set(0, 2, -40); // 放在远处
+        specialGroup.add(sun);
+
+        // 4.2 黑洞积吸盘 (光环) - 使用圆环几何体
+        const ringGeo = new THREE.TorusGeometry(16, 0.3, 16, 100); // 半径比太阳大
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0xffccaa });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.set(0, 2, -40);
+        ring.rotation.x = Math.PI / 2.5; // 倾斜
+        specialGroup.add(ring);
+
+        // 4.3 粒子光尘 (增加空灵感)
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 200;
+        const starPos = new Float32Array(starCount * 3);
+        for(let j=0; j<starCount*3; j++) {
+            starPos[j] = (Math.random() - 0.5) * 60;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({color: 0xffaa00, size: 0.2, transparent: true, opacity: 0.8});
+        const stars = new THREE.Points(starGeo, starMat);
+        stars.position.set(0, 5, -30);
+        specialGroup.add(stars);
+
+
+        // --- 5. 后期处理 ---
         const renderScene = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-        // 降低阈值，让更多原本稍暗的地方也开始发光 (原 0.1 -> 现 0.05)
         bloomPass.threshold = 0.05;
-        // 提高强度 (原 1.0 -> 现 1.8)
         bloomPass.strength = 1.8;
         bloomPass.radius = 0.5;
 
@@ -164,20 +238,64 @@
         composer.addPass(renderScene);
         composer.addPass(bloomPass);
 
-        // --- 5. 动画循环 ---
+        // --- 6. 场景切换逻辑 ---
+        let isScene2 = false;
+        const switchBtn = document.getElementById('switch-btn');
+
+        switchBtn.addEventListener('click', () => {
+            isScene2 = !isScene2;
+            toggleScene(isScene2);
+        });
+
+        function toggleScene(toScene2) {
+            const target = toScene2 ? CONFIG.scene2 : CONFIG.scene1;
+            const duration = 1.5; // 动画时长秒
+
+            // 1. 颜色平滑过渡 (GSAP)
+            gsap.to(scene.background, { r: new THREE.Color(target.bg).r, g: new THREE.Color(target.bg).g, b: new THREE.Color(target.bg).b, duration: duration });
+            gsap.to(scene.fog.color, { r: new THREE.Color(target.bg).r, g: new THREE.Color(target.bg).g, b: new THREE.Color(target.bg).b, duration: duration });
+            gsap.to(scene.fog, { density: target.fogDensity, duration: duration });
+
+            // 灯光颜色过渡
+            gsap.to(ambientLight.color, { r: new THREE.Color(target.ambient).r, g: new THREE.Color(target.ambient).g, b: new THREE.Color(target.ambient).b, duration: duration });
+            gsap.to(mainLight.color, { r: new THREE.Color(target.highlight).r, g: new THREE.Color(target.highlight).g, b: new THREE.Color(target.highlight).b, duration: duration });
+            gsap.to(auxLight.color, { r: new THREE.Color(target.cube).r, g: new THREE.Color(target.cube).g, b: new THREE.Color(target.cube).b, duration: duration });
+
+            // 方块材质颜色过渡
+            gsap.to(material.color, { r: new THREE.Color(target.cube).r, g: new THREE.Color(target.cube).g, b: new THREE.Color(target.cube).b, duration: duration });
+
+            // 2. 物体显隐控制
+            if (toScene2) {
+                specialGroup.visible = true;
+                // 旭日升起动画
+                gsap.fromTo(sun.position, { y: -10 }, { y: 2, duration: 3, ease: "power2.out" });
+                gsap.to(bloomPass, { strength: 2.5, duration: 1 }); // 增强光效
+            } else {
+                // 隐藏回退
+                gsap.to(sun.position, { y: -20, duration: 1, onComplete: () => { specialGroup.visible = false; } });
+                gsap.to(bloomPass, { strength: 1.8, duration: 1 });
+            }
+        }
+
+        // --- 7. 动画循环 ---
         const timeScale = 0.002;
 
         function animate() {
             requestAnimationFrame(animate);
             const time = Date.now() * timeScale;
 
+            // 矩阵波浪动画
             let i = 0;
             for (let x = 0; x < amount; x++) {
                 for (let z = 0; z < amount; z++) {
-                    let y = Math.sin(x * 0.5 + time) * Math.cos(z * 0.5 + time) * 2;
-                    y += Math.sin(x * 0.2 + time * 2) * 1.5;
+                    // 两种模式下波浪稍微不同，Scene2可以让波浪更平缓一些
+                    const waveScale = isScene2 ? 1.0 : 2.0;
+                    let y = Math.sin(x * 0.5 + time) * Math.cos(z * 0.5 + time) * waveScale;
+                    y += Math.sin(x * 0.2 + time * 2) * (isScene2 ? 0.5 : 1.5);
 
                     dummy.position.set(offset - x, y, offset - z);
+
+                    // 旋转效果
                     dummy.rotation.x = time * 0.5 + x * 0.1;
                     dummy.rotation.z = time * 0.5 + z * 0.1;
 
@@ -187,29 +305,39 @@
             }
             mesh.instanceMatrix.needsUpdate = true;
 
-            // 呼吸灯效果也随基础亮度提高 (原 150基数 -> 现 400基数)
-            redLight.intensity = 400 + Math.sin(time * 5) * 100;
+            // 灯光呼吸
+            mainLight.intensity = 400 + Math.sin(time * 5) * 100;
 
+            // 摄像机移动 (Scene2 时让摄像机移动更平缓，聚焦于中心)
             const camTime = Date.now() * 0.0001;
-            camera.position.x = Math.sin(camTime) * 18;
-            camera.position.z = Math.cos(camTime) * 18;
-            camera.lookAt(0, 0, 0);
+            if (!isScene2) {
+                camera.position.x = Math.sin(camTime) * 18;
+                camera.position.z = Math.cos(camTime) * 18;
+                camera.lookAt(0, 0, 0);
+            } else {
+                // 旭日模式下，摄像机缓慢正对太阳
+                camera.position.x = Math.sin(camTime * 0.5) * 5;
+                camera.position.z = 25 + Math.cos(camTime * 0.5) * 2;
+                camera.lookAt(0, 2, -40); // 看向太阳
+            }
+
+            // 特殊物体动画 (黑洞环旋转)
+            if (specialGroup.visible) {
+                ring.rotation.z -= 0.005; // 环自转
+                ring.rotation.x = Math.PI / 2.5 + Math.sin(time) * 0.05; // 环微幅摆动
+                stars.rotation.y = time * 0.05; // 星星旋转
+            }
 
             composer.render();
         }
 
         animate();
 
-        // --- 🔍 重点修改：窗口尺寸变化监听 ---
+        // 窗口尺寸监听
         window.addEventListener('resize', () => {
-            // 1. 更新摄像机长宽比
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-
-            // 2. 更新渲染器尺寸
             renderer.setSize(window.innerWidth, window.innerHeight);
-
-            // 3. 重要：同时更新后期处理合成器的尺寸，否则画面会拉伸变形
             composer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
