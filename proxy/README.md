@@ -75,3 +75,7 @@ http {
     }
 }
 ```
+
+When you need to use certbot to get ssl for a web dns hosted on cloudflare, need to install `certbot-dns-cloudflare` first:
+
+- Follow: https://certbot-dns-cloudflare.readthedocs.io/en/stable/
