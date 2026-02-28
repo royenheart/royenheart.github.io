@@ -4,7 +4,6 @@ date: 2026-2-23 22:07 +0800
 categories: [运维]
 tags: [运维, 配置记录]
 ---
-
 由 CLAUDE 润色。
 
 # 使用 OpenResty + hacdias/webdav 搭建 WebDAV 服务
@@ -174,17 +173,66 @@ openresty -t && openresty -s reload
 ```bash
 export WEBDAV_URL="https://xxx"
 export WEBDAV_USER="youruser"
-export WEBDAV_PASS="yourpassword"
+export WEBDAV_PASS='yourpassword'
 
 # PROPFIND
 curl -u $WEBDAV_USER:$WEBDAV_PASS -X PROPFIND "$WEBDAV_URL/" -H "Depth: 1" -v
+curl -u $WEBDAV_USER:$WEBDAV_PASS -X PROPFIND "$WEBDAV_URL/" -H "Depth: 1" -L -v
 
 # 上传文件，返回 Created
 curl -u $WEBDAV_USER:$WEBDAV_PASS -T /etc/hostname "$WEBDAV_URL/test.txt"
 
-# 下载文件
+# 下载文件，返回文件内容
 curl -u $WEBDAV_USER:$WEBDAV_PASS "$WEBDAV_URL/test.txt"
 
 # 未认证访问
 curl -I "$WEBDAV_URL/"
 ```
+
+## 九、灰云（optional）
+
+通过 cloudflare workers 判断 ipv4 cloudflare 代理还是 ipv6 直连，设置 cloudflare workers（需要被绑定的域名走橙云代理）：
+
+```javascript
+// 代码源自 REF，做了些修改避免信息丢失认证失败
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+  const clientIP = request.headers.get('CF-Connecting-IP') || '';
+  const isIPv6 = clientIP.includes(':');
+
+  if (!isIPv6) {
+    return fetch(request);
+  }
+
+  const originalURL = new URL(request.url);
+  // 替换 hostname 为灰云域名
+  originalURL.hostname = 'xxx.com';
+
+  // 透传原始请求方法，头，body，避免认证丢失
+  const proxyRequest = new Request(originalURL.toString(), {
+    method: request.method,
+    headers: request.headers,
+    body: ['GET', 'HEAD'].includes(request.method) ? null : request.body,
+    redirect: 'manual',
+  });
+
+  return fetch(proxyRequest);
+}
+```
+
+然后需要更新已有 ssl 证书，将其 extend 到灰云域名上：
+
+```bash
+certbot certonly --expand --dns-cloudflare --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini -d xx.com -d gray.xx.com
+```
+
+更新 oprensty 配置，server 块的 server_name 中添加新的域名。
+
+> 不过 cloudflare free 橙云代理限制了[每个连接最大上传100MB](https://community.cloudflare.com/t/max-file-size-upload-error/728692/5)，可能导致部分文件无法上传（比如 zotero，看起来目前并没有实现分块上传）。
+
+REF：
+
+- [通过 Cloudflare 实现基于 IPv6 优先直连 + IPv4 自动代理 的访问方案](https://club.fnnas.com/forum.php?mod=viewthread&tid=30522)

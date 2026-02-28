@@ -21,7 +21,7 @@ http {
             content_by_lua_block {
                 -- 引入 toml 库
                 local toml = require "toml"
-                
+              
                 -- 定义读取文件的辅助函数
                 local function read_file(path)
                     local file = io.open(path, "rb") 
@@ -37,7 +37,7 @@ http {
                     ngx.say("Error: config.toml not found")
                     return
                 end
-                
+              
                 -- 解析 TOML
                 local config = toml.parse(config_content)
 
@@ -51,18 +51,18 @@ http {
                 -- 3. 简单的字符串替换 (渲染模板)
                 -- Lua 的 string.gsub 类似于 Replace
                 local html = template
-                
+              
                 html = html:gsub("{{TITLE}}", config.meta.title)
                 html = html:gsub("{{BEIAN_ICP}}", config.meta.beian_icp)
                 html = html:gsub("{{BEIAN_POLICE}}", config.meta.beian_police)
-                
+              
                 html = html:gsub("{{LINK_BLOG}}", config.links.blog)
                 -- html = html:gsub("{{LINK_TWITTER}}", config.links.twitter)
                 html = html:gsub("{{LINK_GITHUB}}", config.links.github)
-                
+              
                 -- 这里直接注入 Iframe 字符串
                 html = html:gsub("{{MUSIC_IFRAME}}", config.music.iframe)
-                
+              
                 html = html:gsub("{{COLOR_BG}}", config.visual.bg_color)
                 html = html:gsub("{{COLOR_CUBE}}", config.visual.cube_color)
                 html = html:gsub("{{COLOR_HIGHLIGHT}}", config.visual.highlight_color)
@@ -79,3 +79,11 @@ http {
 When you need to use certbot to get ssl for a web dns hosted on cloudflare, need to install `certbot-dns-cloudflare` first:
 
 - Follow: https://certbot-dns-cloudflare.readthedocs.io/en/stable/
+- Use certbot to get ssl:
+
+```bash
+# can specify multiple domains
+certbot certonly --dns-cloudflare --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini -d xx.com
+
+certbot certonly --expand --dns-cloudflare --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini -d xx.com -d gray.xx.com
+```
