@@ -89,7 +89,49 @@ systemctl status webdav
 
 ## 五、申请 SSL 证书
 
-使用常用的 certbot 即可，
+使用常用的 certbot 即可：
+
+```bash
+# 申请证书
+certbot certonly --dns-cloudflare \
+  --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini \
+  -d your-domain.com
+
+# 查看当前证书状态
+certbot certificates
+
+# 模拟续期测试
+certbot renew --dry-run
+
+# 有时候 renew 失败是 API Token / Cloudflare DNS 传播超时问题。
+# 可以在 /etc/letsencrypt/renewal/xxx/xxx.conf 的 renewalparams 中添加 --dns-cloudflare-propagation-seconds 选项，增加等待时间。
+```
+
+certbot 每周更新：
+
+```ini
+# /etc/systemd/system/certbot.service
+[Unit]
+Description=Certbot Renewal
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew
+```
+
+```ini
+# /etc/systemd/system/certbot.timer
+[Unit]
+Description=Run certbot once weekly
+
+[Timer]
+OnCalendar=weekly
+RandomizedDelaySec=3600
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
 
 ---
 
