@@ -16,6 +16,13 @@ http {
     server {
         ....
 
+        location = /favicon.ico {
+            root /path/to/proxy;
+            default_type image/x-icon;
+            try_files /favicon.ico =404;
+            add_header Cache-Control "public, max-age=86400";
+        }
+
         location / {
             default_type text/html;
             content_by_lua_block {
