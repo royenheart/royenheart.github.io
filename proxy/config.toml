@@ -15,7 +15,7 @@ github = "https://github.com/royenheart"
 iframe = '''<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=30953026&auto=1&height=66"></iframe>'''
 
 [visual]
-bg_color = "#050510"
-cube_color = "#1a2a6c"
-highlight_color = "#ff0055"
-ambient_color = "#2b32b2"
+bg_color = "#01e8fe"
+cube_color = "#56dfff"
+highlight_color = "#ff4f8f"
+ambient_color = "#1e7dff"

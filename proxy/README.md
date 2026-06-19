@@ -1,5 +1,26 @@
 # Deploy
 
+## Local preview without OpenResty
+
+Use the Python preview server when you want to inspect `template.html` locally without
+configuring OpenResty. It reads `config.toml` and re-renders the template on every
+request, so refreshing the browser picks up local edits.
+
+```bash
+python3 proxy/dev_preview.py
+```
+
+Open:
+
+- `http://127.0.0.1:4173`
+- `http://127.0.0.1:4173/no-music` if the music iframe slows down browser testing
+
+Optional flags:
+
+```bash
+python3 proxy/dev_preview.py --host 0.0.0.0 --port 8080
+```
+
 ```bash
 dnf install openresty luarocks lua-devel cmake
 luarocks install toml
@@ -20,6 +41,13 @@ http {
             root /path/to/proxy;
             default_type image/x-icon;
             try_files /favicon.ico =404;
+            add_header Cache-Control "public, max-age=86400";
+        }
+
+        location = /avatar.svg {
+            root /path/to/proxy;
+            default_type image/svg+xml;
+            try_files /avatar.svg =404;
             add_header Cache-Control "public, max-age=86400";
         }
 
