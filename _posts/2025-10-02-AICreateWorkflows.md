@@ -89,6 +89,22 @@ Use the provided architectural photo as reference. Generate a high-fidelity 3D b
 - [CMS 机械动力相关蓝图站](https://www.creativemechanicserver.com/)
 - [MC 蓝图站](https://www.mcschematic.top/home/)
 
+# 画图
+
+目前主要几种类型：
+
+1. 即梦等代表软件
+
+这类软件都是提示词 + 已有的资产（参考图片、视频）去生成。没法直接画草稿，可以多生成一些作为灵感，实际用的话只通过文字说明很难描绘出自己已经想好的效果（多模态目标空间太大）。
+
+2. krita + [VirtualTablet](https://www.sunnysidesoft.com/virtualtablet/)（可以把平板电脑作为数位板，如果 PC 使用 Linux，可以试试 https://github.com/H-M-H/Weylus）+ [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion)
+
+通过插件扩展已有的绘图软件，可以先画草稿再不断生成，适合已经想好具体效果、色彩、构图的。
+
+krita-ai-diffusion 内置 ComfyUI，[Wiki](https://docs.interstice.cloud/installation/)，可选定图片区域根据提示词 AI 修改。提供了[在线](https://www.interstice.cloud/) 服务、本地模型（可直接插件界面下载）和自定义服务三种方式。
+
+3. 自建：ComfyUI 提供节点编辑、前后端，再用 stable diffusion 等本地模型或者三方多模态 LLM API 提供服务。
+
 # REF
 
 1. [BV1FKWAzJE16](https://www.bilibili.com/video/BV1FKWAzJE16/)
