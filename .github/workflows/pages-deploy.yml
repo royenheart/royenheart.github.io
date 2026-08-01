@@ -1,0 +1,155 @@
+name: "Build and Deploy"
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - .gitignore
+      - README.md
+      - LICENSE
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  # write is required by the "Push summaries to summaries-data branch" step.
+  # The push goes to the dedicated summaries-data branch (never `main`) and is
+  # done with GITHUB_TOKEN, which does not trigger a new workflow run.
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # submodules: true
+          # If using the 'assets' git submodule from Chirpy Starter, uncomment above
+          # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
+
+      # ------------------------------------------------------------------
+      # AI 摘要生成 (incremental): scripts/generate_summaries.py diffs each
+      # post's content hash against the summaries data file and only calls
+      # the DeepSeek API for new/changed posts.
+      #
+      # Persistence: summaries are NOT committed to `main`. They live on the
+      # dedicated `summaries-data` branch (created automatically on first
+      # run), so `main` history stays clean. Each run:
+      #   1. seeds _data/summaries.json from origin/summaries-data
+      #   2. regenerates summaries only for changed/new posts
+      #   3. builds & deploys the site (fresh summaries are in the build)
+      #   4. pushes the updated file back to summaries-data
+      #
+      # Required secret (repo Settings -> Secrets and variables -> Actions):
+      #   DEEPSEEK_API_KEY  - e.g. sk-... (NEVER commit it to the repo)
+      # Optional variables (Settings -> Variables):
+      #   DEEPSEEK_MODEL    - model id, e.g. deepseek-v4-flash (default) / deepseek-v4-pro
+      #   DEEPSEEK_BASE_URL - API base, defaults to https://api.deepseek.com (only
+      #                       needed when routing through a proxy/relay)
+      #
+      # If DEEPSEEK_API_KEY is missing the script is a safe no-op (exit 0),
+      # so the site still builds and deploys without summaries.
+      # ------------------------------------------------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Seed summaries from summaries-data branch
+        run: |
+          git fetch origin summaries-data || true
+          if git rev-parse --verify origin/summaries-data >/dev/null 2>&1; then
+            mkdir -p _data
+            git show origin/summaries-data:summaries.json > _data/summaries.json
+            echo "Seeded summaries from summaries-data branch ($(wc -c < _data/summaries.json) bytes)."
+          else
+            echo "summaries-data branch does not exist yet - first run, will generate all summaries."
+          fi
+
+      - name: Generate AI summaries (incremental)
+        run: python3 scripts/generate_summaries.py
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: ${{ vars.DEEPSEEK_MODEL }}
+          DEEPSEEK_BASE_URL: ${{ vars.DEEPSEEK_BASE_URL }}
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
+        env:
+          JEKYLL_ENV: "production"
+
+      - name: Test site
+        run: |
+          bundle exec htmlproofer _site \
+            \-\-disable-external \
+            \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site${{ steps.pages.outputs.base_path }}"
+
+      # Persist generated summaries on the dedicated summaries-data branch.
+      # Git is the persistence layer: the next run seeds from this branch and
+      # only regenerates what actually changed. The branch is created on the
+      # first run (orphan commit); subsequent runs fast-forward it. Pushes are
+      # done with GITHUB_TOKEN (no new workflow runs) to a branch the workflow
+      # does not listen to, so `main` history stays clean.
+      - name: Push summaries to summaries-data branch
+        if: ${{ !cancelled() }}
+        run: |
+          if [ ! -f _data/summaries.json ]; then
+            echo "No summaries file - skipping push."
+            exit 0
+          fi
+          cp _data/summaries.json /tmp/summaries.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin summaries-data || true
+          if git rev-parse --verify origin/summaries-data >/dev/null 2>&1; then
+            git checkout -B summaries-data origin/summaries-data
+          else
+            git checkout --orphan summaries-data
+            git clean -fdx
+          fi
+          cp /tmp/summaries.json summaries.json
+          git add summaries.json
+          if git rev-parse --verify HEAD >/dev/null 2>&1 && git diff --cached --quiet; then
+            echo "No summary changes to push."
+          else
+            git commit -m "chore: update AI summaries [skip ci]"
+            git push origin HEAD:summaries-data
+            echo "Pushed updated summaries to summaries-data."
+          fi
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

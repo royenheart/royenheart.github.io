@@ -1,0 +1,21 @@
+# config.toml
+
+[meta]
+title = "RoyenHeart's Space"
+beian_icp = "浙ICP备2020042582号"
+beian_police = "甘公网安备62012302000279号"
+
+[links]
+blog = "https://royenheart.github.io"
+# twitter = "https://twitter.com/yourhandle"
+github = "https://github.com/royenheart"
+
+[music]
+# iframe music player
+iframe = '''<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=30953026&auto=1&height=66"></iframe>'''
+
+[visual]
+bg_color = "#01e8fe"
+cube_color = "#56dfff"
+highlight_color = "#ff4f8f"
+ambient_color = "#1e7dff"

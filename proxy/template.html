@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" href="/favicon.ico?v=20260615" type="image/x-icon">
+    <title>{{TITLE}}</title>
+    <style>
+        :root {
+            --frame-border: rgba(0, 19, 56, 0.72);
+            --chrome-bg: rgba(235, 252, 255, 0.72);
+            --chrome-text: rgba(1, 15, 45, 0.82);
+            --scene-bg: {{COLOR_BG}};
+            --sidebar-width: clamp(92px, 8vw, 124px);
+            --bottom-height: clamp(88px, 10vh, 104px);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            color: #fff;
+            font-family: Inter, "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+            background:
+                radial-gradient(circle at 20% 14%, rgba(255, 255, 255, 0.78), transparent 28%),
+                radial-gradient(circle at 80% 72%, rgba(0, 190, 254, 0.24), transparent 34%),
+                #eefbff;
+        }
+
+        #app-frame {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr) var(--bottom-height);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            border: 2px solid var(--frame-border);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-sidebar {
+            grid-column: 1;
+            grid-row: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(18px, 4vh, 34px);
+            padding: clamp(16px, 2.2vh, 24px) 10px;
+            border-right: 2px solid var(--frame-border);
+            background: var(--chrome-bg);
+            backdrop-filter: blur(16px);
+            color: var(--chrome-text);
+            z-index: 4;
+        }
+
+        .profile-avatar {
+            width: clamp(54px, 5vw, 72px);
+            aspect-ratio: 1;
+            border: 2px solid rgba(0, 20, 64, 0.72);
+            object-fit: cover;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(0, 220, 255, 0.22)),
+                rgba(255, 255, 255, 0.66);
+        }
+
+        .side-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            width: 100%;
+        }
+
+        .nav-link {
+            color: var(--chrome-text);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: clamp(14px, 1.2vw, 18px);
+            line-height: 1.18;
+            text-align: center;
+            transition: color 0.24s ease, text-shadow 0.24s ease;
+        }
+
+        .nav-link:hover {
+            color: {{COLOR_HIGHLIGHT}};
+            text-shadow: 0 0 14px rgba(255, 79, 143, 0.36);
+        }
+
+        .scene-panel {
+            position: relative;
+            grid-column: 2;
+            grid-row: 1;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            background: var(--scene-bg);
+        }
+
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: var(--scene-bg);
+            z-index: 1;
+        }
+
+        #cube-field-layer,
+        #canvas-container canvas.webgl-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #cube-field-layer {
+            z-index: 1;
+            transition: opacity 1.2s ease;
+        }
+
+        #canvas-container canvas.webgl-layer {
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .scene-toggle {
+            position: absolute;
+            right: clamp(16px, 2.4vw, 30px);
+            bottom: clamp(14px, 2.2vh, 24px);
+            z-index: 5;
+            display: grid;
+            place-items: center;
+            width: clamp(42px, 4.6vw, 58px);
+            aspect-ratio: 1;
+            padding: 0;
+            border: 2px solid rgba(255, 255, 255, 0.72);
+            border-radius: 50%;
+            color: rgba(255, 255, 255, 0.92);
+            background: rgba(0, 14, 50, 0.18);
+            box-shadow: 0 10px 26px rgba(0, 34, 90, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: transform 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+        }
+
+        .scene-toggle:hover {
+            transform: translateY(-1px) rotate(14deg);
+            background: rgba(255, 79, 143, 0.32);
+            box-shadow: 0 12px 34px rgba(255, 79, 143, 0.32), inset 0 0 18px rgba(255, 255, 255, 0.26);
+        }
+
+        .scene-toggle-icon {
+            font-size: clamp(20px, 2.4vw, 30px);
+            line-height: 1;
+        }
+
+        .bottom-bar {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: minmax(330px, 440px) minmax(0, 1fr) max-content;
+            align-items: center;
+            gap: clamp(16px, 2vw, 28px);
+            padding: 8px clamp(12px, 1.6vw, 20px) 8px 0;
+            border-top: 2px solid var(--frame-border);
+            background: var(--chrome-bg);
+            backdrop-filter: blur(16px);
+            color: var(--chrome-text);
+            z-index: 6;
+        }
+
+        .music-panel {
+            justify-self: start;
+            width: 330px;
+            height: 86px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .music-panel iframe {
+            width: 330px;
+            height: 86px;
+            border: 0;
+        }
+
+        .music-panel:empty::before {
+            content: "歌曲信息";
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding-left: 28px;
+            color: rgba(0, 20, 64, 0.74);
+            font-weight: 700;
+        }
+
+        .record-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-self: end;
+            gap: 4px;
+            min-width: 0;
+            font-size: clamp(10px, 0.78vw, 12px);
+            font-weight: 700;
+            color: rgba(0, 20, 64, 0.74);
+            line-height: 1.25;
+            text-align: right;
+        }
+
+        .record-panel a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .record-panel a:hover {
+            color: {{COLOR_HIGHLIGHT}};
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 720px) {
+            #app-frame {
+                grid-template-columns: 1fr;
+                grid-template-rows: 84px minmax(0, 1fr) 78px;
+                width: 100vw;
+                height: 100vh;
+                min-height: 0;
+            }
+
+            .profile-sidebar {
+                grid-column: 1;
+                grid-row: 1;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 16px;
+                padding: 10px 14px;
+                border-right: 0;
+                border-bottom: 2px solid var(--frame-border);
+            }
+
+            .side-nav {
+                flex-direction: row;
+                justify-content: space-around;
+                gap: 10px;
+            }
+
+            .scene-panel {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .bottom-bar {
+                grid-row: 3;
+                grid-template-columns: minmax(0, 1fr) max-content;
+                gap: 10px;
+            }
+
+            .music-panel {
+                width: 260px;
+                height: 68px;
+            }
+
+            .music-panel iframe {
+                transform: scale(0.79);
+                transform-origin: left top;
+            }
+
+            .record-panel {
+                display: flex;
+                font-size: 9px;
+            }
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="app-frame">
+        <aside class="profile-sidebar" aria-label="个人导航">
+            <img class="profile-avatar" src="/avatar.svg" alt="RoyenHeart 头像">
+            <nav class="side-nav">
+                <a href="{{LINK_BLOG}}" target="_blank" class="nav-link">博客</a>
+                <a href="{{LINK_GITHUB}}" target="_blank" class="nav-link">GitHub</a>
+            </nav>
+        </aside>
+
+        <main class="scene-panel" aria-label="场景">
+            <div id="canvas-container">
+                <canvas id="cube-field-layer"></canvas>
+            </div>
+
+            <button id="switch-btn" class="scene-toggle" type="button" aria-label="切换场景">
+                <span class="scene-toggle-icon" aria-hidden="true">↻</span>
+                <span class="visually-hidden">切换场景</span>
+            </button>
+        </main>
+
+        <footer class="bottom-bar">
+            <div class="music-panel">
+                {{MUSIC_IFRAME}}
+            </div>
+            <div class="record-panel">
+                <a href="https://beian.miit.gov.cn/" target="_blank">{{BEIAN_ICP}}</a>
+                <a href="#" target="_blank">{{BEIAN_POLICE}}</a>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { gsap } from 'https://unpkg.com/gsap@3.12.5/index.js'; // 引入 GSAP 用于平滑过渡颜色
+
+        // --- 配置参数 ---
+        const CONFIG = {
+            scene1: {
+                bg: '{{COLOR_BG}}',
+                ambient: '{{COLOR_AMBIENT}}',
+                highlight: '{{COLOR_HIGHLIGHT}}',
+                cube: '{{COLOR_CUBE}}',
+                fogDensity: 0.0018,
+                keyLight: '#d8fbff',
+                warmRim: '#ff4f8f',
+                orangeRim: '#ff4b31'
+            },
+            scene2: {
+                bg: '#1a0b00', // 深褐色背景
+                ambient: '#ffaa00', // 金色环境光
+                highlight: '#ffdd00', // 明亮的金黄色
+                cube: '#ff8800', // 橙色方块
+                fogDensity: 0.015 // 视野更开阔
+            }
+        };
+
+        // 默认回退颜色 (防止模板字符串未替换报错)
+        if (CONFIG.scene1.bg.includes('{{')) CONFIG.scene1.bg = '#01e8fe';
+        if (CONFIG.scene1.ambient.includes('{{')) CONFIG.scene1.ambient = '#1e7dff';
+        if (CONFIG.scene1.highlight.includes('{{')) CONFIG.scene1.highlight = '#ff4f8f';
+        if (CONFIG.scene1.cube.includes('{{')) CONFIG.scene1.cube = '#56dfff';
+
+        const cubeFieldCanvas = document.getElementById('cube-field-layer');
+        const canvasContainer = document.getElementById('canvas-container');
+        const cubeFieldCtx = cubeFieldCanvas.getContext('2d', { alpha: true, desynchronized: true });
+        const urlParams = new URLSearchParams(window.location.search);
+        const forceCanvasCubeField = urlParams.get('renderer') === 'canvas' || urlParams.get('gpu') === '0';
+        const backgroundCubeSprites = [];
+        const cubeFieldSprites = [];
+        let cubeFieldWidth = 0;
+        let cubeFieldHeight = 0;
+        const cubeFieldRenderScale = 0.82;
+        let cubeFieldRenderDpr = cubeFieldRenderScale;
+        let cubeFieldFrame = 0;
+        const atmosphereCache = createLayerCache(8);
+        const backgroundCloudCache = createLayerCache(4);
+        const webglRenderInterval = 4;
+        const scene2RenderPath = 'direct';
+        const webglPixelRatio = Math.min(window.devicePixelRatio || 1, 1.35);
+        let webglFrameCounter = webglRenderInterval - 1;
+        let useGpuCubeField = false;
+        let gpuCubeCloudGroup = null;
+        let gpuCubeUniforms = null;
+        let gpuAtmosphereUniforms = null;
+        let gpuCubeInstanceCount = 0;
+        const gpuDenseCubeInstanceCount = 720;
+        const gpuCentralClusterWeight = 0.72;
+        const gpuLayerRatios = { far: 0.38, foreground: 0.76 };
+        const gpuVerticalDensityPower = 1.85;
+        const gpuPileHoldStart = 0.72;
+        const gpuPileFadeStart = 0.94;
+        const gpuLightContrast = 1.34;
+
+        function getSceneSize() {
+            const rect = canvasContainer.getBoundingClientRect();
+            return {
+                width: Math.max(320, Math.round(rect.width || window.innerWidth)),
+                height: Math.max(240, Math.round(rect.height || window.innerHeight))
+            };
+        }
+
+        // --- 1. 场景初始化 ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(CONFIG.scene1.bg, CONFIG.scene1.fogDensity);
+        scene.background = null;
+
+        const initialSceneSize = getSceneSize();
+        const camera = new THREE.PerspectiveCamera(62, initialSceneSize.width / initialSceneSize.height, 0.1, 160);
+        camera.position.set(0, 1.1, 18);
+
+        let renderer = null;
+        let webglAvailable = true;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(initialSceneSize.width, initialSceneSize.height, false);
+            renderer.setPixelRatio(webglPixelRatio);
+            renderer.setClearColor(0x000000, 0);
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 0.82;
+            renderer.domElement.classList.add('webgl-layer');
+            canvasContainer.appendChild(renderer.domElement);
+        } catch (error) {
+            webglAvailable = false;
+            console.warn('WebGL unavailable; using 2D cube field fallback.', error);
+        }
+        useGpuCubeField = webglAvailable && !forceCanvasCubeField;
+        if (useGpuCubeField) {
+            cubeFieldCanvas.style.opacity = '0';
+        }
+
+        // --- 2. 灯光系统 ---
+        const ambientLight = new THREE.HemisphereLight(CONFIG.scene1.ambient, '#02164f', 0.95);
+        scene.add(ambientLight);
+
+        const keyLight = new THREE.DirectionalLight(CONFIG.scene1.keyLight, 3.1);
+        keyLight.position.set(-18, 24, 18);
+        scene.add(keyLight);
+
+        const coolFillLight = new THREE.PointLight('#126dff', 30, 58, 1.7);
+        coolFillLight.position.set(-8, 8, 8);
+        scene.add(coolFillLight);
+
+        const warmRimLight = new THREE.PointLight(CONFIG.scene1.warmRim, 58, 72, 1.6);
+        warmRimLight.position.set(16, -6, 4);
+        scene.add(warmRimLight);
+
+        const orangeRimLight = new THREE.PointLight(CONFIG.scene1.orangeRim, 48, 66, 1.8);
+        orangeRimLight.position.set(-15, -8, -3);
+        scene.add(orangeRimLight);
+
+        // --- 3. 第一场景：参考图方块云 ---
+        const referenceCubeCloud = new THREE.Group();
+        scene.add(referenceCubeCloud);
+
+        const backgroundPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(180, 120),
+            new THREE.MeshBasicMaterial({ color: CONFIG.scene1.bg, transparent: true, opacity: 0, depthWrite: false })
+        );
+        backgroundPlane.name = 'backgroundPlane';
+        backgroundPlane.position.set(0, 0, -92);
+        referenceCubeCloud.add(backgroundPlane);
+
+        const foregroundCubes = [];
+        const midgroundCubes = [];
+        const allCubes = [];
+        const realCubeBudget = { midground: 58, foreground: 28 };
+        const baseGeometry = new THREE.BoxGeometry(1, 1, 1);
+        let seed = 82371;
+
+        function random() {
+            seed = (seed * 1664525 + 1013904223) >>> 0;
+            return seed / 4294967296;
+        }
+
+        function range(min, max) {
+            return min + (max - min) * random();
+        }
+
+        function pick(items) {
+            return items[Math.floor(random() * items.length)];
+        }
+
+        function colorToVec3(hex) {
+            const color = new THREE.Color(hex);
+            return [color.r, color.g, color.b];
+        }
+
+        function clusteredGpuX(xRange) {
+            if (random() > gpuCentralClusterWeight) {
+                return range(-xRange * 1.18, xRange * 1.18);
+            }
+            const value = range(-1, 1);
+            const centered = Math.sign(value) * Math.pow(Math.abs(value), 1.54);
+            return centered * xRange * 0.92 + range(-1.1, 1.1);
+        }
+
+        const gpuCubeVertexShader = `
+            attribute vec3 instanceOffset;
+            attribute vec3 instanceScale;
+            attribute vec3 instancePile;
+            attribute vec4 instanceMotion;
+            attribute vec4 instanceRotation;
+            attribute vec3 instanceTint;
+            attribute vec3 instanceAccent;
+            attribute float instanceAlpha;
+
+            uniform float uTime;
+            uniform float uFallTop;
+            uniform float uFallBottom;
+            uniform float uVerticalDensityPower;
+            uniform float uPileHoldStart;
+            uniform float uPileFadeStart;
+
+            varying vec3 vNormal;
+            varying vec3 vTint;
+            varying vec3 vAccent;
+            varying vec3 vWorldPosition;
+            varying float vAlpha;
+            varying float vDepth;
+            varying float vPileProgress;
+
+            mat3 rotateX(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return mat3(1.0, 0.0, 0.0, 0.0, c, -s, 0.0, s, c);
+            }
+
+            mat3 rotateY(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c);
+            }
+
+            mat3 rotateZ(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return mat3(c, -s, 0.0, s, c, 0.0, 0.0, 0.0, 1.0);
+            }
+
+            void main() {
+                float cycle = fract(instanceMotion.w + uTime * instanceMotion.x);
+                float normalizedFall = clamp(cycle / uPileHoldStart, 0.0, 1.0);
+                float densityFallProgress = 1.0 - pow(1.0 - normalizedFall, uVerticalDensityPower);
+                float pileProgress = smoothstep(uPileHoldStart - 0.08, uPileHoldStart + 0.12, cycle);
+                float fadeProgress = smoothstep(uPileFadeStart, 1.0, cycle);
+                float fallY = mix(uFallTop, uFallBottom, densityFallProgress);
+                float pileY = uFallBottom + instancePile.y;
+                float driftX = sin(uTime * 0.28 + instanceMotion.z) * instanceMotion.y * (1.0 - pileProgress * 0.72);
+                float spin = uTime * instanceRotation.w * (1.0 - pileProgress * 0.48);
+                mat3 rotationMatrix =
+                    rotateZ(instanceRotation.z + spin) *
+                    rotateY(instanceRotation.y + spin * 0.64) *
+                    rotateX(instanceRotation.x + spin * 0.48);
+                vec3 fallingOffset = instanceOffset + vec3(driftX, fallY, 0.0);
+                vec3 pileOffset = vec3(instancePile.x, pileY, instancePile.z);
+                pileOffset.y += sin(uTime * 0.9 + instanceMotion.z) * 0.08 * pileProgress * (1.0 - fadeProgress);
+                vec3 baseWorldOffset = mix(fallingOffset, pileOffset, pileProgress);
+                float lowerDensity = 1.0 - smoothstep(-14.0, 16.0, baseWorldOffset.y);
+                float verticalDensityScale = mix(0.72, 1.08, lowerDensity);
+                vec3 localPosition = rotationMatrix * (position * instanceScale * verticalDensityScale);
+                vec3 worldPosition = baseWorldOffset + localPosition;
+
+                float topFade = smoothstep(0.0, 0.08, cycle);
+                float bottomFade = 1.0 - fadeProgress;
+                float verticalDensityAlpha = mix(0.46, 1.18, lowerDensity);
+                vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha;
+                vNormal = normalize(normalMatrix * rotationMatrix * normal);
+                vTint = instanceTint;
+                vAccent = instanceAccent;
+                vWorldPosition = worldPosition;
+                vDepth = smoothstep(-42.0, -4.0, instanceOffset.z);
+                vPileProgress = pileProgress;
+
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(worldPosition, 1.0);
+            }
+        `;
+
+        const gpuCubeFragmentShader = `
+            precision mediump float;
+
+            varying vec3 vNormal;
+            varying vec3 vTint;
+            varying vec3 vAccent;
+            varying vec3 vWorldPosition;
+            varying float vAlpha;
+            varying float vDepth;
+            varying float vPileProgress;
+
+            uniform float uLightContrast;
+
+            void main() {
+                vec3 normalDirection = normalize(vNormal);
+                vec3 keyDirection = normalize(vec3(-0.62, 0.76, 0.32));
+                vec3 rimDirection = normalize(vec3(0.86, -0.18, 0.28));
+                vec3 shadowDirection = normalize(vec3(0.3, -0.42, -0.86));
+
+                float key = max(dot(normalDirection, keyDirection), 0.0);
+                float topLight = smoothstep(0.18, 0.88, normalDirection.y);
+                float shadow = smoothstep(0.18, 0.92, max(-normalDirection.z, dot(normalDirection, shadowDirection)));
+                float sideWarmth = smoothstep(0.24, 0.9, normalDirection.x);
+                float rim = pow(max(dot(normalDirection, rimDirection), 0.0), 1.35);
+                float leftTopLight = smoothstep(-12.0, 24.0, -vWorldPosition.x) * smoothstep(-16.0, 13.0, vWorldPosition.y);
+                float bottomOcclusion = (1.0 - smoothstep(-16.5, -6.5, vWorldPosition.y)) * (0.38 + vPileProgress * 0.62);
+                float contactShade = vPileProgress * (1.0 - topLight) * 0.34;
+
+                vec3 deepBlue = vec3(0.0, 0.018, 0.105);
+                vec3 color = mix(deepBlue, vTint, 0.24 + key * 0.72 * uLightContrast);
+                color = mix(color, vTint * vec3(1.34, 1.48, 1.5), topLight * 0.82);
+                color = mix(color, deepBlue, shadow * 0.62 * uLightContrast);
+                color = mix(color, vAccent, max(rim * 0.98, sideWarmth * 0.38));
+                color += vTint * leftTopLight * (0.08 + topLight * 0.16);
+                color = mix(color, color * vec3(0.58, 0.68, 0.86), contactShade);
+                color = mix(color, deepBlue, bottomOcclusion * 0.2);
+                color += vec3(0.0, 0.11, 0.18) * (1.0 - vDepth);
+
+                if (vAlpha < 0.035) discard;
+                gl_FragColor = vec4(color, vAlpha);
+            }
+        `;
+
+        const gpuAtmosphereVertexShader = `
+            varying vec2 vUv;
+
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const gpuAtmosphereFragmentShader = `
+            precision mediump float;
+
+            uniform float uTime;
+            uniform float uAspect;
+            varying vec2 vUv;
+
+            float softCircle(vec2 uv, vec2 center, float radius) {
+                vec2 delta = uv - center;
+                delta.x *= uAspect;
+                return 1.0 - smoothstep(radius * 0.18, radius, length(delta));
+            }
+
+            void main() {
+                vec3 topColor = vec3(0.0, 0.98, 1.0);
+                vec3 midColor = vec3(0.0, 0.75, 0.995);
+                vec3 bottomColor = vec3(0.03, 0.56, 0.9);
+                vec3 color = mix(topColor, midColor, smoothstep(0.08, 0.52, vUv.y));
+                color = mix(color, bottomColor, smoothstep(0.56, 1.0, vUv.y));
+
+                vec2 warmCenter = vec2(0.58 + sin(uTime * 0.06) * 0.035, 0.52 + cos(uTime * 0.05) * 0.025);
+                vec2 coolCenter = vec2(0.16, 0.88);
+                float warmMist = softCircle(vUv, warmCenter, 0.62);
+                float coolMist = softCircle(vUv, coolCenter, 0.5);
+                color += vec3(1.0, 0.16, 0.5) * warmMist * 0.18;
+                color += vec3(0.72, 1.0, 1.0) * coolMist * 0.16;
+                color = mix(color, vec3(0.0, 0.15, 0.36), smoothstep(0.72, 1.0, vUv.y) * 0.16);
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        function createGpuCubeFieldGeometry(count) {
+            const geometry = new THREE.InstancedBufferGeometry();
+            geometry.index = baseGeometry.index;
+            geometry.setAttribute('position', baseGeometry.attributes.position);
+            geometry.setAttribute('normal', baseGeometry.attributes.normal);
+            geometry.instanceCount = count;
+
+            const offsets = new Float32Array(count * 3);
+            const scales = new Float32Array(count * 3);
+            const piles = new Float32Array(count * 3);
+            const motions = new Float32Array(count * 4);
+            const rotations = new Float32Array(count * 4);
+            const tints = new Float32Array(count * 3);
+            const accents = new Float32Array(count * 3);
+            const alphas = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+                const isFar = i < count * gpuLayerRatios.far;
+                const isForeground = i > count * gpuLayerRatios.foreground;
+                const xRange = isFar ? 34 : isForeground ? 24 : 25.5;
+                const z = isFar ? range(-48, -22) : isForeground ? range(-13, -2.5) : range(-30, -7);
+                const scaleBase = isFar ? range(0.34, 0.9) : isForeground ? range(0.95, 2.36) : range(0.72, 1.82);
+                const tint = colorToVec3(pick(['#67edff', '#26cfff', '#00bffe', '#75f4ff', '#56dfff']));
+                const accent = colorToVec3(pick(['#ff4f8f', '#d546dc', '#ff4b31', '#2347ff']));
+                const x = clusteredGpuX(xRange);
+
+                offsets[i * 3] = x;
+                offsets[i * 3 + 1] = 0;
+                offsets[i * 3 + 2] = z;
+
+                piles[i * 3] = x * range(0.62, 0.94) + range(-2.2, 2.2);
+                piles[i * 3 + 1] = isFar ? range(2.2, 9.2) : isForeground ? range(0.2, 5.4) : range(0.8, 7.2);
+                piles[i * 3 + 2] = isForeground ? range(-13, -3) : z + range(-2.4, 2.4);
+
+                scales[i * 3] = scaleBase * range(0.78, 1.32);
+                scales[i * 3 + 1] = scaleBase * range(0.78, 1.28);
+                scales[i * 3 + 2] = scaleBase * range(0.78, 1.34);
+
+                motions[i * 4] = isFar ? range(0.005, 0.013) : isForeground ? range(0.012, 0.028) : range(0.009, 0.02);
+                motions[i * 4 + 1] = isFar ? range(0.08, 0.36) : range(0.1, 0.56);
+                motions[i * 4 + 2] = range(0, Math.PI * 2);
+                motions[i * 4 + 3] = random();
+
+                rotations[i * 4] = range(-Math.PI, Math.PI);
+                rotations[i * 4 + 1] = range(-Math.PI, Math.PI);
+                rotations[i * 4 + 2] = range(-Math.PI, Math.PI);
+                rotations[i * 4 + 3] = isFar ? range(-0.07, 0.07) : range(-0.2, 0.2);
+
+                tints.set(tint, i * 3);
+                accents.set(accent, i * 3);
+                alphas[i] = isFar ? range(0.22, 0.44) : isForeground ? range(0.78, 0.98) : range(0.7, 0.94);
+            }
+
+            geometry.setAttribute('instanceOffset', new THREE.InstancedBufferAttribute(offsets, 3));
+            geometry.setAttribute('instanceScale', new THREE.InstancedBufferAttribute(scales, 3));
+            geometry.setAttribute('instancePile', new THREE.InstancedBufferAttribute(piles, 3));
+            geometry.setAttribute('instanceMotion', new THREE.InstancedBufferAttribute(motions, 4));
+            geometry.setAttribute('instanceRotation', new THREE.InstancedBufferAttribute(rotations, 4));
+            geometry.setAttribute('instanceTint', new THREE.InstancedBufferAttribute(tints, 3));
+            geometry.setAttribute('instanceAccent', new THREE.InstancedBufferAttribute(accents, 3));
+            geometry.setAttribute('instanceAlpha', new THREE.InstancedBufferAttribute(alphas, 1));
+            return geometry;
+        }
+
+        function createGpuCubeCloudScene() {
+            gpuCubeCloudGroup = new THREE.Group();
+            gpuCubeCloudGroup.name = 'gpuCubeCloud';
+
+            gpuAtmosphereUniforms = {
+                uTime: { value: 0 },
+                uAspect: { value: initialSceneSize.width / initialSceneSize.height }
+            };
+            const gpuAtmosphere = new THREE.Mesh(
+                new THREE.PlaneGeometry(320, 190),
+                new THREE.ShaderMaterial({
+                    uniforms: gpuAtmosphereUniforms,
+                    vertexShader: gpuAtmosphereVertexShader,
+                    fragmentShader: gpuAtmosphereFragmentShader,
+                    depthWrite: false
+                })
+            );
+            gpuAtmosphere.name = 'gpuAtmosphere';
+            gpuAtmosphere.position.set(0, 0, -94);
+            gpuCubeCloudGroup.add(gpuAtmosphere);
+
+            gpuCubeInstanceCount = gpuDenseCubeInstanceCount;
+            gpuCubeUniforms = {
+                uTime: { value: 0 },
+                uFallTop: { value: 23 },
+                uFallBottom: { value: -17 },
+                uVerticalDensityPower: { value: gpuVerticalDensityPower },
+                uPileHoldStart: { value: gpuPileHoldStart },
+                uPileFadeStart: { value: gpuPileFadeStart },
+                uLightContrast: { value: gpuLightContrast }
+            };
+            const gpuCubeMesh = new THREE.Mesh(
+                createGpuCubeFieldGeometry(gpuCubeInstanceCount),
+                new THREE.ShaderMaterial({
+                    uniforms: gpuCubeUniforms,
+                    vertexShader: gpuCubeVertexShader,
+                    fragmentShader: gpuCubeFragmentShader,
+                    transparent: true,
+                    depthWrite: true
+                })
+            );
+            gpuCubeMesh.name = 'gpuCubeField';
+            gpuCubeMesh.frustumCulled = false;
+            gpuCubeCloudGroup.add(gpuCubeMesh);
+            referenceCubeCloud.add(gpuCubeCloudGroup);
+        }
+
+        function resizeCubeField() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            const renderDpr = dpr * cubeFieldRenderScale;
+            const sceneSize = getSceneSize();
+            const oldWidth = cubeFieldWidth;
+            const oldHeight = cubeFieldHeight;
+            const hadSprites = backgroundCubeSprites.length > 0 || cubeFieldSprites.length > 0;
+            cubeFieldWidth = sceneSize.width;
+            cubeFieldHeight = sceneSize.height;
+            cubeFieldRenderDpr = renderDpr;
+            cubeFieldCanvas.width = Math.ceil(cubeFieldWidth * renderDpr);
+            cubeFieldCanvas.height = Math.ceil(cubeFieldHeight * renderDpr);
+            cubeFieldCanvas.style.width = `${cubeFieldWidth}px`;
+            cubeFieldCanvas.style.height = `${cubeFieldHeight}px`;
+            cubeFieldCtx.setTransform(renderDpr, 0, 0, renderDpr, 0, 0);
+            resizeLayerCache(atmosphereCache);
+            resizeLayerCache(backgroundCloudCache);
+            if (hadSprites) {
+                scaleSpritesForResize(oldWidth, oldHeight);
+                reconcileCubeSpriteCounts();
+            } else {
+                createBackgroundCubeSprites();
+                createCubeFieldSprites();
+            }
+            updateProxyPerfState();
+        }
+
+        function targetBackgroundCubeSpriteCount() {
+            return Math.round(Math.min(76, Math.max(46, cubeFieldWidth * cubeFieldHeight / 18000)));
+        }
+
+        function targetCubeFieldSpriteCount() {
+            return Math.round(Math.min(168, Math.max(104, cubeFieldWidth * cubeFieldHeight / 11200)));
+        }
+
+        function createBackgroundCubeSprite() {
+            const depth = random();
+            const size = range(36, 92) + depth * 34;
+            const clusteredX = 0.5 + range(-0.54, 0.54);
+            const sprite = {
+                is2d: true,
+                layer: 'backgroundCubeSprites',
+                x: (random() < 0.78 ? clusteredX : range(-0.1, 1.1)) * cubeFieldWidth,
+                y: range(-0.26, 1.02) * cubeFieldHeight,
+                size,
+                depth,
+                rotation: range(-0.8, 0.8),
+                rotationSpeed: range(-0.014, 0.014),
+                velocityY: range(2.4, 6.2) + depth * 4.4,
+                drift: range(-3.5, 3.5),
+                phase: range(0, Math.PI * 2),
+                blur: range(4.5, 10.5),
+                alpha: range(0.08, 0.22),
+                topColor: pick(['#8cffff', '#54e8ff', '#20cffe', '#7ff6ff']),
+                frontColor: pick(['#0a54c8', '#0939a8', '#062a88', '#0a6cef']),
+                sideColor: pick(['#010a30', '#021553', '#062277', '#020820']),
+                rimColor: pick(['#ff4f8f', '#d546dc', '#ff4b31', '#2f6cff'])
+            };
+            prepareCubeSpriteBitmap(sprite);
+            return sprite;
+        }
+
+        function createCubeFieldSprite() {
+            const depth = random();
+            const size = range(24, 58) + depth * 44;
+            const clusteredX = 0.5 + range(-0.48, 0.48);
+            const uniformX = range(-0.08, 1.08);
+            const sprite = {
+                is2d: true,
+                layer: 'cubeFieldSprites',
+                x: (random() < 0.72 ? clusteredX : uniformX) * cubeFieldWidth,
+                y: range(-0.2, 1.08) * cubeFieldHeight,
+                size,
+                depth,
+                rotation: range(-0.75, 0.75),
+                rotationSpeed: range(-0.05, 0.05),
+                velocityY: range(8, 22) + depth * 18,
+                drift: range(-7, 7),
+                phase: range(0, Math.PI * 2),
+                blur: depth < 0.42 ? range(1.5, 4.2) : range(0.2, 1.4),
+                alpha: range(0.46, 0.84),
+                topColor: pick(['#67edff', '#26cfff', '#00bffe', '#75f4ff']),
+                frontColor: pick(['#02145f', '#0527a0', '#073acf', '#0a55ef']),
+                sideColor: pick(['#000315', '#010722', '#020c38', '#06155c']),
+                rimColor: pick(['#ff4f8f', '#d546dc', '#ff4b31', '#2347ff'])
+            };
+            prepareCubeSpriteBitmap(sprite);
+            return sprite;
+        }
+
+        function createBackgroundCubeSprites() {
+            const count = targetBackgroundCubeSpriteCount();
+            for (let i = 0; i < count; i++) {
+                backgroundCubeSprites.push(createBackgroundCubeSprite());
+            }
+            backgroundCubeSprites.sort((a, b) => a.depth - b.depth);
+        }
+
+        function createCubeFieldSprites() {
+            const count = targetCubeFieldSpriteCount();
+            for (let i = 0; i < count; i++) {
+                cubeFieldSprites.push(createCubeFieldSprite());
+            }
+            cubeFieldSprites.sort((a, b) => a.depth - b.depth);
+        }
+
+        function scaleSpritesForResize(oldWidth, oldHeight) {
+            if (!oldWidth || !oldHeight) return;
+            const scaleX = cubeFieldWidth / oldWidth;
+            const scaleY = cubeFieldHeight / oldHeight;
+            for (const sprite of backgroundCubeSprites.concat(cubeFieldSprites)) {
+                sprite.x *= scaleX;
+                sprite.y *= scaleY;
+            }
+        }
+
+        function reconcileSpriteCount(list, targetCount, createSprite) {
+            while (list.length < targetCount) {
+                list.push(createSprite());
+            }
+            if (list.length > targetCount) {
+                list.length = targetCount;
+            }
+            list.sort((a, b) => a.depth - b.depth);
+        }
+
+        function reconcileCubeSpriteCounts() {
+            reconcileSpriteCount(backgroundCubeSprites, targetBackgroundCubeSpriteCount(), createBackgroundCubeSprite);
+            reconcileSpriteCount(cubeFieldSprites, targetCubeFieldSpriteCount(), createCubeFieldSprite);
+        }
+
+        function createSpriteBitmap(size) {
+            if (typeof OffscreenCanvas === 'function') {
+                return new OffscreenCanvas(size, size);
+            }
+            const bitmap = document.createElement('canvas');
+            bitmap.width = size;
+            bitmap.height = size;
+            return bitmap;
+        }
+
+        function createLayerCache(updateInterval) {
+            const canvas = document.createElement('canvas');
+            return {
+                canvas,
+                ctx: canvas.getContext('2d', { alpha: true, desynchronized: true }),
+                dirty: true,
+                updateInterval
+            };
+        }
+
+        function resizeLayerCache(cache) {
+            cache.canvas.width = cubeFieldCanvas.width;
+            cache.canvas.height = cubeFieldCanvas.height;
+            if (cache.ctx) {
+                cache.ctx.setTransform(cubeFieldRenderDpr, 0, 0, cubeFieldRenderDpr, 0, 0);
+            }
+            cache.dirty = true;
+        }
+
+        function prepareCubeSpriteBitmap(sprite) {
+            const blur = sprite.blur || 0;
+            const bitmapSize = Math.ceil(sprite.size * 2.4 + blur * 8);
+            const bitmap = createSpriteBitmap(bitmapSize);
+            const bitmapCtx = bitmap.getContext('2d');
+            if (!bitmapCtx) {
+                return;
+            }
+
+            bitmapCtx.translate(bitmapSize / 2, bitmapSize / 2);
+            bitmapCtx.filter = blur ? `blur(${blur}px)` : 'none';
+            paintPseudoCubeShape(bitmapCtx, sprite, sprite.size);
+            bitmapCtx.filter = 'none';
+
+            sprite.bitmap = typeof bitmap.transferToImageBitmap === 'function'
+                ? bitmap.transferToImageBitmap()
+                : bitmap;
+            sprite.bitmapSize = bitmapSize;
+        }
+
+        function updateProxyPerfState() {
+            window.__proxyPerf = {
+                backgroundSpriteCount: backgroundCubeSprites.length,
+                cubeSpriteCount: cubeFieldSprites.length,
+                cachedSpriteCount: backgroundCubeSprites.concat(cubeFieldSprites).filter((sprite) => sprite.bitmap).length,
+                webglAvailable,
+                cubeFieldRenderScale,
+                atmosphereCacheInterval: atmosphereCache.updateInterval,
+                backgroundCloudCacheInterval: backgroundCloudCache.updateInterval,
+                webglRenderInterval,
+                scene2RenderPath,
+                webglPixelRatio,
+                renderMode: useGpuCubeField ? 'gpu' : 'canvas',
+                forceCanvasCubeField,
+                gpuCubeInstanceCount,
+                gpuLayerRatios,
+                gpuVerticalDensityPower,
+                gpuPileHoldStart,
+                gpuPileFadeStart,
+                gpuLightContrast,
+                canvasWidth: cubeFieldWidth,
+                canvasHeight: cubeFieldHeight
+            };
+        }
+
+        function drawCubeField(delta, time) {
+            const pileFadeStart = cubeFieldHeight * 0.74;
+            cubeFieldFrame += 1;
+            cubeFieldCtx.clearRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+            drawAtmosphericBackdrop(time);
+            drawBackgroundCubeCloud(delta, time);
+
+            for (const sprite of cubeFieldSprites) {
+                sprite.y += sprite.velocityY * delta;
+                sprite.x += Math.sin(time * 0.22 + sprite.phase) * sprite.drift * delta;
+                sprite.rotation += sprite.rotationSpeed * delta;
+
+                const pileProgress = Math.max(0, Math.min(1, (sprite.y - pileFadeStart) / (cubeFieldHeight * 0.24)));
+                const alpha = sprite.alpha * (1 - pileProgress);
+                const speedScale = 1 - pileProgress * 0.68;
+                sprite.velocityY = Math.max(3, sprite.velocityY * speedScale + 0.04);
+
+                if (alpha > 0.02) {
+                    drawPseudoCube(sprite, alpha, pileProgress);
+                }
+
+                if (sprite.y > cubeFieldHeight + sprite.size || alpha <= 0.02) {
+                    recycleFallingElement(sprite);
+                }
+            }
+
+            const gradient = cubeFieldCtx.createLinearGradient(0, cubeFieldHeight * 0.72, 0, cubeFieldHeight);
+            gradient.addColorStop(0, 'rgba(0, 0, 60, 0)');
+            gradient.addColorStop(1, 'rgba(0, 0, 24, 0.42)');
+            cubeFieldCtx.fillStyle = gradient;
+            cubeFieldCtx.fillRect(0, cubeFieldHeight * 0.72, cubeFieldWidth, cubeFieldHeight * 0.28);
+        }
+
+        function drawAtmosphericBackdrop(time) {
+            if (atmosphereCache.dirty || cubeFieldFrame % atmosphereCache.updateInterval === 0) {
+                paintAtmosphericBackdrop(atmosphereCache.ctx, time);
+                atmosphereCache.dirty = false;
+            }
+            cubeFieldCtx.drawImage(atmosphereCache.canvas, 0, 0, cubeFieldWidth, cubeFieldHeight);
+        }
+
+        function paintAtmosphericBackdrop(targetCtx, time) {
+            if (!targetCtx) return;
+            targetCtx.clearRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+
+            const skyGradient = targetCtx.createLinearGradient(0, 0, 0, cubeFieldHeight);
+            skyGradient.addColorStop(0, '#01fdfe');
+            skyGradient.addColorStop(0.44, CONFIG.scene1.bg);
+            skyGradient.addColorStop(1, '#079ee8');
+            targetCtx.fillStyle = skyGradient;
+            targetCtx.fillRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+
+            const mistX = cubeFieldWidth * (0.56 + Math.sin(time * 0.06) * 0.04);
+            const mistY = cubeFieldHeight * (0.38 + Math.cos(time * 0.05) * 0.03);
+            const mistGradient = targetCtx.createRadialGradient(
+                mistX,
+                mistY,
+                0,
+                mistX,
+                mistY,
+                Math.max(cubeFieldWidth, cubeFieldHeight) * 0.64
+            );
+            mistGradient.addColorStop(0, 'rgba(255, 79, 143, 0.18)');
+            mistGradient.addColorStop(0.42, 'rgba(42, 77, 255, 0.18)');
+            mistGradient.addColorStop(1, 'rgba(0, 191, 254, 0)');
+            targetCtx.fillStyle = mistGradient;
+            targetCtx.fillRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+
+            const coolMist = targetCtx.createRadialGradient(
+                cubeFieldWidth * 0.16,
+                cubeFieldHeight * 0.08,
+                0,
+                cubeFieldWidth * 0.16,
+                cubeFieldHeight * 0.08,
+                Math.max(cubeFieldWidth, cubeFieldHeight) * 0.52
+            );
+            coolMist.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+            coolMist.addColorStop(0.5, 'rgba(0, 255, 255, 0.12)');
+            coolMist.addColorStop(1, 'rgba(0, 255, 255, 0)');
+            targetCtx.fillStyle = coolMist;
+            targetCtx.fillRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+        }
+
+        function drawBackgroundCubeCloud(delta, time) {
+            for (const sprite of backgroundCubeSprites) {
+                sprite.y += sprite.velocityY * delta;
+                sprite.x += Math.sin(time * 0.12 + sprite.phase) * sprite.drift * delta;
+                sprite.rotation += sprite.rotationSpeed * delta;
+
+                if (sprite.y > cubeFieldHeight + sprite.size) {
+                    recycleFallingElement(sprite);
+                }
+            }
+
+            if (backgroundCloudCache.dirty || cubeFieldFrame % backgroundCloudCache.updateInterval === 0) {
+                paintBackgroundCubeCloud(backgroundCloudCache.ctx);
+                backgroundCloudCache.dirty = false;
+            }
+            cubeFieldCtx.drawImage(backgroundCloudCache.canvas, 0, 0, cubeFieldWidth, cubeFieldHeight);
+        }
+
+        function paintBackgroundCubeCloud(targetCtx) {
+            if (!targetCtx) return;
+            targetCtx.clearRect(0, 0, cubeFieldWidth, cubeFieldHeight);
+            for (const sprite of backgroundCubeSprites) {
+                if (!sprite.bitmap) {
+                    prepareCubeSpriteBitmap(sprite);
+                }
+                if (sprite.bitmap) {
+                    drawCachedPseudoCubeOnContext(targetCtx, sprite, sprite.alpha, 0);
+                }
+            }
+        }
+
+        function drawPseudoCube(sprite, alpha, pileProgress) {
+            if (!sprite.bitmap) {
+                prepareCubeSpriteBitmap(sprite);
+            }
+            if (sprite.bitmap) {
+                drawCachedPseudoCube(sprite, alpha, pileProgress);
+                return;
+            }
+
+            const s = sprite.size * (1 - pileProgress * 0.22);
+
+            cubeFieldCtx.save();
+            cubeFieldCtx.globalAlpha = alpha;
+            cubeFieldCtx.translate(sprite.x, sprite.y);
+            cubeFieldCtx.rotate(sprite.rotation);
+            paintPseudoCubeShape(cubeFieldCtx, sprite, s);
+            cubeFieldCtx.restore();
+        }
+
+        function drawCachedPseudoCube(sprite, alpha, pileProgress) {
+            drawCachedPseudoCubeOnContext(cubeFieldCtx, sprite, alpha, pileProgress);
+        }
+
+        function drawCachedPseudoCubeOnContext(targetCtx, sprite, alpha, pileProgress) {
+            const scale = 1 - pileProgress * 0.22;
+            const bitmapSize = sprite.bitmapSize || sprite.size * 2.4;
+
+            targetCtx.save();
+            targetCtx.globalAlpha = alpha;
+            targetCtx.translate(sprite.x, sprite.y);
+            targetCtx.rotate(sprite.rotation);
+            targetCtx.scale(scale, scale);
+            targetCtx.drawImage(sprite.bitmap, -bitmapSize / 2, -bitmapSize / 2, bitmapSize, bitmapSize);
+            targetCtx.restore();
+        }
+
+        function paintPseudoCubeShape(targetCtx, sprite, s) {
+            const skew = s * 0.32;
+            const depth = s * 0.28;
+
+            targetCtx.fillStyle = sprite.topColor;
+            targetCtx.beginPath();
+            targetCtx.moveTo(-s * 0.48, -s * 0.5);
+            targetCtx.lineTo(s * 0.42, -s * 0.6);
+            targetCtx.lineTo(s * 0.5 + skew, -s * 0.28);
+            targetCtx.lineTo(-s * 0.38 + skew, -s * 0.18);
+            targetCtx.closePath();
+            targetCtx.fill();
+
+            targetCtx.fillStyle = sprite.frontColor;
+            targetCtx.fillRect(-s * 0.38 + skew, -s * 0.18, s * 0.9, s * 0.78);
+
+            targetCtx.fillStyle = sprite.sideColor;
+            targetCtx.beginPath();
+            targetCtx.moveTo(s * 0.52 + skew, -s * 0.18);
+            targetCtx.lineTo(s * 0.52 + skew + depth, -s * 0.02);
+            targetCtx.lineTo(s * 0.52 + depth, s * 0.76);
+            targetCtx.lineTo(s * 0.52, s * 0.6);
+            targetCtx.closePath();
+            targetCtx.fill();
+
+            if (sprite.depth > 0.45 || sprite.rimColor !== '#2347ff') {
+                targetCtx.save();
+                targetCtx.globalAlpha *= 0.72;
+                targetCtx.fillStyle = sprite.rimColor;
+                targetCtx.fillRect(s * 0.36, -s * 0.08, s * 0.16, s * 0.7);
+                targetCtx.restore();
+            }
+        }
+
+        function createCubeMaterials(accentWeight = 0.18) {
+            const sideBlue = pick(['#56dfff', '#33bfff', '#0c64ff', '#2074ff']);
+            const brightTop = pick(['#69e9ff', '#4bdcff', '#28befe']);
+            const shadowBlue = pick(['#020b3d', '#03145c', '#06124a']);
+            const frontBlue = pick(['#125ee8', '#0d42c0', '#061e82']);
+            const warmAccent = random() < accentWeight ? pick(['#ff4f8f', '#d546dc', '#ff4b31']) : pick(['#0c64ff', '#2d9cff']);
+
+            return [
+                new THREE.MeshStandardMaterial({ color: sideBlue, roughness: 0.34, metalness: 0.46, transparent: true }),
+                new THREE.MeshStandardMaterial({ color: shadowBlue, roughness: 0.5, metalness: 0.28, transparent: true }),
+                new THREE.MeshStandardMaterial({ color: brightTop, roughness: 0.28, metalness: 0.42, emissive: '#021146', emissiveIntensity: 0.02, transparent: true }),
+                new THREE.MeshStandardMaterial({ color: shadowBlue, roughness: 0.58, metalness: 0.2, transparent: true }),
+                new THREE.MeshStandardMaterial({ color: frontBlue, roughness: 0.42, metalness: 0.34, transparent: true }),
+                new THREE.MeshStandardMaterial({ color: warmAccent, roughness: 0.38, metalness: 0.42, emissive: warmAccent, emissiveIntensity: random() < accentWeight ? 0.035 : 0.005, transparent: true })
+            ];
+        }
+
+        function createCubeMesh(layer, options) {
+            const cube = new THREE.Mesh(baseGeometry, createCubeMaterials(options.accentWeight));
+            const scale = range(options.scale[0], options.scale[1]);
+
+            cube.name = `${layer}-cube`;
+            cube.position.set(
+                range(options.x[0], options.x[1]),
+                range(options.y[0], options.y[1]),
+                range(options.z[0], options.z[1])
+            );
+            if (layer === 'foregroundCubes' && Math.abs(cube.position.x) < 4 && Math.abs(cube.position.y) < 4) {
+                cube.position.x += cube.position.x < 0 ? -5 : 5;
+            }
+            cube.scale.setScalar(scale);
+            cube.scale.x *= range(0.82, 1.28);
+            cube.scale.y *= range(0.82, 1.22);
+            cube.scale.z *= range(0.82, 1.32);
+            cube.rotation.set(range(-Math.PI, Math.PI), range(-Math.PI, Math.PI), range(-Math.PI, Math.PI));
+            cube.userData = {
+                layer,
+                baseX: cube.position.x,
+                baseZ: cube.position.z,
+                velocityY: range(options.fallSpeed[0], options.fallSpeed[1]),
+                driftSpeed: range(0.08, 0.22),
+                driftAmount: range(options.drift[0], options.drift[1]),
+                phase: range(0, Math.PI * 2),
+                resetTop: options.y[1],
+                resetBottom: options.y[0] - 3.5,
+                pileFadeStart: options.y[0] + 3.5,
+                xRange: options.x,
+                zRange: options.z,
+                baseScale: cube.scale.clone(),
+                rotationSpeed: new THREE.Vector3(range(-0.13, 0.13), range(-0.1, 0.1), range(-0.12, 0.12))
+            };
+            return cube;
+        }
+
+        function addCubeLayer(target, count, layer, options) {
+            for (let i = 0; i < count; i++) {
+                const cube = createCubeMesh(layer, options);
+                target.push(cube);
+                allCubes.push(cube);
+                referenceCubeCloud.add(cube);
+            }
+        }
+
+        function createCubeCloudScene() {
+            addCubeLayer(midgroundCubes, realCubeBudget.midground, 'midgroundCubes', {
+                x: [-18, 18],
+                y: [-14, 18],
+                z: [-30, -10],
+                scale: [0.9, 2.0],
+                fallSpeed: [0.18, 0.34],
+                drift: [0.15, 0.52],
+                accentWeight: 0.3
+            });
+
+            addCubeLayer(foregroundCubes, realCubeBudget.foreground, 'foregroundCubes', {
+                x: [-15, 15],
+                y: [-12, 14],
+                z: [-12, -2],
+                scale: [1.35, 2.75],
+                fallSpeed: [0.2, 0.38],
+                drift: [0.08, 0.3],
+                accentWeight: 0.34
+            });
+        }
+
+        if (useGpuCubeField) {
+            createGpuCubeCloudScene();
+        } else {
+            createCubeCloudScene();
+        }
+
+        function recycleFallingElement(element) {
+            if (element.is2d) {
+                const isBackground = element.layer === 'backgroundCubeSprites';
+                element.x = range(-0.08, 1.08) * cubeFieldWidth;
+                element.y = -element.size - range(0, cubeFieldHeight * 0.35);
+                element.velocityY = isBackground ? range(2.4, 6.2) + element.depth * 4.4 : range(8, 20) + element.depth * 14;
+                element.rotation = range(-0.8, 0.8);
+                element.phase = range(0, Math.PI * 2);
+                return;
+            }
+
+            const data = element.userData;
+            element.position.y = data.resetTop + range(1.5, 5);
+            element.position.x = range(data.xRange[0], data.xRange[1]);
+            element.position.z = range(data.zRange[0], data.zRange[1]);
+            element.scale.copy(data.baseScale);
+            element.material.forEach((material) => {
+                material.opacity = 1;
+            });
+            data.baseX = element.position.x;
+            data.baseZ = element.position.z;
+            data.phase = range(0, Math.PI * 2);
+        }
+
+        function animateCubeCloud(delta, time) {
+            const fallScale = isScene2 ? 0.28 : 1;
+
+            for (const cube of allCubes) {
+                const data = cube.userData;
+                cube.position.y -= data.velocityY * delta * fallScale;
+                cube.position.x = data.baseX + Math.sin(time * data.driftSpeed + data.phase) * data.driftAmount;
+                cube.position.z = data.baseZ + Math.cos(time * data.driftSpeed * 0.7 + data.phase) * data.driftAmount * 0.35;
+                cube.rotation.x += data.rotationSpeed.x * delta;
+                cube.rotation.y += data.rotationSpeed.y * delta;
+                cube.rotation.z += data.rotationSpeed.z * delta;
+
+                const pileProgress = Math.max(0, Math.min(1, (data.pileFadeStart - cube.position.y) / (data.pileFadeStart - data.resetBottom)));
+                cube.scale.copy(data.baseScale).multiplyScalar(1 - pileProgress * 0.25);
+                cube.material.forEach((material) => {
+                    material.opacity = 1 - pileProgress;
+                });
+
+                if (cube.position.y < data.resetBottom || pileProgress >= 0.98) {
+                    recycleFallingElement(cube);
+                }
+            }
+        }
+
+        function animateGpuCubeCloud(time) {
+            if (!useGpuCubeField) return;
+            if (gpuCubeUniforms) {
+                gpuCubeUniforms.uTime.value = time;
+            }
+            if (gpuAtmosphereUniforms) {
+                gpuAtmosphereUniforms.uTime.value = time;
+            }
+        }
+
+        // --- 4. 第二场景专属物体：事件视界与背光光圈 ---
+        const specialGroup = new THREE.Group();
+        specialGroup.visible = false; // 初始隐藏
+        scene.add(specialGroup);
+
+        const goldenAccretionPalette = {
+            deepOrange: new THREE.Color('#ff5a00'),
+            richGold: new THREE.Color('#ffb02a'),
+            paleGold: new THREE.Color('#ffe08a'),
+            whiteGold: new THREE.Color('#fff1bd')
+        };
+
+        const eventHorizonGroup = new THREE.Group();
+        eventHorizonGroup.position.set(0, 1.0, -38);
+        specialGroup.add(eventHorizonGroup);
+
+        const eventHorizonBaseScale = {
+            backdrop: new THREE.Vector2(1.35, 1.35),
+            glow: new THREE.Vector2(1.42, 1.72),
+            outerGlow: new THREE.Vector2(1.56, 1.9),
+            core: new THREE.Vector2(1.08, 1.34),
+            disk: new THREE.Vector2(1.35, 1.38)
+        };
+
+        function eventHorizonBackdropMaterial() {
+            return new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uSceneAspectRatio: { value: 1 },
+                    uDeepOrange: { value: goldenAccretionPalette.deepOrange },
+                    uGold: { value: goldenAccretionPalette.richGold }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+
+                    uniform float uTime;
+                    uniform float uSceneAspectRatio;
+                    uniform vec3 uDeepOrange;
+                    uniform vec3 uGold;
+                    varying vec2 vUv;
+
+                    void main() {
+                        vec2 p = vUv - 0.5;
+                        p.x *= uSceneAspectRatio;
+                        float upperWarmth = smoothstep(0.1, 0.88, vUv.y);
+                        float centerField = 1.0 - smoothstep(0.0, 0.95, length(p));
+                        float lowerVignette = 1.0 - smoothstep(0.04, 0.58, vUv.y);
+                        float softBand = exp(-pow((vUv.y - 0.72) * 2.7, 2.0));
+                        float shimmer = 0.5 + 0.5 * sin(uTime * 0.22 + p.x * 2.4);
+                        vec3 base = vec3(0.012, 0.004, 0.0);
+                        vec3 color = mix(base, uDeepOrange * 0.32, upperWarmth * 0.42 + centerField * 0.18);
+                        color = mix(color, uGold * 0.22, softBand * 0.16 + shimmer * centerField * 0.035);
+                        color = mix(color, base * 0.54, lowerVignette * 0.56);
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `,
+                depthWrite: false,
+                depthTest: false,
+                side: THREE.DoubleSide
+            });
+        }
+
+        function eventHorizonGlowMaterial({ opacity = 1, intensity = 1, haloSpread = 1 }) {
+            const eventHorizonRimPower = 1.24;
+            const directGlowBoost = 1.68;
+            return new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uOpacity: { value: opacity },
+                    uIntensity: { value: intensity },
+                    uHaloSpread: { value: haloSpread },
+                    uDirectGlowBoost: { value: directGlowBoost },
+                    uEventHorizonRimPower: { value: eventHorizonRimPower },
+                    uDeepOrange: { value: goldenAccretionPalette.deepOrange },
+                    uGold: { value: goldenAccretionPalette.richGold },
+                    uPaleGold: { value: goldenAccretionPalette.paleGold },
+                    uWhiteGold: { value: goldenAccretionPalette.whiteGold }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+
+                    uniform float uTime;
+                    uniform float uOpacity;
+                    uniform float uIntensity;
+                    uniform float uHaloSpread;
+                    uniform float uDirectGlowBoost;
+                    uniform float uEventHorizonRimPower;
+                    uniform vec3 uDeepOrange;
+                    uniform vec3 uGold;
+                    uniform vec3 uPaleGold;
+                    uniform vec3 uWhiteGold;
+
+                    varying vec2 vUv;
+
+                    void main() {
+                        vec2 p = (vUv - 0.5) * vec2(1.48, 1.48);
+                        p.y += 0.035;
+                        float d = length(p);
+                        float angle = atan(p.y, p.x);
+
+                        float sideLift = smoothstep(0.34, 0.62, abs(p.x));
+                        float upperLift = smoothstep(-0.16, 0.34, p.y);
+                        float sideContactBridge = sideLift * (1.0 - smoothstep(0.08, 0.34, abs(p.y)));
+                        float haloArcMask = max(smoothstep(-0.12, 0.08, p.y), sideContactBridge);
+                        float continuousUpperHalo = haloArcMask * (1.0 - smoothstep(0.68, 0.75, d));
+                        float lowerGlowOcclusion = continuousUpperHalo;
+                        float lowerDimming = mix(0.28, 1.0, max(upperLift, sideLift * 0.74));
+                        float eventHorizonRim = exp(-pow((d - 0.502) * 24.0, 2.0));
+                        float paleInnerRim = exp(-pow((d - 0.49) * 36.0, 2.0)) * (upperLift * 0.82 + sideLift * 0.38);
+                        float whiteCrest = exp(-pow((d - 0.507) * 30.0, 2.0)) * (upperLift * 0.9 + sideLift * 0.42);
+                        float goldenField = exp(-pow((d - 0.58) * (7.4 / uHaloSpread), 2.0));
+                        float deepOrangeField = exp(-pow((d - 0.65) * (5.8 / uHaloSpread), 2.0));
+                        float hotStreak = pow(0.5 + 0.5 * sin(angle * 15.0 + d * 24.0 - uTime * 0.42), 9.0);
+                        float shimmer = 0.9 + 0.1 * sin(uTime * 0.62 + angle * 4.0);
+
+                        float rim = pow(eventHorizonRim, uEventHorizonRimPower);
+                        float alpha = (
+                            rim * 1.32 +
+                            paleInnerRim * 1.08 +
+                            whiteCrest * 0.92 +
+                            goldenField * 0.42 +
+                            deepOrangeField * 0.2 +
+                            hotStreak * rim * 0.18
+                        ) * lowerDimming * lowerGlowOcclusion * uOpacity * shimmer;
+                        alpha *= 1.0 - smoothstep(0.64, 0.78, d);
+                        alpha *= min(uDirectGlowBoost, 2.2);
+
+                        vec3 color = mix(uDeepOrange, uGold, smoothstep(0.49, 0.64, d));
+                        color = mix(color, uPaleGold, clamp(rim * 0.56 + paleInnerRim * 0.72 + whiteCrest * 0.32, 0.0, 1.0));
+                        color = mix(color, uWhiteGold, clamp(whiteCrest * 0.78 + paleInnerRim * 0.28 + hotStreak * rim * 0.18, 0.0, 1.0));
+                        gl_FragColor = vec4(color * uIntensity * uDirectGlowBoost, alpha);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                side: THREE.DoubleSide
+            });
+        }
+
+        function eventHorizonCoreMaterial() {
+            return new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+
+                    uniform float uTime;
+                    varying vec2 vUv;
+
+                    void main() {
+                        vec2 p = (vUv - 0.5) * vec2(1.14, 1.14);
+                        p.y += 0.02;
+                        float d = length(p);
+                        float sphereSilhouette = 1.0 - smoothstep(0.492, 0.526, d);
+                        float rimSoftBlend = smoothstep(0.44, 0.506, d) * (1.0 - smoothstep(0.506, 0.538, d));
+                        float edge = smoothstep(0.36, 0.505, d);
+                        float upperFalloff = smoothstep(-0.42, 0.36, p.y);
+                        float barelyVisibleSurface = 0.035 * edge * upperFalloff;
+                        barelyVisibleSurface += 0.01 * sin((p.x + p.y) * 18.0 + uTime * 0.2) * edge;
+                        float horizonContactGlow = rimSoftBlend * upperFalloff;
+                        vec3 coreColor = mix(vec3(0.0, 0.0, 0.0), vec3(0.04, 0.024, 0.008), barelyVisibleSurface);
+                        coreColor = mix(coreColor, vec3(0.075, 0.038, 0.008), horizonContactGlow * 0.18);
+                        gl_FragColor = vec4(coreColor, sphereSilhouette);
+                    }
+                `,
+                transparent: true,
+                depthWrite: false,
+                side: THREE.DoubleSide
+            });
+        }
+
+        function eventHorizonDiskMaterial() {
+            return new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uSceneAspectRatio: { value: 1 },
+                    uDeepOrange: { value: goldenAccretionPalette.deepOrange },
+                    uGold: { value: goldenAccretionPalette.richGold },
+                    uPaleGold: { value: goldenAccretionPalette.paleGold },
+                    uWhiteGold: { value: goldenAccretionPalette.whiteGold }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+
+                    uniform float uTime;
+                    uniform float uSceneAspectRatio;
+                    uniform vec3 uDeepOrange;
+                    uniform vec3 uGold;
+                    uniform vec3 uPaleGold;
+                    uniform vec3 uWhiteGold;
+                    varying vec2 vUv;
+
+                    void main() {
+                        vec2 p = vUv - 0.5;
+                        p.x *= mix(1.7, 2.4, smoothstep(1.0, 2.0, uSceneAspectRatio));
+                        p.y = (p.y + 0.16) * 2.55;
+
+                        float diskPerspective = smoothstep(-0.42, 0.72, p.y);
+                        float edgeSpread = 1.0 - smoothstep(0.72, 1.28, abs(p.x));
+                        float lowerFade = 1.0 - smoothstep(0.9, 1.22, p.y);
+                        float foregroundExtent = smoothstep(-0.98, -0.62, p.y);
+
+                        float ellipseRadius = length(vec2(p.x * 0.68, p.y * 2.8));
+                        float accretionDiskRings = 0.0;
+                        accretionDiskRings += exp(-pow((ellipseRadius - 0.58) * 34.0, 2.0)) * 0.62;
+                        accretionDiskRings += exp(-pow((ellipseRadius - 0.76) * 42.0, 2.0)) * 0.5;
+                        accretionDiskRings += exp(-pow((ellipseRadius - 0.96) * 48.0, 2.0)) * 0.46;
+                        accretionDiskRings += exp(-pow((ellipseRadius - 1.18) * 54.0, 2.0)) * 0.38;
+                        accretionDiskRings += exp(-pow((ellipseRadius - 1.42) * 66.0, 2.0)) * 0.26;
+
+                        float fineBands = pow(0.5 + 0.5 * sin(ellipseRadius * 58.0 - uTime * 0.42 + p.x * 1.2), 12.0);
+                        float perspectiveY = clamp((p.y + 0.94) / 1.82, 0.0, 1.0);
+                        float foregroundAccretionRings = pow(
+                            0.5 + 0.5 * sin(
+                                p.y * (36.0 + perspectiveY * 46.0) +
+                                p.x * p.x * 0.9 -
+                                uTime * 0.22
+                            ),
+                            16.0
+                        );
+                        float centerDarkMask = 1.0 - smoothstep(0.46, 0.78, length(vec2(p.x * 0.88, p.y * 1.52)));
+                        float innerShadow = 1.0 - centerDarkMask * 0.72;
+                        float longHorizon = exp(-pow((p.y + 0.04) * 28.0, 2.0)) * (0.28 + edgeSpread * 0.72);
+                        float warmSheet = exp(-pow((p.y - 0.12) * 2.2, 2.0)) * (0.35 + edgeSpread * 0.5);
+                        float nearFieldDiskBody = smoothstep(-0.74, 0.08, p.y) * (1.0 - smoothstep(0.82, 1.14, p.y));
+                        float foregroundDiskOcclusion = smoothstep(-0.24, 0.2, p.y) * (1.0 - smoothstep(0.78, 1.12, p.y));
+                        float diskOcclusionAlpha = max(foregroundDiskOcclusion * 0.88, nearFieldDiskBody * 0.36) * edgeSpread * lowerFade;
+                        float foregroundRingAlpha = foregroundAccretionRings * edgeSpread * lowerFade * foregroundExtent * 0.28;
+                        float ringAlpha = (
+                            accretionDiskRings * 0.58 +
+                            fineBands * 0.14 +
+                            foregroundRingAlpha +
+                            longHorizon * 0.42 +
+                            warmSheet * 0.24
+                        ) * edgeSpread * lowerFade * innerShadow;
+                        float alpha = max(diskOcclusionAlpha, ringAlpha);
+
+                        vec3 darkDisk = vec3(0.026, 0.006, 0.0);
+                        vec3 color = mix(darkDisk, uDeepOrange * 0.58, warmSheet * 0.34 + accretionDiskRings * 0.18 + nearFieldDiskBody * 0.08);
+                        color = mix(color, uGold, clamp(accretionDiskRings * 0.62 + longHorizon * 0.34 + foregroundAccretionRings * foregroundExtent * 0.12, 0.0, 1.0));
+                        color = mix(color, uPaleGold, clamp(longHorizon * 0.38 + fineBands * 0.14 + foregroundAccretionRings * foregroundExtent * 0.04, 0.0, 1.0));
+                        color = mix(color, uWhiteGold, clamp(longHorizon * 0.08, 0.0, 0.24));
+                        gl_FragColor = vec4(color, alpha);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.NormalBlending,
+                depthWrite: false,
+                side: THREE.DoubleSide
+            });
+        }
+
+        const eventHorizonBackdrop = new THREE.Mesh(
+            new THREE.PlaneGeometry(180, 120),
+            eventHorizonBackdropMaterial()
+        );
+        eventHorizonBackdrop.name = 'eventHorizonBackdrop';
+        eventHorizonBackdrop.position.set(0, 0, -72);
+        eventHorizonBackdrop.renderOrder = -10;
+        specialGroup.add(eventHorizonBackdrop);
+
+        const eventHorizonGlow = new THREE.Mesh(
+            new THREE.PlaneGeometry(64, 44),
+            eventHorizonGlowMaterial({ opacity: 0.94, intensity: 1.18, haloSpread: 1.08 })
+        );
+        eventHorizonGlow.name = 'eventHorizonGlow';
+        eventHorizonGlow.position.set(0, 0.5, -0.08);
+        eventHorizonGlow.renderOrder = 1;
+        eventHorizonGroup.add(eventHorizonGlow);
+
+        const eventHorizonOuterGlow = new THREE.Mesh(
+            new THREE.PlaneGeometry(64, 44),
+            eventHorizonGlowMaterial({ opacity: 0.42, intensity: 0.9, haloSpread: 1.64 })
+        );
+        eventHorizonOuterGlow.name = 'eventHorizonOuterGlow';
+        eventHorizonOuterGlow.position.set(0, 0.4, -0.1);
+        eventHorizonOuterGlow.renderOrder = 0;
+        eventHorizonGroup.add(eventHorizonOuterGlow);
+
+        const eventHorizonCore = new THREE.Mesh(
+            new THREE.PlaneGeometry(62, 42),
+            eventHorizonCoreMaterial()
+        );
+        eventHorizonCore.name = 'eventHorizonCore';
+        eventHorizonCore.position.set(0, 0.5, 0.02);
+        eventHorizonCore.renderOrder = 3;
+        eventHorizonGroup.add(eventHorizonCore);
+
+        const eventHorizonDisk = new THREE.Mesh(
+            new THREE.PlaneGeometry(160, 44),
+            eventHorizonDiskMaterial()
+        );
+        eventHorizonDisk.name = 'eventHorizonDisk';
+        eventHorizonDisk.position.set(0, -10.6, 0.08);
+        eventHorizonDisk.renderOrder = 6;
+        eventHorizonGroup.add(eventHorizonDisk);
+
+        function updateEventHorizonLayout(sceneSize = getSceneSize()) {
+            const sceneAspectRatio = sceneSize.width / sceneSize.height;
+            const backdropWideCover = Math.max(1, sceneAspectRatio / 1.5);
+            const backdropTallCover = Math.max(1, 1.5 / sceneAspectRatio);
+            const narrowSceneScale = sceneAspectRatio < 0.75 ? 0.94 : 1;
+            const wideSceneScale = sceneAspectRatio > 1.8 ? 0.96 : 1;
+            const horizonScale = narrowSceneScale * wideSceneScale;
+            const horizonRestY = sceneAspectRatio < 0.75 ? 1.8 : 1.0;
+
+            eventHorizonGroup.userData.restY = horizonRestY;
+            if (specialGroup.visible && !gsap.isTweening(eventHorizonGroup.position)) {
+                eventHorizonGroup.position.y = horizonRestY;
+            }
+
+            eventHorizonBackdrop.scale.set(
+                eventHorizonBaseScale.backdrop.x * backdropWideCover,
+                eventHorizonBaseScale.backdrop.y * backdropTallCover,
+                1
+            );
+            if (eventHorizonBackdrop.material.uniforms?.uSceneAspectRatio) {
+                eventHorizonBackdrop.material.uniforms.uSceneAspectRatio.value = sceneAspectRatio;
+            }
+
+            eventHorizonGlow.scale.set(
+                eventHorizonBaseScale.glow.x * horizonScale,
+                eventHorizonBaseScale.glow.y * horizonScale,
+                1
+            );
+            eventHorizonOuterGlow.scale.set(
+                eventHorizonBaseScale.outerGlow.x * horizonScale,
+                eventHorizonBaseScale.outerGlow.y * horizonScale,
+                1
+            );
+            eventHorizonCore.scale.set(
+                eventHorizonBaseScale.core.x * horizonScale,
+                eventHorizonBaseScale.core.y * horizonScale,
+                1
+            );
+            eventHorizonDisk.scale.set(
+                eventHorizonBaseScale.disk.x * backdropWideCover,
+                eventHorizonBaseScale.disk.y * horizonScale,
+                1
+            );
+            if (eventHorizonDisk.material.uniforms?.uSceneAspectRatio) {
+                eventHorizonDisk.material.uniforms.uSceneAspectRatio.value = sceneAspectRatio;
+            }
+        }
+
+        // 4.2 粒子光尘 (增加空灵感)
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 200;
+        const starPos = new Float32Array(starCount * 3);
+        for(let j=0; j<starCount*3; j++) {
+            starPos[j] = (Math.random() - 0.5) * 60;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: goldenAccretionPalette.paleGold,
+            size: 0.2,
+            transparent: true,
+            opacity: 0.72,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        stars.position.set(0, 5, -30);
+        specialGroup.add(stars);
+
+
+        // --- 5. 渲染路径 ---
+        // 场景二的辉光与柔边都在 shader 内完成，避免全屏后处理 pass 持续占用主线程。
+
+        // --- 6. 场景切换逻辑 ---
+        let isScene2 = false;
+        const switchBtn = document.getElementById('switch-btn');
+        const clock = new THREE.Clock();
+
+        switchBtn.addEventListener('click', () => {
+            isScene2 = !isScene2;
+            toggleScene(isScene2);
+        });
+
+        function shouldRenderWebglFrame() {
+            if (isScene2 || useGpuCubeField) {
+                return true;
+            }
+            webglFrameCounter = (webglFrameCounter + 1) % webglRenderInterval;
+            return webglFrameCounter === 0;
+        }
+
+        function toggleScene(toScene2) {
+            const target = toScene2 ? CONFIG.scene2 : CONFIG.scene1;
+            const duration = 1.5; // 动画时长秒
+            if (!scene.background) {
+                scene.background = new THREE.Color(CONFIG.scene1.bg);
+            }
+            cubeFieldCanvas.style.opacity = useGpuCubeField || (toScene2 && webglAvailable) ? '0' : '1';
+            if (gpuCubeCloudGroup) {
+                gpuCubeCloudGroup.visible = !toScene2;
+            }
+
+            // 1. 颜色平滑过渡 (GSAP)
+            gsap.to(scene.background, {
+                r: new THREE.Color(target.bg).r,
+                g: new THREE.Color(target.bg).g,
+                b: new THREE.Color(target.bg).b,
+                duration: duration,
+                onComplete: () => {
+                    if (!toScene2) scene.background = null;
+                }
+            });
+            gsap.to(scene.fog.color, { r: new THREE.Color(target.bg).r, g: new THREE.Color(target.bg).g, b: new THREE.Color(target.bg).b, duration: duration });
+            gsap.to(scene.fog, { density: target.fogDensity, duration: duration });
+            gsap.to(backgroundPlane.material.color, { r: new THREE.Color(target.bg).r, g: new THREE.Color(target.bg).g, b: new THREE.Color(target.bg).b, duration: duration });
+
+            // 灯光颜色过渡
+            gsap.to(ambientLight.color, { r: new THREE.Color(target.ambient).r, g: new THREE.Color(target.ambient).g, b: new THREE.Color(target.ambient).b, duration: duration });
+            gsap.to(keyLight.color, { r: new THREE.Color(toScene2 ? target.highlight : CONFIG.scene1.keyLight).r, g: new THREE.Color(toScene2 ? target.highlight : CONFIG.scene1.keyLight).g, b: new THREE.Color(toScene2 ? target.highlight : CONFIG.scene1.keyLight).b, duration: duration });
+            gsap.to(coolFillLight.color, { r: new THREE.Color(target.cube).r, g: new THREE.Color(target.cube).g, b: new THREE.Color(target.cube).b, duration: duration });
+            gsap.to(warmRimLight.color, { r: new THREE.Color(target.highlight).r, g: new THREE.Color(target.highlight).g, b: new THREE.Color(target.highlight).b, duration: duration });
+            gsap.to(orangeRimLight.color, { r: new THREE.Color(toScene2 ? target.cube : CONFIG.scene1.orangeRim).r, g: new THREE.Color(toScene2 ? target.cube : CONFIG.scene1.orangeRim).g, b: new THREE.Color(toScene2 ? target.cube : CONFIG.scene1.orangeRim).b, duration: duration });
+
+            // 2. 物体显隐控制
+            if (toScene2) {
+                specialGroup.visible = true;
+                updateEventHorizonLayout(getSceneSize());
+                // 整个事件视界组同步升起，保持黑色球面和背光光圈贴合。
+                gsap.fromTo(
+                    eventHorizonGroup.position,
+                    { y: -12 },
+                    { y: eventHorizonGroup.userData.restY ?? 1.0, duration: 2.6, ease: "power2.out" }
+                );
+            } else {
+                // 隐藏回退
+                gsap.to(eventHorizonGroup.position, { y: -20, duration: 1, onComplete: () => { specialGroup.visible = false; } });
+            }
+            updateProxyPerfState();
+        }
+
+        // --- 7. 动画循环 ---
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = Math.min(clock.getDelta(), 0.05);
+            const time = clock.elapsedTime;
+
+            if (!useGpuCubeField && (!isScene2 || !webglAvailable)) {
+                drawCubeField(delta, time);
+            }
+            animateCubeCloud(delta, time);
+            animateGpuCubeCloud(time);
+
+            // 灯光呼吸，保持空灵感但避免闪烁。
+            keyLight.intensity = 3.1 + Math.sin(time * 0.85) * 0.24;
+            warmRimLight.intensity = 58 + Math.sin(time * 0.72 + 1.7) * 8;
+
+            // 摄像机移动 (Scene2 时让摄像机移动更平缓，聚焦于中心)
+            if (!isScene2) {
+                camera.position.x = Math.sin(time * 0.08) * 0.7;
+                camera.position.y = 1.2 + Math.sin(time * 0.11) * 0.18;
+                camera.position.z = 18 + Math.cos(time * 0.08) * 0.45;
+                camera.lookAt(0, 0, -25);
+            } else {
+                camera.position.x = Math.sin(time * 0.05) * 1.4;
+                camera.position.y = 1.4 + Math.sin(time * 0.07) * 0.16;
+                camera.position.z = 22 + Math.cos(time * 0.05) * 0.7;
+                camera.lookAt(0, 1.4, -38);
+            }
+
+            // 特殊物体动画：只更新 shader 时间和少量漂移，避免几何旋转破坏球面轮廓。
+            if (specialGroup.visible) {
+                eventHorizonGroup.position.x = Math.sin(time * 0.08) * 0.18;
+                eventHorizonGroup.traverse((child) => {
+                    if (child.material?.uniforms?.uTime) {
+                        child.material.uniforms.uTime.value = time;
+                    }
+                });
+                stars.rotation.y = time * 0.05; // 星星旋转
+            }
+
+            if (!webglAvailable) {
+                return;
+            }
+
+            if (shouldRenderWebglFrame()) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function resizeScene() {
+            const sceneSize = getSceneSize();
+            camera.aspect = sceneSize.width / sceneSize.height;
+            camera.updateProjectionMatrix();
+            if (renderer) renderer.setSize(sceneSize.width, sceneSize.height, false);
+            if (gpuAtmosphereUniforms) {
+                gpuAtmosphereUniforms.uAspect.value = sceneSize.width / sceneSize.height;
+            }
+            updateEventHorizonLayout(sceneSize);
+            if (useGpuCubeField) {
+                cubeFieldWidth = sceneSize.width;
+                cubeFieldHeight = sceneSize.height;
+                updateProxyPerfState();
+            } else {
+                resizeCubeField();
+            }
+        }
+
+        resizeScene();
+        animate();
+
+        // 窗口尺寸监听
+        let resizeQueued = false;
+        window.addEventListener('resize', () => {
+            if (resizeQueued) return;
+            resizeQueued = true;
+            requestAnimationFrame(() => {
+                resizeQueued = false;
+                resizeScene();
+            });
+        });
+    </script>
+</body>
+</html>

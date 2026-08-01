@@ -1,0 +1,14 @@
+{
+  "name": "royenheart-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node proxy/scene.test.mjs && python3 -m unittest proxy/test_dev_preview.py",
+    "perf": "playwright test -c playwright.config.mjs tests/perf",
+    "perf:headed": "playwright test -c playwright.config.mjs tests/perf --headed",
+    "perf:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.0"
+  }
+}
