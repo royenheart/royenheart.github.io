@@ -1,12 +1,3 @@
-{% comment %}
-This file overrides the theme's `_layouts/post.html` (jekyll-theme-chirpy,
-synced from tag v7.6.0 — the version CI resolves from Gemfile `~> 7.3`).
-The only addition is the "AI 摘要" block rendered under the title, driven by
-`site.data.summaries` (generated in CI by scripts/generate_summaries.py and
-keyed by post filename, i.e. `page.name`). If the theme version is ever
-bumped, re-sync this file with the theme's post.html.
-{% endcomment %}
-
 ---
 layout: default
 panel_includes:
@@ -17,6 +8,14 @@ tail_includes:
 script_includes:
   - comment
 ---
+{% comment %}
+This file overrides the theme's `_layouts/post.html` (jekyll-theme-chirpy,
+synced from tag v7.6.0 — the version CI resolves from Gemfile `~> 7.3`).
+The only addition is the "AI 摘要" block rendered under the title, driven by
+`site.data.summaries` (generated in CI by scripts/generate_summaries.py and
+keyed by post filename, i.e. `page.name`). If the theme version is ever
+bumped, re-sync this file with the theme's post.html.
+{% endcomment %}
 
 {% include lang.html %}
 
