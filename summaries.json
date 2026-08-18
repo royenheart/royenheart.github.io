@@ -30,9 +30,9 @@
     "updated_at": "2026-08-01T08:01:41Z"
   },
   "2026-03-10-TailscaleDerper.md": {
-    "text": "在腾讯云Lighthouse上自建Tailscale DERP中继节点，用于提升国内设备间访问速度。部署过程包括新增域名解析、放行自定义端口（10443/10080/3478），编译安装derper并配置systemd服务，手动生成证书以适配非标准端口，最后通过Tailscale ACL自定义节点并验证连通性。同时保留官方节点作为备用，确保服务稳定。",
-    "hash": "71ba4a55116184b52e62da15dece053dbb65e812e86c350501e589bb5d6b1ef0",
-    "updated_at": "2026-08-01T08:01:46Z"
+    "text": "针对国内Tailscale访问速度慢的问题，在腾讯云Lighthouse上自建DERP中继节点。通过编译安装derper，处理非标准端口下的证书生成，配置systemd服务并加入",
+    "hash": "a3c95b9d2454bf7a7147361cc68ce17d8a9c6c0feaf383185ae4b12c7c494257",
+    "updated_at": "2026-08-18T07:36:40Z"
   },
   "2026-06-29-ComputeUse.md": {
     "text": "文章围绕如何让 AI 直接操控操作系统和应用展开，提出通过跨平台操控技术路由器 CUA 整合 macOS、Windows、Linux 的多种 UI 自动化协议，实现对图形界面的统一操作。同时介绍了浏览器使用的三种方式：浏览器扩展、内置浏览器和 CDP 协议，并提及相关开源项目及 Agent 的设计理念，核心在于为智能体提供操控平面的基础能力。",
