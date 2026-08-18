@@ -193,6 +193,41 @@ tailscale status
 tailscale ping <设备名>
 ```
 
+## 七、其他
+
+### 邀请了其他用户到自己的 tailnet
+
+按照官方 [Users can access their own devices](https://tailscale.com/docs/reference/examples/acls#users-can-access-their-own-devices) 一节说明：
+
+新版：
+
+```json
+	"grants": [
+		// Users can access their own devices
+		{
+			"src": ["autogroup:member"],
+			"dst": ["autogroup:self"],
+			"ip":  ["*"],
+		},
+
+		// Allow users in "group:example" to access "tag:example", but only from
+		// devices that are running macOS and have enabled Tailscale client auto-updating.
+		// {"src": ["group:example"], "dst": ["tag:example"], "ip": ["*"], "srcPosture":["posture:autoUpdateMac"]},
+	],
+```
+
+老版 ACL 写法：
+
+```json
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self:*"]
+    }
+  ]
+```
+
 ---
 
 ## Ref
