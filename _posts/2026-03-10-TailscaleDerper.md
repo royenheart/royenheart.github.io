@@ -228,6 +228,11 @@ tailscale ping <设备名>
   ]
 ```
 
+### 运维事项
+
+1. tailscale 管理界面 settings -> contact preferences 设置邮件提醒（如安全问题、配置错误等），有问题及时通知。
+2. tailscale 管理界面把 derper 节点 disable expire key 避免更新导致服务中断。
+
 ---
 
 ## Ref
