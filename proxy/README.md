@@ -77,6 +77,18 @@ Browser evidence is written to `proxy/test-results/` and `proxy/playwright-repor
 
 The compressed budget covers **all emitted JavaScript**, including the dynamically imported graphics chunk, and all CSS. It does not hide the graphics download under a shell-only budget. The graphics import starts after hydration, so it is still part of the first normal visit. `proxy:bundle` records individual and total gzip sizes and fails above 500 KiB JavaScript or 30 KiB CSS.
 
+## Design exploration
+
+Four interactive directions live under `Explorations/Design directions` in Storybook. They share the original two scenes and the new `UnifiedPlayer`; the production `HomeFrame` remains the previous design until a direction is selected. See [the research and capability report](../docs/proxy-design-exploration.md) for current playback support and remaining integration work.
+
+With Storybook running on port 6006, capture both scenes on desktop, phone and tablet:
+
+```bash
+node proxy/scripts/capture-concepts.mjs /tmp/proxy-style-previews
+```
+
+Run this command from the repository root. It refuses an output directory inside the repository. Screenshots, comparison pages and rendering evidence are local review artifacts, not committed design assets.
+
 ## Release
 
 The independent `Proxy checks and static artifact` workflow uploads `proxy-static-<commit>` after verification. Deploy only its contents (`proxy/dist`), using the [atomic publication helper and OpenResty examples](deploy/README.md). Node is a build/deployment-helper dependency; the public server needs no Node, Python, Lua template engine, playlist API, or database.

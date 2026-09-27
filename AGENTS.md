@@ -12,7 +12,7 @@
 - Build a static site. Read and validate repository content during the build; OpenResty must not render templates or interpret music configuration.
 - Use TypeScript contracts, shared design tokens, accessible HTML controls, and the existing npm workspace lockfile.
 - Use React Three Fiber for rendering lifecycle and established library primitives for animation and adaptive rendering. Keep artistic shaders separate from rendering infrastructure.
-- Keep third-party music embeds isolated. Do not imply control over cross-origin playback or invent playable audio URLs.
+- Keep music source metadata separate from playback capabilities. Use the unified player for new music work; do not add new iframe players. Do not imply control over cross-origin playback or invent playable audio URLs.
 - Keep the Jekyll blog build independent of the proxy application and development skills.
 
 ## Verification
