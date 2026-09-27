@@ -218,8 +218,9 @@ exclude:
   - "*.config.js"
   - "package*.json"
   - proxy
+  - AGENTS.md
+  - .agents
   # Dev/test artifacts & helper scripts that must never be deployed into _site
-  - playwright.config.mjs
   - playwright-report
   - scripts
   - test-results

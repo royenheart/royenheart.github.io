@@ -8,6 +8,12 @@ on:
       - .gitignore
       - README.md
       - LICENSE
+      - "proxy/**"
+      - ".agents/**"
+      - "docs/**"
+      - AGENTS.md
+      - "package*.json"
+      - .github/workflows/proxy-check.yml
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,7 +45,7 @@ jobs:
           # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
 
       # ------------------------------------------------------------------
-      # AI 摘要生成 (incremental): scripts/generate_summaries.py diffs each
+      # AI summary generation (incremental): scripts/generate_summaries.py diffs each
       # post's content hash against the summaries data file and only calls
       # the DeepSeek API for new/changed posts.
       #

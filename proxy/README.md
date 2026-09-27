@@ -1,124 +1,84 @@
-# Deploy
+# Personal homepage
 
-## Local preview without OpenResty
+The VPC homepage is an Astro static site with React islands, TypeScript, Tailwind CSS, Motion, and React Three Fiber. It preserves the sidebar/navigation, central artwork, bottom music/registration bar, blue cube cloud, and golden event horizon. OpenResty serves the build output or proxies to an internal static server. It never reads application data or renders templates.
 
-Use the Python preview server when you want to inspect `template.html` locally without
-configuring OpenResty. It reads `config.toml` and re-renders the template on every
-request, so refreshing the browser picks up local edits.
+## Development
 
-```bash
-python3 proxy/dev_preview.py
-```
-
-Open:
-
-- `http://127.0.0.1:4173`
-- `http://127.0.0.1:4173/no-music` if the music iframe slows down browser testing
-
-Optional flags:
+Use Node 24 LTS and run commands from the repository root:
 
 ```bash
-python3 proxy/dev_preview.py --host 0.0.0.0 --port 8080
+npm ci
+npm run proxy:dev
 ```
 
-```bash
-dnf install openresty luarocks lua-devel cmake
-luarocks install toml
-```
+Astro prints the local URL (normally `http://localhost:4321`). `npm run proxy:storybook` opens the component development server at `http://localhost:6006`. Run `npm run proxy:build && npm run proxy:preview` to inspect the production output. Preview is for local verification only.
 
-add such lua script to your nginx/openresty config:
+The Jekyll blog remains independent. One root `package-lock.json` locks the npm workspace. Do not create another lockfile inside `proxy`.
 
-```conf
-http {
-    # 如果有，增加 lua 模块搜索路径 (根据你的安装位置可能略有不同)
-    lua_package_path "/usr/local/share/lua/5.1/?.lua;;";
-    # 如果使用 openresty，可以直接从 https://github.com/jonstoler/lua-toml 下载 toml.lua 到 openresty 的 lualib 目录
+## Content
 
-    server {
-        ....
+Edit the following files, commit, build, and publish the new artifact:
 
-        location = /favicon.ico {
-            root /path/to/proxy;
-            default_type image/x-icon;
-            try_files /favicon.ico =404;
-            add_header Cache-Control "public, max-age=86400";
-        }
+- `src/content/site.json`: title, profile links, and official registration links.
+- `src/content/playlist.json`: track IDs, labels, and the default selection.
+- `src/content/scenes.json`: default scene, deterministic seed, particle budget, and palettes.
 
-        location = /avatar.svg {
-            root /path/to/proxy;
-            default_type image/svg+xml;
-            try_files /avatar.svg =404;
-            add_header Cache-Control "public, max-age=86400";
-        }
+`src/lib/content/schema.ts` validates these files during the build. Invalid links, arbitrary HTML, duplicate track IDs, missing defaults, or invalid graphics settings fail the build. React escapes labels; raw iframe markup is not accepted.
 
-        location / {
-            default_type text/html;
-            content_by_lua_block {
-                -- 引入 toml 库
-                local toml = require "toml"
-              
-                -- 定义读取文件的辅助函数
-                local function read_file(path)
-                    local file = io.open(path, "rb") 
-                    if not file then return nil end
-                    local content = file:read "*a" 
-                    file:close()
-                    return content
-                end
+A playlist entry uses this structure:
 
-                -- 1. 读取并解析 Config
-                local config_content = read_file(ngx.var.document_dir .. "/config.toml")
-                if not config_content then
-                    ngx.say("Error: config.toml not found")
-                    return
-                end
-              
-                -- 解析 TOML
-                local config = toml.parse(config_content)
-
-                -- 2. 读取 Template
-                local template = read_file(ngx.var.document_dir .. "/template.html")
-                if not template then
-                    ngx.say("Error: template.html not found")
-                    return
-                end
-
-                -- 3. 简单的字符串替换 (渲染模板)
-                -- Lua 的 string.gsub 类似于 Replace
-                local html = template
-              
-                html = html:gsub("{{TITLE}}", config.meta.title)
-                html = html:gsub("{{BEIAN_ICP}}", config.meta.beian_icp)
-                html = html:gsub("{{BEIAN_POLICE}}", config.meta.beian_police)
-              
-                html = html:gsub("{{LINK_BLOG}}", config.links.blog)
-                -- html = html:gsub("{{LINK_TWITTER}}", config.links.twitter)
-                html = html:gsub("{{LINK_GITHUB}}", config.links.github)
-              
-                -- 这里直接注入 Iframe 字符串
-                html = html:gsub("{{MUSIC_IFRAME}}", config.music.iframe)
-              
-                html = html:gsub("{{COLOR_BG}}", config.visual.bg_color)
-                html = html:gsub("{{COLOR_CUBE}}", config.visual.cube_color)
-                html = html:gsub("{{COLOR_HIGHLIGHT}}", config.visual.highlight_color)
-                html = html:gsub("{{COLOR_AMBIENT}}", config.visual.ambient_color)
-
-                -- 4. 输出最终 HTML
-                ngx.say(html)
-            }
-        }
-    }
+```json
+{
+  "id": "first-light",
+  "kind": "netease-embed",
+  "songId": "30953026",
+  "label": "A little music for the journey"
 }
 ```
 
-When you need to use certbot to get ssl for a web dns hosted on cloudflare, need to install `certbot-dns-cloudflare` first:
+The existing NetEase song is preserved. Multiple entries expose a native track selector. An empty playlist uses `{"defaultTrackId": null, "tracks": []}`. The player loads only after Listen is pressed, with autoplay disabled. Small screens use the external song link. Cross-origin playback remains under NetEase's control; a loaded iframe does not establish that audio is playing. The advisory timeout and external link remain available when the provider fails.
 
-- Follow: https://certbot-dns-cloudflare.readthedocs.io/en/stable/
-- Use certbot to get ssl:
+## Architecture
+
+`src/pages/index.astro` validates data and emits the static `HomeFrame`. Music and scene controls hydrate independently. `SceneExperience` owns scene selection, loading, reduced motion, pause, and fallback. `SceneCanvas` loads separately and delegates the render loop, resizing, instancing, and resource disposal to R3F/Three.js. Motion handles DOM transitions; Drei's performance monitor lowers quality when needed. There is no custom cross-device renderer or second Canvas2D engine.
+
+The existing artistic shaders remain in `src/scenes/materials`. The scene posters are fallback captures of the original artwork; live rendering uses actual geometry and shaders. The optimized avatar derives from the original `avatar.svg`, retained as source material.
+
+Useful diagnostic URLs:
+
+- `/?capture=1`: deterministic scene time for screenshots; no continuous loop.
+- `/?graphics=poster`: static scene artwork for layout/failure isolation.
+
+Neither diagnostic mode is evidence of normal animation performance. Test `/` as well.
+
+See [design constraints](DESIGN.md), [architecture decisions](../docs/proxy-refactor-plan.md), [verification record](../docs/proxy-verification.md), [deployment](deploy/README.md), and [agent skills](../.agents/skills/README.md).
+
+## Verification
 
 ```bash
-# can specify multiple domains
-certbot certonly --dns-cloudflare --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini -d xx.com
-
-certbot certonly --expand --dns-cloudflare --dns-cloudflare-credentials /path/to/cloudflare_credentials.ini -d xx.com -d gray.xx.com
+npm run skills:check
+npm test
+npx playwright install chromium firefox webkit
+npm run proxy:storybook:test
+npm run proxy:build
+npm run proxy:bundle
+npm run proxy:deploy:test # Requires Docker
+npm run proxy:storybook:build
+npm run proxy:e2e
 ```
+
+On supported Linux CI, use `npx playwright install --with-deps chromium firefox webkit`. Local operating systems may need additional browser libraries. The Playwright config starts the production preview and a static Storybook server. In local development it can reuse servers on ports 4321 and 6006; stop stale servers after rebuilding when necessary. CI requires clean ports.
+
+`npm test` runs type checking, lint, formatting, content-contract tests, and temporary-directory deployment tests. `proxy:storybook:test` runs component interactions and accessibility checks in Chromium. `proxy:e2e` runs the actual production page and built Storybook iframe in Chromium, Firefox, and WebKit. The GPU/performance smoke is explicitly Chromium-only; other engines verify layout, input, and failure behavior. `npm run proxy:perf` runs only the rendering lifetime/frame-sampling scenario.
+
+The 13-size matrix covers phone, tablet, desktop, portrait/landscape, short height, and both sides of the 720px breakpoint. Geometry assertions calculate containment, intersection, edge alignment, overflow, and canvas size. A deliberate broken-layout test verifies that the oracle detects defects. Race tests cover repeated scene changes, resize during interaction, deferred graphics loading/unmount, pending music embeds, stale timeouts, and close/reopen. Text enlargement, keyboard access, reduced motion, no JavaScript, unavailable graphics, and context loss have dedicated checks.
+
+Browser evidence is written to `proxy/test-results/` and `proxy/playwright-report/`. Frame intervals describe the browser scheduler, not GPU completion. Software-rendered CI results do not establish real iOS/Android device performance. Screenshots are review artifacts; this migration does not claim cross-platform pixel-identical image baselines.
+
+The compressed budget covers **all emitted JavaScript**, including the dynamically imported graphics chunk, and all CSS. It does not hide the graphics download under a shell-only budget. The graphics import starts after hydration, so it is still part of the first normal visit. `proxy:bundle` records individual and total gzip sizes and fails above 500 KiB JavaScript or 30 KiB CSS.
+
+## Release
+
+The independent `Proxy checks and static artifact` workflow uploads `proxy-static-<commit>` after verification. Deploy only its contents (`proxy/dist`), using the [atomic publication helper and OpenResty examples](deploy/README.md). Node is a build/deployment-helper dependency; the public server needs no Node, Python, Lua template engine, playlist API, or database.
+
+The legacy TOML/template/Python preview path and source-regex tests have been removed. Previous Git revisions and deployed release directories remain the rollback source. No production deployment is performed by the verification workflow.

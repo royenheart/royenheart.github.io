@@ -1,1 +1,8 @@
-tests
+node_modules/
+.astro/
+dist/
+storybook-static/
+test-results/
+playwright-report/
+coverage/
+*.log

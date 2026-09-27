@@ -1,0 +1,18 @@
+{
+  "title": "RoyenHeart's Space",
+  "name": "RoyenHeart",
+  "links": [
+    { "label": "Blog", "href": "https://royenheart.github.io" },
+    { "label": "GitHub", "href": "https://github.com/royenheart" }
+  ],
+  "registrations": [
+    {
+      "label": "\u6d59ICP\u59072020042582\u53f7",
+      "href": "https://beian.miit.gov.cn/"
+    },
+    {
+      "label": "\u7518\u516c\u7f51\u5b89\u590762012302000279\u53f7",
+      "href": "https://beian.mps.gov.cn/#/query/webSearch?code=62012302000279"
+    }
+  ]
+}
