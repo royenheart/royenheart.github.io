@@ -232,6 +232,7 @@ tailscale ping <设备名>
 
 1. tailscale 管理界面 settings -> contact preferences 设置邮件提醒（如安全问题、配置错误等），有问题及时通知。
 2. tailscale 管理界面把 derper 节点 disable expire key 避免更新导致服务中断。
+3. tailscale 如果开启 MagicDNS（好处是可以用域名解析服务器），会劫持系统 DNS 解析，机制是默认用设备本地的 DNS；代理查询时会并行问所有解析器，取最快的响应。可以在 [tailscale dns 控制台](https://console.tailscale.com/admin/dns) 中关闭。并注意 systemd resolved 的缓存机制
 
 ---
 
