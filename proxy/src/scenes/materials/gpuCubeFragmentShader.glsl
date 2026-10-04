@@ -10,6 +10,7 @@ varying float vPileProgress;
 
 uniform float uLightContrast;
 uniform highp float uCollapse;
+uniform bool uLinearOutput;
 
 void main() {
     vec3 normalDirection = normalize(vNormal);
@@ -38,6 +39,8 @@ void main() {
 
     color = mix(color, vec3(1.0, 0.64, 0.12) * (0.5 + key), smoothstep(0.35, 0.85, uCollapse));
     if (vAlpha < 0.035) discard;
+    // Preserve authored display colors when rendering into a linear composer buffer.
+    if (uLinearOutput) color = sRGBTransferEOTF(vec4(color, 1.0)).rgb;
     gl_FragColor = vec4(color, vAlpha);
 }
         

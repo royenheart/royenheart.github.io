@@ -89,6 +89,14 @@ node proxy/scripts/capture-concepts.mjs /tmp/proxy-style-previews
 
 Run this command from the repository root. It refuses an output directory inside the repository. Screenshots, comparison pages and rendering evidence are local review artifacts, not committed design assets.
 
+`Explorations/Orbit study` develops the subsequent full-screen direction: compact artwork controls, stacked trapezoid ribbons, and a reversible cube-to-horizon sequence. Its optical renderer uses precomputed Schwarzschild light paths and procedural disk emission. See [the current implementation notes](../docs/proxy-relativistic-horizon.md) for model limits, source attribution, controls and verification. Generate the comparison page and motion recordings with:
+
+```bash
+node proxy/scripts/capture-optical-study.mjs /tmp/proxy-optical-study/final
+```
+
+The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
+
 ## Release
 
 The independent `Proxy checks and static artifact` workflow uploads `proxy-static-<commit>` after verification. Deploy only its contents (`proxy/dist`), using the [atomic publication helper and OpenResty examples](deploy/README.md). Node is a build/deployment-helper dependency; the public server needs no Node, Python, Lua template engine, playlist API, or database.

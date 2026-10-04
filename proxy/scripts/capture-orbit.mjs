@@ -41,8 +41,10 @@ try {
         outline: getComputedStyle(document.querySelector('.orbit-card-front'))
           .clipPath,
       }));
-      if (Math.abs(geometry.card / geometry.artwork - 0.4) > 0.01)
-        throw new Error('The ribbon does not match the artwork proportion.');
+      if (geometry.card > geometry.artwork * 0.51 || geometry.card < 43)
+        throw new Error(
+          'The compact ribbon violates its artwork or control bounds.',
+        );
       shots.push({ scene, ...size, file, geometry });
     }
   }
@@ -81,12 +83,12 @@ try {
         cardShape:
           'Trapezoid; top wider than bottom; scene-independent silhouette',
         cardHeight:
-          '40% of the actual artwork diameter; right seam occluded by artwork',
+          '44–54px readable ribbons; compact artwork occludes the right seam',
         motion: 'Actual browser recording; fixed background time',
         soundtrack:
           'Requested artist metadata; no substituted recording; audio requests aborted for this visual capture',
         blackHole:
-          'Existing baseline. Relativistic replacement researched, not implemented.',
+          'Precomputed Schwarzschild ray tracing, procedural rotating disk and HDR bloom.',
       },
       null,
       2,
@@ -97,8 +99,8 @@ try {
     `<!doctype html>
 <html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Orbit study — compact trapezoid cards</title>
 <style>body{margin:0;padding:clamp(20px,4vw,60px);background:#0a101a;color:#e5eef5;font:16px/1.6 system-ui}main{max-width:1400px;margin:auto}h1{font-weight:500}a{color:#92ddfc}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}figure{margin:0 0 32px}img,video{display:block;width:100%;border:1px solid #27394e}figcaption{padding:10px 0;color:#b5c5d5}button{background:#173048;color:white;border:1px solid #53748f;padding:12px 20px;font:inherit;cursor:pointer}small{display:block;margin-bottom:30px}video{max-height:75vh}</style>
-<main><h1>Compact trapezoid cards</h1><p>The entire card is a trapezoid. The silhouette stays the same in both scenes; only the palette and internal surface change. Each ribbon is 40% of the artwork diameter, and its right seam is occluded by that artwork circle.</p>
-<small>The black hole shown here is the existing baseline. Optical reconstruction is the next study. Remote music playback is disabled in these visual captures; the requested track metadata is retained.</small>
+<main><h1>Compact trapezoid cards</h1><p>A 124px phone wheel and a maximum 164px desktop wheel keep the controls secondary to the scene. Readable ribbons preserve the trapezoid silhouette and terminate behind the artwork circle.</p>
+<small>The black hole uses precomputed curved light paths and procedural disk emission. Remote music playback is disabled in these visual captures; the requested track metadata is retained.</small>
 <figure><video id="motion" controls playsinline muted loop src="card-motion.webm"></video><figcaption>Actual card exchange, forward and backward. Fixed background time for comparison.</figcaption><button onclick="const v=document.getElementById('motion');v.currentTime=0;v.play()">Replay card motion</button></figure>
 <section>${shots.map((shot) => `<figure><a href="${shot.file}"><img src="${shot.file}" alt="${shot.scene} scene, compact trapezoid card, ${shot.width} by ${shot.height}"></a><figcaption>${shot.scene} · ${shot.width} × ${shot.height} · ribbon ${shot.geometry.card}px / artwork ${shot.geometry.artwork}px</figcaption></figure>`).join('')}</section>
 <p><a href="${story('cubes')}">Open live cube study</a> · <a href="${story('horizon')}">Open live horizon study</a> · <a href="recipe.json">Capture recipe</a></p></main></html>`,

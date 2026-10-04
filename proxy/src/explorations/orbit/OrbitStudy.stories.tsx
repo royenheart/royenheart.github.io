@@ -22,6 +22,19 @@ const meta = {
     study: 'gather',
     tracks: { cubes: previewTracks[1]!, horizon: previewTracks[2]! },
     resolve: resolvePreviewTrack,
+    horizonRenderer: 'relativistic',
+    diskStyle: 'turbulent',
+    inclination: 12,
+    bloom: 0.28,
+  },
+  argTypes: {
+    horizonRenderer: {
+      control: 'radio',
+      options: ['baseline', 'relativistic'],
+    },
+    diskStyle: { control: 'radio', options: ['silk', 'turbulent'] },
+    inclination: { control: { type: 'range', min: 5, max: 35, step: 1 } },
+    bloom: { control: { type: 'range', min: 0, max: 1.2, step: 0.05 } },
   },
 } satisfies Meta<typeof OrbitStudy>;
 export default meta;
@@ -34,6 +47,33 @@ export const SelectedHorizon: Story = {
     initialScene: 'horizon',
     tracks: sceneTracks,
     resolve: resolvePublicAudio,
+  },
+};
+export const HorizonBaseline: Story = {
+  args: {
+    tracks: sceneTracks,
+    resolve: resolvePublicAudio,
+    initialScene: 'horizon',
+    horizonRenderer: 'baseline',
+    skipEntrance: true,
+  },
+};
+export const HorizonSilk: Story = {
+  args: {
+    tracks: sceneTracks,
+    resolve: resolvePublicAudio,
+    initialScene: 'horizon',
+    diskStyle: 'silk',
+    skipEntrance: true,
+  },
+};
+export const HorizonTurbulent: Story = {
+  args: {
+    tracks: sceneTracks,
+    resolve: resolvePublicAudio,
+    initialScene: 'horizon',
+    diskStyle: 'turbulent',
+    skipEntrance: true,
   },
 };
 export const S1Gather: Story = {};

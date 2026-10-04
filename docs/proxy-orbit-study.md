@@ -1,6 +1,6 @@
 # Orbit study: artwork-aligned information ribbons
 
-Status: interactive Storybook exploration on `refactor/proxy-modernization`. The production Astro homepage retains its existing layout. Captures stay outside Git. No push or PR has been requested for this iteration.
+Status: this note records the initial artwork-aligned iteration. The user's subsequent correction rejects copying the sketch's scale; the smaller controls and new optical renderer are described in [the current implementation notes](proxy-relativistic-horizon.md). The production Astro homepage retains its existing layout. Captures stay outside Git; no push or PR.
 
 ## Reference geometry
 

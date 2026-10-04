@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from 'react';
+import { useRef, useState, type RefObject } from 'react';
 import { useAnimationFrame } from 'motion/react';
 
 export function AudioWheel({
@@ -29,6 +29,7 @@ export function AudioWheel({
   const last = useRef(0);
   const wasLive = useRef(false);
   const pointerFocus = useRef(false);
+  const [failedArtwork, setFailedArtwork] = useState<string>();
   useAnimationFrame((time) => {
     if (time - last.current < 40) return;
     last.current = time;
@@ -94,7 +95,20 @@ export function AudioWheel({
       >
         <span className="orbit-disc-grooves" aria-hidden="true" />
         <span className="orbit-artwork">
-          {artwork && <img src={artwork} alt={`${title} artwork`} />}
+          {artwork && failedArtwork !== artwork ? (
+            <img
+              src={artwork}
+              alt={`${title} artwork`}
+              onError={() => setFailedArtwork(artwork)}
+            />
+          ) : (
+            <span
+              className="orbit-artwork-placeholder"
+              aria-label={`${title} artwork unavailable`}
+            >
+              ♫
+            </span>
+          )}
         </span>
         <span className="orbit-spindle" aria-hidden="true" />
       </button>

@@ -39,6 +39,7 @@ import '@fontsource/space-grotesk/400.css';
 import '@fontsource/space-grotesk/500.css';
 import '@fontsource/instrument-serif/400.css';
 import './orbit.css';
+import type { DiskStyle } from '../../scenes/RelativisticHorizon';
 
 const OrbitCanvas = lazy(() => import('./OrbitCanvas'));
 const titles = { cubes: 'Blue hour', horizon: 'Event horizon' };
@@ -71,6 +72,10 @@ export interface OrbitStudyProps {
   startOpen?: boolean;
   resolve?: TrackResolver;
   tracks?: SceneTracks;
+  horizonRenderer?: 'baseline' | 'relativistic';
+  diskStyle?: DiskStyle;
+  inclination?: number;
+  bloom?: number;
 }
 
 export function OrbitStudy({
@@ -81,6 +86,10 @@ export function OrbitStudy({
   startOpen = false,
   resolve = resolvePublicAudio,
   tracks = sceneTracks,
+  horizonRenderer = 'relativistic',
+  diskStyle = 'turbulent',
+  inclination = 12,
+  bloom = 0.28,
 }: OrbitStudyProps) {
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
@@ -376,6 +385,10 @@ export function OrbitStudy({
                     paused={paused || reduced || !visible}
                     onReady={onReady}
                     onFailure={onFailure}
+                    horizonRenderer={horizonRenderer}
+                    diskStyle={diskStyle}
+                    inclination={inclination}
+                    bloom={bloom}
                   />
                 </Suspense>
               </GraphicsBoundary>

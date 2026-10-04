@@ -87,8 +87,8 @@ export function inspectOrbitLayout() {
       const r = rect(ribbon);
       if (r.top < cover.top - 1 || r.bottom > cover.bottom + 1)
         issues.push('Ribbon escapes the artwork height');
-      if (r.height > cover.height * 0.43)
-        issues.push('Ribbon exceeds the measured sketch proportion');
+      if (r.height > cover.height * 0.51)
+        issues.push('Ribbon is too tall for the compact artwork');
       const shape = getComputedStyle(ribbon).clipPath;
       const cut = Number(shape.match(/, ([\d.]+)px 100%\)$/)?.[1]);
       if (!Number.isFinite(cut)) {
@@ -112,6 +112,9 @@ export function inspectOrbitLayout() {
       if (visible(content)) contains(front, content);
     if (overlap(front, heading)) issues.push('Card overlaps scene heading');
   }
+  const wheel = root.querySelector('.orbit-wheel');
+  if (wheel && rect(wheel).width > (innerWidth < 640 ? 125 : 165))
+    issues.push('Wheel exceeds its compact size budget');
   const canvas = root.querySelector('canvas');
   if (
     canvas &&

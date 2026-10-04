@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import type { ShaderMaterial } from 'three';
+import {
+  MathUtils,
+  Vector3,
+  type ShaderMaterial,
+  type PerspectiveCamera,
+} from 'three';
+import { HORIZON_CENTER, horizonCaptureRadius } from './relativity/framing';
 import { createCubeGeometry } from './cubeGeometry';
 import vertexShader from './materials/gpuCubeVertexShader.glsl?raw';
 import fragmentShader from './materials/gpuCubeFragmentShader.glsl?raw';
@@ -22,13 +28,16 @@ export function CubeCloud({
   collapse,
   presence,
   swirl = 0,
+  linearOutput = false,
 }: SceneProps & {
   quality: number;
   collapse?: SceneSignal;
   presence?: SceneSignal;
   swirl?: number;
+  linearOutput?: boolean;
 }) {
   const size = useThree((state) => state.size);
+  const camera = useThree((state) => state.camera);
   const count = Math.round(settings.cubeCount * quality);
   const geometry = useMemo(
     () => createCubeGeometry(count, settings.seed),
@@ -49,6 +58,9 @@ export function CubeCloud({
       uCollapse: { value: 0 },
       uPresence: { value: 1 },
       uSwirl: { value: 0 },
+      uLinearOutput: { value: false },
+      uHorizonRadius: { value: 12 },
+      uHorizonCenter: { value: new Vector3(...HORIZON_CENTER) },
     }),
     [],
   );
@@ -57,6 +69,7 @@ export function CubeCloud({
       uTime: { value: 0 },
       uAspect: { value: 1 },
       uPresence: { value: 1 },
+      uLinearOutput: { value: false },
     }),
     [],
   );
@@ -68,11 +81,20 @@ export function CubeCloud({
       cubes.current.uniforms.uCollapse!.value = blend;
       cubes.current.uniforms.uPresence!.value = entry;
       cubes.current.uniforms.uSwirl!.value = swirl;
+      cubes.current.uniforms.uLinearOutput!.value = linearOutput;
+      cubes.current.uniforms.uHorizonRadius!.value = horizonCaptureRadius(
+        size.width,
+        size.height,
+        camera.position.z - HORIZON_CENTER[2],
+        (camera as PerspectiveCamera).fov ?? 62,
+      );
     }
     if (backdrop.current) {
       backdrop.current.uniforms.uTime!.value = time.current;
       backdrop.current.uniforms.uAspect!.value = size.width / size.height;
-      backdrop.current.uniforms.uPresence!.value = entry * (1 - blend);
+      backdrop.current.uniforms.uLinearOutput!.value = linearOutput;
+      backdrop.current.uniforms.uPresence!.value =
+        entry * (1 - MathUtils.smoothstep(blend, 0.06, 0.62));
     }
   });
   return (

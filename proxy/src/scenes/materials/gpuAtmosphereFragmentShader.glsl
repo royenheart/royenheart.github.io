@@ -3,6 +3,7 @@ precision mediump float;
 uniform float uTime;
 uniform float uAspect;
 uniform float uPresence;
+uniform bool uLinearOutput;
 varying vec2 vUv;
 
 float softCircle(vec2 uv, vec2 center, float radius) {
@@ -26,6 +27,7 @@ void main() {
     color += vec3(0.72, 1.0, 1.0) * coolMist * 0.16;
     color = mix(color, vec3(0.0, 0.15, 0.36), smoothstep(0.72, 1.0, vUv.y) * 0.16);
 
+    if (uLinearOutput) color = sRGBTransferEOTF(vec4(color, 1.0)).rgb;
     gl_FragColor = vec4(color, uPresence);
 }
         

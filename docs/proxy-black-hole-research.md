@@ -1,6 +1,6 @@
 # Procedural black hole research and soundtrack decision
 
-Status: research complete; the replacement renderer is not implemented. The existing transition studies remain provisional. The user requested improving the black hole before continuing transition work. No aesthetic direction has been selected. Work remains on `refactor/proxy-modernization`; no push or PR.
+Status: the optical renderer, compact controls and aligned adjacent transition are now implemented in the Orbit study. See [implementation and review notes](proxy-relativistic-horizon.md). The baseline remains for comparison; the disk texture is still a review choice. Work remains on `refactor/proxy-modernization`; no push or PR. The proposal and initial probes below record the research stage.
 
 ## Confirmed constraints
 

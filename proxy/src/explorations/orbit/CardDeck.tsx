@@ -26,12 +26,12 @@ function FrontCard({
       initial={
         reduced
           ? false
-          : { y: direction * 30, rotateX: -direction * 32, opacity: 0 }
+          : { y: `${direction * 35}%`, rotateX: -direction * 24, opacity: 0 }
       }
       animate={{ y: 0, rotateX: 0, opacity: 1 }}
       exit={{
-        y: reduced ? 0 : -direction * 28,
-        rotateX: reduced ? 0 : direction * 32,
+        y: reduced ? 0 : `${-direction * 35}%`,
+        rotateX: reduced ? 0 : direction * 24,
         opacity: 0,
       }}
       transition={{ duration: reduced ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}

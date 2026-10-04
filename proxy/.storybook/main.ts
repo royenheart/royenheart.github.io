@@ -9,9 +9,21 @@ const config: StorybookConfig = {
     '@storybook/addon-vitest',
   ],
   framework: '@storybook/react-vite',
+  staticDirs: ['../public'],
   viteFinal: async (config) => ({
     ...config,
     plugins: [...(config.plugins ?? []), tailwind()],
+    server: {
+      ...config.server,
+      watch: {
+        ...config.server?.watch,
+        ignored: [
+          '**/playwright-report/**',
+          '**/test-results/**',
+          '**/storybook-static/**',
+        ],
+      },
+    },
   }),
 };
 export default config;
