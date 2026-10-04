@@ -1,0 +1,35 @@
+{
+  "cubes": {
+    "id": "c418-axolotl",
+    "title": "Axolotl",
+    "artist": "C418",
+    "duration": 303.138,
+    "artwork": "https://p2.music.126.net/SeXtt1Y06q7JUEPaWiBFOg==/109951169069316679.jpg",
+    "sourceUrl": "https://music.163.com/song?id=1317502662",
+    "links": [
+      {
+        "label": "NetEase",
+        "href": "https://music.163.com/song?id=1317502662"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/0DDrhNi7QBhJkSK3lL9ghD"
+      }
+    ]
+  },
+  "horizon": {
+    "id": "alexei-zakharov-sanctuary",
+    "title": "Sanctuary",
+    "artist": "Alexei Zakharov",
+    "duration": 168.045,
+    "artwork": "https://p2.music.126.net/9xUrtBaorkUdSUGQozuldA==/1243547651061611.jpg",
+    "sourceUrl": "https://music.163.com/song?id=27755434",
+    "links": [
+      { "label": "NetEase", "href": "https://music.163.com/song?id=27755434" },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/2afhQXoPbDCimkgue7zUfZ"
+      }
+    ]
+  }
+}

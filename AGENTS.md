@@ -9,6 +9,8 @@
 ## Proxy application
 
 - Preserve the personal navigation, central scene, music/footer layout, blue cube cloud, and golden event horizon.
+- The user-approved immersive exploration may move navigation and music into a corner wheel/card deck over a full-screen scene. Preserve previous layouts as separate studies until a direction is selected.
+- Information cards in that exploration must be complete trapezoids with wider tops and narrower bottoms. Size them against the actual song-artwork circle, not the outer spectrum or wheel container: the supplied detail sketch has a ribbon/cover ratio near 0.4. Keep the ribbons inside the cover's vertical extent, and hide their entire right seam behind that circle. Scene themes may change colors and internal surfaces, but not this outline. Verify these relationships using rendered DOM geometry and hit testing.
 - Build a static site. Read and validate repository content during the build; OpenResty must not render templates or interpret music configuration.
 - Use TypeScript contracts, shared design tokens, accessible HTML controls, and the existing npm workspace lockfile.
 - Use React Three Fiber for rendering lifecycle and established library primitives for animation and adaptive rendering. Keep artistic shaders separate from rendering infrastructure.

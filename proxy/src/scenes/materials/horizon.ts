@@ -12,6 +12,7 @@ export function eventHorizonBackdropMaterial() {
   return new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
+      uPresence: { value: 1 },
       uSceneAspectRatio: { value: 1 },
       uDeepOrange: { value: goldenAccretionPalette.deepOrange },
       uGold: { value: goldenAccretionPalette.richGold },
@@ -28,6 +29,7 @@ export function eventHorizonBackdropMaterial() {
             precision mediump float;
 
             uniform float uTime;
+            uniform float uPresence;
             uniform float uSceneAspectRatio;
             uniform vec3 uDeepOrange;
             uniform vec3 uGold;
@@ -45,11 +47,12 @@ export function eventHorizonBackdropMaterial() {
                 vec3 color = mix(base, uDeepOrange * 0.32, upperWarmth * 0.42 + centerField * 0.18);
                 color = mix(color, uGold * 0.22, softBand * 0.16 + shimmer * centerField * 0.035);
                 color = mix(color, base * 0.54, lowerVignette * 0.56);
-                gl_FragColor = vec4(color, 1.0);
+                gl_FragColor = vec4(color, uPresence);
             }
         `,
     depthWrite: false,
     depthTest: false,
+    transparent: true,
     side: THREE.DoubleSide,
   });
 }
@@ -68,6 +71,7 @@ export function eventHorizonGlowMaterial({
   return new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
+      uPresence: { value: 1 },
       uOpacity: { value: opacity },
       uIntensity: { value: intensity },
       uHaloSpread: { value: haloSpread },
@@ -90,6 +94,7 @@ export function eventHorizonGlowMaterial({
             precision mediump float;
 
             uniform float uTime;
+            uniform float uPresence;
             uniform float uOpacity;
             uniform float uIntensity;
             uniform float uHaloSpread;
@@ -138,7 +143,7 @@ export function eventHorizonGlowMaterial({
                 vec3 color = mix(uDeepOrange, uGold, smoothstep(0.49, 0.64, d));
                 color = mix(color, uPaleGold, clamp(rim * 0.56 + paleInnerRim * 0.72 + whiteCrest * 0.32, 0.0, 1.0));
                 color = mix(color, uWhiteGold, clamp(whiteCrest * 0.78 + paleInnerRim * 0.28 + hotStreak * rim * 0.18, 0.0, 1.0));
-                gl_FragColor = vec4(color * uIntensity * uDirectGlowBoost, alpha);
+                gl_FragColor = vec4(color * uIntensity * uDirectGlowBoost, alpha * uPresence);
             }
         `,
     transparent: true,
@@ -152,6 +157,7 @@ export function eventHorizonCoreMaterial() {
   return new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
+      uPresence: { value: 1 },
     },
     vertexShader: `
             varying vec2 vUv;
@@ -165,6 +171,7 @@ export function eventHorizonCoreMaterial() {
             precision mediump float;
 
             uniform float uTime;
+            uniform float uPresence;
             varying vec2 vUv;
 
             void main() {
@@ -180,7 +187,7 @@ export function eventHorizonCoreMaterial() {
                 float horizonContactGlow = rimSoftBlend * upperFalloff;
                 vec3 coreColor = mix(vec3(0.0, 0.0, 0.0), vec3(0.04, 0.024, 0.008), barelyVisibleSurface);
                 coreColor = mix(coreColor, vec3(0.075, 0.038, 0.008), horizonContactGlow * 0.18);
-                gl_FragColor = vec4(coreColor, sphereSilhouette);
+                gl_FragColor = vec4(coreColor, sphereSilhouette * uPresence);
             }
         `,
     transparent: true,
@@ -193,6 +200,7 @@ export function eventHorizonDiskMaterial() {
   return new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
+      uPresence: { value: 1 },
       uSceneAspectRatio: { value: 1 },
       uDeepOrange: { value: goldenAccretionPalette.deepOrange },
       uGold: { value: goldenAccretionPalette.richGold },
@@ -211,6 +219,7 @@ export function eventHorizonDiskMaterial() {
             precision mediump float;
 
             uniform float uTime;
+            uniform float uPresence;
             uniform float uSceneAspectRatio;
             uniform vec3 uDeepOrange;
             uniform vec3 uGold;
@@ -268,7 +277,7 @@ export function eventHorizonDiskMaterial() {
                 color = mix(color, uGold, clamp(accretionDiskRings * 0.62 + longHorizon * 0.34 + foregroundAccretionRings * foregroundExtent * 0.12, 0.0, 1.0));
                 color = mix(color, uPaleGold, clamp(longHorizon * 0.38 + fineBands * 0.14 + foregroundAccretionRings * foregroundExtent * 0.04, 0.0, 1.0));
                 color = mix(color, uWhiteGold, clamp(longHorizon * 0.08, 0.0, 0.24));
-                gl_FragColor = vec4(color, alpha);
+                gl_FragColor = vec4(color, alpha * uPresence);
             }
         `,
     transparent: true,

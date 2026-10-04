@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { AdditiveBlending, type Group, type Points } from 'three';
+import {
+  AdditiveBlending,
+  type Group,
+  type Points,
+  type PointsMaterial,
+} from 'three';
 import {
   eventHorizonBackdropMaterial,
   eventHorizonGlowMaterial,
@@ -8,9 +13,13 @@ import {
   eventHorizonDiskMaterial,
 } from './materials/horizon';
 import { seededRandom } from './random';
-import type { SceneProps } from './CubeCloud';
+import type { SceneProps, SceneSignal } from './CubeCloud';
 
-export function EventHorizon({ settings, time }: SceneProps) {
+export function EventHorizon({
+  settings,
+  time,
+  presence,
+}: SceneProps & { presence?: SceneSignal }) {
   const { width, height } = useThree((state) => state.size);
   const aspect = width / height;
   const wide = Math.max(1, aspect / 1.5);
@@ -18,6 +27,7 @@ export function EventHorizon({ settings, time }: SceneProps) {
   const scale = (aspect < 0.75 ? 0.94 : 1) * (aspect > 1.8 ? 0.96 : 1);
   const group = useRef<Group>(null);
   const stars = useRef<Points>(null);
+  const starMaterial = useRef<PointsMaterial>(null);
   const materials = useMemo(
     () => ({
       backdrop: eventHorizonBackdropMaterial(),
@@ -46,13 +56,18 @@ export function EventHorizon({ settings, time }: SceneProps) {
     return Float32Array.from({ length: 600 }, () => range(-30, 30));
   }, [settings.seed]);
   useFrame(() => {
+    const reveal = presence?.get() ?? 1;
     Object.values(materials).forEach((material) => {
       material.uniforms.uTime!.value = time.current;
+      material.uniforms.uPresence!.value = reveal;
       if (material.uniforms.uSceneAspectRatio)
         material.uniforms.uSceneAspectRatio.value = aspect;
     });
-    if (group.current)
+    if (group.current) {
       group.current.position.x = Math.sin(time.current * 0.08) * 0.18;
+      group.current.scale.setScalar(0.18 + reveal * 0.82);
+    }
+    if (starMaterial.current) starMaterial.current.opacity = 0.72 * reveal;
     if (stars.current) stars.current.rotation.y = time.current * 0.05;
   });
   return (
@@ -104,6 +119,7 @@ export function EventHorizon({ settings, time }: SceneProps) {
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
         <pointsMaterial
+          ref={starMaterial}
           color={settings.horizon.paleGold}
           size={0.2}
           transparent

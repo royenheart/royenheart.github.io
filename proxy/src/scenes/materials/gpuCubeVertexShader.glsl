@@ -13,6 +13,9 @@ uniform float uFallBottom;
 uniform float uVerticalDensityPower;
 uniform float uPileHoldStart;
 uniform float uPileFadeStart;
+uniform highp float uCollapse;
+uniform float uPresence;
+uniform float uSwirl;
 
 varying vec3 vNormal;
 varying vec3 vTint;
@@ -61,12 +64,19 @@ void main() {
     float lowerDensity = 1.0 - smoothstep(-14.0, 16.0, baseWorldOffset.y);
     float verticalDensityScale = mix(0.72, 1.08, lowerDensity);
     vec3 localPosition = rotationMatrix * (position * instanceScale * verticalDensityScale);
-    vec3 worldPosition = baseWorldOffset + localPosition;
+    float collapse = smoothstep(0.0, 1.0, uCollapse);
+    float angle = instanceMotion.z + collapse * uSwirl * 6.283185 + uTime * 0.08;
+    float radius = mix(24.0, 12.0, collapse) + sin(instanceMotion.z * 5.0) * 2.0;
+    vec3 orbit = vec3(cos(angle) * radius, sin(angle) * radius * 0.78 + 1.4, -38.0);
+    vec3 center = vec3(0.0, 1.4, -38.0);
+    vec3 gatheredOffset = mix(baseWorldOffset, orbit, pow(collapse, 0.7));
+    vec3 worldPosition = mix(center, gatheredOffset, uPresence) + localPosition * mix(1.0, 0.16, collapse) * uPresence;
 
     float topFade = smoothstep(0.0, 0.08, cycle);
     float bottomFade = 1.0 - fadeProgress;
     float verticalDensityAlpha = mix(0.46, 1.18, lowerDensity);
     vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha;
+    vAlpha *= uPresence * (1.0 - smoothstep(0.68, 0.98, collapse));
     vNormal = normalize(normalMatrix * rotationMatrix * normal);
     vTint = instanceTint;
     vAccent = instanceAccent;

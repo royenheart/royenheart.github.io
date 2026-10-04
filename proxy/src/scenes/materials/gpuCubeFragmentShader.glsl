@@ -9,6 +9,7 @@ varying float vDepth;
 varying float vPileProgress;
 
 uniform float uLightContrast;
+uniform highp float uCollapse;
 
 void main() {
     vec3 normalDirection = normalize(vNormal);
@@ -35,6 +36,7 @@ void main() {
     color = mix(color, deepBlue, bottomOcclusion * 0.2);
     color += vec3(0.0, 0.11, 0.18) * (1.0 - vDepth);
 
+    color = mix(color, vec3(1.0, 0.64, 0.12) * (0.5 + key), smoothstep(0.35, 0.85, uCollapse));
     if (vAlpha < 0.035) discard;
     gl_FragColor = vec4(color, vAlpha);
 }

@@ -1,0 +1,156 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { OrbitStudy } from './OrbitStudy';
+import { previewTracks, resolvePreviewTrack } from '../music-fixtures';
+import { sceneTracks } from '../../lib/music/scene-tracks';
+import { resolvePublicAudio } from '../../lib/music/sources';
+import type { TrackResolver } from '../../lib/music/sources';
+
+const failedAudio: TrackResolver = async () => {
+  throw new Error('Preview audio unavailable');
+};
+const delayedAudio: TrackResolver = async (track, signal) => {
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  return resolvePreviewTrack(track, signal);
+};
+const meta = {
+  title: 'Explorations/Orbit study',
+  component: OrbitStudy,
+  parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
+  args: {
+    initialScene: 'cubes',
+    study: 'gather',
+    tracks: { cubes: previewTracks[1]!, horizon: previewTracks[2]! },
+    resolve: resolvePreviewTrack,
+  },
+} satisfies Meta<typeof OrbitStudy>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const SelectedCubes: Story = {
+  args: { tracks: sceneTracks, resolve: resolvePublicAudio },
+};
+export const SelectedHorizon: Story = {
+  args: {
+    initialScene: 'horizon',
+    tracks: sceneTracks,
+    resolve: resolvePublicAudio,
+  },
+};
+export const S1Gather: Story = {};
+export const S2Vortex: Story = { args: { study: 'vortex' } };
+export const HorizonArrival: Story = { args: { initialScene: 'horizon' } };
+export const RandomArrival: Story = { args: { initialScene: undefined } };
+export const CubesOpen: Story = {
+  args: { skipEntrance: true, startOpen: true },
+};
+export const HorizonOpen: Story = {
+  args: { initialScene: 'horizon', skipEntrance: true, startOpen: true },
+};
+export const StillView: Story = {
+  args: { graphics: 'poster', skipEntrance: true, startOpen: true },
+};
+export const LongMusicMetadata: Story = {
+  args: {
+    graphics: 'poster',
+    skipEntrance: true,
+    startOpen: true,
+    tracks: {
+      cubes: {
+        ...previewTracks[1]!,
+        title:
+          'An unusually long recording title with several movements and variations',
+        artist: 'An ensemble with a long list of credited collaborators',
+      },
+      horizon: previewTracks[2]!,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (let index = 0; index < 3; index++)
+      await userEvent.click(canvas.getByRole('button', { name: 'Next card' }));
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('heading', { name: /An unusually long/ }),
+      ).toBeVisible(),
+    );
+  },
+};
+export const MissingAudio: Story = {
+  args: { graphics: 'poster', resolve: failedAudio },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(
+        canvas.getByText('Sound is unavailable. You can continue quietly.'),
+      ).toBeVisible(),
+    );
+    await expect(
+      canvas.getByRole('button', { name: 'Enter with sound' }),
+    ).toBeDisabled();
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Enter quietly' }),
+    );
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('button', { name: 'Open information cards' }),
+      ).toBeVisible(),
+    );
+  },
+};
+export const DelayedAudio: Story = {
+  args: { graphics: 'poster', resolve: delayedAudio },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole('button', { name: 'Enter with sound' }),
+    ).toBeDisabled();
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByRole('button', { name: 'Enter with sound' }),
+        ).toBeEnabled(),
+      { timeout: 5000 },
+    );
+  },
+};
+export const DeckInteraction: Story = {
+  args: { graphics: 'poster', skipEntrance: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Open information cards' }),
+    );
+    await expect(
+      canvas.getByRole('article', { name: 'A little about me' }),
+    ).toBeVisible();
+    for (
+      let index = 0;
+      index <
+      Number(
+        canvasElement
+          .querySelector('.orbit-deck')
+          ?.getAttribute('data-card-count'),
+      ) -
+        1;
+      index++
+    )
+      await userEvent.click(canvas.getByRole('button', { name: 'Next card' }));
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'Next scene' })).toBeVisible(),
+    );
+    await expect(
+      canvas.getByRole('button', { name: 'Next card' }),
+    ).toBeDisabled();
+    await userEvent.click(canvas.getByRole('button', { name: 'Next scene' }));
+    await waitFor(() =>
+      expect(canvasElement.querySelector('main')).toHaveAttribute(
+        'data-scene',
+        'horizon',
+      ),
+    );
+    await expect(canvasElement.querySelector('main')).toHaveAttribute(
+      'data-transitioning',
+      'false',
+    );
+  },
+};
