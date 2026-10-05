@@ -84,66 +84,68 @@ export function AudioWheel({
           />
         ))}
       </svg>
-      <button
-        className="orbit-disc"
-        aria-label={
-          expanded ? 'Close information cards' : 'Open information cards'
-        }
-        aria-expanded={expanded}
-        aria-controls={expanded ? 'orbit-deck' : undefined}
-        onPointerDown={() => {
-          pointerFocus.current = true;
-        }}
-        onClick={() => {
-          onToggle();
-          pointerFocus.current = false;
-        }}
-        onBlur={() => {
-          pointerFocus.current = false;
-        }}
-        onFocus={(event) => {
-          if (
-            !pointerFocus.current &&
-            event.currentTarget.matches(':focus-visible')
-          )
-            onFocus();
-        }}
-      >
-        <span className="orbit-disc-grooves" aria-hidden="true" />
-        <span className="orbit-artwork">
-          {artwork && failedArtwork !== artwork ? (
-            <img
-              src={artwork}
-              alt={`${title} artwork`}
-              onError={() => setFailedArtwork(artwork)}
-            />
+      <div className="orbit-cover-controls">
+        <button
+          className="orbit-disc"
+          aria-label={
+            expanded ? 'Close information cards' : 'Open information cards'
+          }
+          aria-expanded={expanded}
+          aria-controls={expanded ? 'orbit-deck' : undefined}
+          onPointerDown={() => {
+            pointerFocus.current = true;
+          }}
+          onClick={() => {
+            onToggle();
+            pointerFocus.current = false;
+          }}
+          onBlur={() => {
+            pointerFocus.current = false;
+          }}
+          onFocus={(event) => {
+            if (
+              !pointerFocus.current &&
+              event.currentTarget.matches(':focus-visible')
+            )
+              onFocus();
+          }}
+        >
+          <span className="orbit-disc-grooves" aria-hidden="true" />
+          <span className="orbit-artwork">
+            {artwork && failedArtwork !== artwork ? (
+              <img
+                src={artwork}
+                alt={`${title} artwork`}
+                onError={() => setFailedArtwork(artwork)}
+              />
+            ) : (
+              <span
+                className="orbit-artwork-placeholder"
+                aria-label={`${title} artwork unavailable`}
+              >
+                ♫
+              </span>
+            )}
+          </span>
+          <span className="orbit-spindle" aria-hidden="true" />
+        </button>
+        <button
+          className="orbit-sound"
+          aria-label={playing ? 'Pause music' : 'Play music'}
+          disabled={!ready}
+          onClick={onSound}
+        >
+          {playing ? (
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M7 4v12M13 4v12" />
+            </svg>
           ) : (
-            <span
-              className="orbit-artwork-placeholder"
-              aria-label={`${title} artwork unavailable`}
-            >
-              ♫
-            </span>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m7 4 9 6-9 6Z" />
+            </svg>
           )}
-        </span>
-        <span className="orbit-spindle" aria-hidden="true" />
-      </button>
-      <button
-        className="orbit-sound"
-        aria-label={playing ? 'Pause music' : 'Play music'}
-        disabled={!ready}
-        onClick={onSound}
-      >
-        {playing ? (
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M7 4v12M13 4v12" />
-          </svg>
-        ) : (
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="m7 4 9 6-9 6Z" />
-          </svg>
-        )}
-      </button>
+        </button>
+      </div>
     </div>
   );
 }

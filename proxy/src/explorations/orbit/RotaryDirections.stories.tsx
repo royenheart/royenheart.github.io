@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { OrbitStudy } from './OrbitStudy';
 import { sceneTracks } from '../../lib/music/scene-tracks';
+import { previewTracks, resolvePreviewTrack } from '../music-fixtures';
 import { resolvePublicAudio } from '../../lib/music/sources';
 
 const meta = {
@@ -17,6 +18,11 @@ const meta = {
     cardDuration: 0.68,
   },
   argTypes: {
+    horizonTreatment: {
+      type: 'string',
+      control: 'radio',
+      options: ['optical', 'limb'],
+    },
     dockDesign: {
       type: 'string',
       control: 'radio',
@@ -45,11 +51,8 @@ export const InterruptedDrum: Story = {
   args: { dockDesign: 'drum', graphics: 'poster' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    for (let i = 0; i < 3; i++)
-      await userEvent.click(canvas.getByRole('button', { name: 'Next card' }));
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Previous card' }),
-    );
+    canvas.getByRole('region', { name: 'Information cards' }).focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{ArrowUp}');
     await waitFor(() =>
       expect(canvasElement.querySelector('.rotary-deck')).toHaveAttribute(
         'data-moving',
@@ -61,5 +64,14 @@ export const InterruptedDrum: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Open information cards' }),
     ).toHaveFocus();
+  },
+};
+
+export const NativeDrum: Story = {
+  args: {
+    dockDesign: 'drum',
+    graphics: 'poster',
+    tracks: { cubes: previewTracks[1]!, horizon: previewTracks[2]! },
+    resolve: resolvePreviewTrack,
   },
 };

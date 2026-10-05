@@ -22,6 +22,7 @@ import {
 } from '../../scenes/RelativisticHorizon';
 import { scenes } from '../../lib/content/load';
 import { motionStudies, type MotionStudy } from './sequence';
+import type { HorizonTreatment } from '../../scenes/relativity/framing';
 
 declare global {
   interface Window {
@@ -50,6 +51,7 @@ export interface OrbitCanvasProps {
   diskStyle: DiskStyle;
   inclination: number;
   bloom: number;
+  horizonTreatment: HorizonTreatment;
 }
 function OpticalPostprocessing({
   presence,
@@ -156,6 +158,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           presence={reveal}
           diskStyle={props.diskStyle}
           inclination={props.inclination}
+          treatment={props.horizonTreatment}
           onReady={onOpticsReady}
           onFailure={onFailure}
         />
@@ -168,6 +171,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
         presence={props.entrance}
         swirl={motionStudies[props.study].swirl}
         linearOutput={props.horizonRenderer === 'relativistic'}
+        horizonTreatment={props.horizonTreatment}
       />
       {props.horizonRenderer === 'relativistic' && (
         <OpticalPostprocessing presence={reveal} amount={props.bloom} />

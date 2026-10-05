@@ -2,6 +2,8 @@
 
 Status: the user explicitly selected B / Velvet drum (rounded capsule with cylindrical card travel). It is now the Orbit component default and the selected-recording stories use it. A and C remain comparison studies. Work stays on `refactor/proxy-modernization`; no push, PR or production promotion. The classic Orbit deck remains available. The upper-left monogram and brand label have been removed from the immersive study, while its scene heading remains available to assistive technology.
 
+The subsequent [limb-glow and hover-control refinement](proxy-limb-refinement.md) removes the up/down buttons and relocates playback inside the artwork while preserving B. The captures and verification below document the selection round.
+
 ## Brief and reference
 
 Keep the two full-screen scenes, selected recordings, compact artwork control, information hierarchy and adjacent-scene triggers. Compare top alignment, softer silhouettes, different proportions, scene-specific texture and actual circular card motion. The subsequent feedback also requires content to follow the card silhouette instead of sharing one vertical left rail.

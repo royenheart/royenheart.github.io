@@ -97,6 +97,8 @@ node proxy/scripts/capture-optical-study.mjs /tmp/proxy-optical-study/final
 
 The user selected **B / Velvet drum** in `Explorations/Rotary directions`. The Orbit component and `Selected Cubes` / `Selected Horizon` stories now use it. A/C and the classic trapezoid stories remain comparisons; older capture scripts explicitly select the classic baseline. [The rotary decision record](../docs/proxy-rotary-directions.md) documents contour-aware text placement, scene textures, motion and responsive verification. Generate the out-of-repository review with `node proxy/scripts/capture-rotary.mjs /tmp/proxy-rotary-study/final`.
 
+The latest [limb-glow refinement](../docs/proxy-limb-refinement.md) removes card arrow buttons, reveals playback inside the artwork and restores a foreground disk reaching the bottom. The selected stories use the `limb` treatment; `optical` retains the previous disk image. Capture the current state with `node proxy/scripts/capture-limb.mjs /tmp/proxy-limb-study/final`.
+
 The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
 
 ## Release

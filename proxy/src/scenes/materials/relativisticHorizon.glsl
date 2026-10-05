@@ -38,6 +38,7 @@ uniform float uViewHeight;
 uniform float uPresence;
 uniform float uInclination;
 uniform float uTurbulence;
+uniform float uLimb;
 uniform float uSeed;
 uniform vec2 uCenter;
 varying vec2 vUv;
@@ -95,6 +96,21 @@ vec3 sky(vec3 direction) {
 
 vec4 disc(vec2 position, float time, float shift) {
   float radius = length(position);
+  if (uLimb > 0.5) {
+    float angle = atan(position.y, position.x);
+    float orbit = angle - time * 0.26 * pow(3.0 / max(radius, 3.0), 1.5);
+    float structure = densityField(vec3(cos(orbit) * 3.0, sin(orbit) * 3.0, radius * 0.7));
+    float phase = radius * 47.0 + structure * 12.0 + sin(orbit * 11.0 + radius * 0.8) * 1.8;
+    float aa = max(fwidth(phase), 0.001);
+    float strands = pow(0.5 + 0.5 * sin(phase) * exp(-aa * aa * 0.15), 5.0);
+    float front = 1.0 - smoothstep(-0.8, 0.8, position.y);
+    float inner = smoothstep(3.0, 3.08, radius);
+    float outer = 1.0 - smoothstep(35.0, 48.0, radius);
+    float foreground = (0.1 + strands * 1.8 + structure * 0.2) * pow(3.0 / max(radius, 3.0), 0.7);
+    float emission = foreground * front * inner * outer;
+    vec3 warm = mix(vec3(0.52, 0.14, 0.026), vec3(1.0, 0.66, 0.32), strands);
+    return vec4(warm * emission * pow(clamp(shift, 0.55, 1.6), 0.45), 0.82 * front * inner * outer);
+  }
   float edge = smoothstep(3.0, 3.22, radius) * (1.0 - smoothstep(9.5, 12.0, radius));
   float azimuth = atan(position.y, position.x);
   float orbit = azimuth - time * 0.48 * pow(3.0 / max(radius, 3.0), 1.5);
@@ -134,12 +150,24 @@ vec3 sceneColor(vec2 screen) {
   float energy = -sqrt(energySquared);
   float u0, phi0, t0, a0, u1, phi1, t1, a1;
   float deflection = TraceRay(uDeflection, uInverseRadius, u, velocity, energySquared,
-    delta, alpha, 1.0 / INNER_DISC_R, 1.0 / OUTER_DISC_R, u0, phi0, t0, a0, u1, phi1, t1, a1);
+    delta, alpha, 1.0 / INNER_DISC_R, 1.0 / mix(OUTER_DISC_R, 48.0, uLimb), u0, phi0, t0, a0, u1, phi1, t1, a1);
   float escapeAngle = delta + max(deflection, 0.0);
   vec3 escapeDirection = cos(escapeAngle) * radial + sin(escapeAngle) * tangent;
-  vec3 color = deflection >= 0.0 ? sky(escapeDirection) : vec3(0.0);
+  vec3 color = deflection >= 0.0 ? sky(escapeDirection) * mix(1.0, 0.45, uLimb) : vec3(0.0);
+  if (uLimb > 0.5) {
+    // Art-directed limb emission follows the finite observer's capture boundary.
+    // This is a visual analogy to rim lighting, not a black-hole atmosphere model.
+    float captureRadius = inversesqrt(4.0 / 27.0 - u * u * (1.0 - u));
+    float d = length(screen) - captureRadius;
+    float pixel = max(fwidth(d), 0.004);
+    float crest = exp(-pow(d / max(0.018, pixel), 2.0));
+    float shoulder = exp(-abs(d) / 0.057);
+    float outer = smoothstep(-pixel, pixel, d) * (exp(-max(d, 0.0) / 0.18) * 0.18 + exp(-max(d, 0.0) / 0.5) * 0.035);
+    float arc = smoothstep(-0.15, 0.3, screen.y);
+    color += (vec3(1.0, 0.92, 0.79) * crest * 3.8 + vec3(1.0, 0.52, 0.16) * (shoulder * 0.42 + outer)) * arc;
+  }
   float receiver = energy / sqrt(1.0 - u);
-  if (u1 > 0.0 && a1 > 0.0) {
+  if (u1 > 0.0 && a1 > 0.0 && uLimb < 0.5) {
     float source = energy * sqrt(2.0 / (2.0 - 3.0 * u1)) - u1 * sqrt(u1 / (2.0 - 3.0 * u1)) * normal.z;
     vec3 intersection = (radial * cos(phi1) + tangent * sin(phi1)) / u1;
     vec4 emission = disc(intersection.xy, uTime - t1 * 0.015, receiver / source);

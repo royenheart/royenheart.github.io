@@ -7,6 +7,7 @@ export function inspectOrbitLayout() {
   const visible = (node: Element) =>
     rect(node).width > 0 &&
     rect(node).height > 0 &&
+    Number(getComputedStyle(node).opacity) > 0.05 &&
     !node.closest('[inert], [aria-hidden="true"]');
   const contains = (parent: Element, child: Element) => {
     const p = rect(parent),
@@ -60,8 +61,10 @@ export function inspectOrbitLayout() {
   for (const element of controls) {
     contains(root, element);
     const r = rect(element);
+    const insetPlayback = root.dataset.dockDesign !== 'classic';
     const hit = document.elementFromPoint(
-      r.x + r.width / 2,
+      r.x +
+        (insetPlayback && element.matches('.orbit-disc') ? 12 : r.width / 2),
       r.y + r.height / 2,
     );
     if (!hit || !element.contains(hit))
@@ -71,6 +74,13 @@ export function inspectOrbitLayout() {
   }
   for (const [index, control] of controls.entries())
     for (const other of controls.slice(index + 1)) {
+      // The playback button intentionally overlays the artwork, inside its circle.
+      if (
+        root.dataset.dockDesign !== 'classic' &&
+        control.matches('.orbit-disc, .orbit-sound') &&
+        other.matches('.orbit-disc, .orbit-sound')
+      )
+        continue;
       if (overlap(control, other))
         issues.push(
           `Controls overlap: ${control.getAttribute('aria-label') ?? control.textContent} / ${other.getAttribute('aria-label') ?? other.textContent}`,

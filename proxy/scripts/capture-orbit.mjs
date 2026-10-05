@@ -10,7 +10,7 @@ if (!local.startsWith('..') && !isAbsolute(local))
   throw new Error('Keep review captures outside the repository.');
 const base = process.env.STORYBOOK_URL ?? 'http://127.0.0.1:6006';
 const story = (scene) =>
-  `${base}/iframe.html?id=explorations-orbit-study--selected-${scene}&args=skipEntrance:true;startOpen:true;dockDesign:classic&capture=1`;
+  `${base}/iframe.html?id=explorations-orbit-study--selected-${scene}&args=skipEntrance:true;startOpen:true;dockDesign:classic;horizonTreatment:optical&capture=1`;
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch();
 try {

@@ -20,7 +20,7 @@ test('selected recordings enter the drum deck and retain adjacent-scene navigati
     const root = page.locator('main');
     await expect(root).toHaveAttribute('data-dock-design', 'drum');
     await page.getByRole('button', { name: 'Enter quietly' }).click();
-    await page.locator('.orbit-disc').click();
+    await page.locator('.orbit-disc').click({ position: { x: 12, y: 50 } });
     await expect(page.locator('.rotary-card-active')).toBeVisible();
     await expect.poll(() => page.evaluate(inspectRotaryLayout)).toEqual([]);
     await expect(page.locator('.orbit-artwork img')).toHaveAttribute(
@@ -31,9 +31,7 @@ test('selected recordings enter the drum deck and retain adjacent-scene navigati
       await page.locator('.rotary-deck').getAttribute('data-card-count'),
     );
     for (let i = 1; i < count; i++)
-      await page
-        .getByRole('button', { name: 'Next card', exact: true })
-        .click();
+      await page.locator('.rotary-deck').press('ArrowDown');
     await page
       .getByRole('button', {
         name: scene === 'cubes' ? 'Next scene' : 'Previous scene',
@@ -46,7 +44,7 @@ test('selected recordings enter the drum deck and retain adjacent-scene navigati
     );
     await expect(root).toHaveAttribute('data-transitioning', 'false');
     await expect(root).toHaveAttribute('data-dock-design', 'drum');
-    await page.locator('.orbit-disc').click();
+    await page.locator('.orbit-disc').click({ position: { x: 12, y: 50 } });
     await expect(page.locator('.rotary-deck')).toHaveAttribute(
       'data-card-index',
       '0',
@@ -100,14 +98,10 @@ for (const story of stories) {
           .toEqual([]);
         await expect.poll(() => page.evaluate(inspectRotaryLayout)).toEqual([]);
         if (i < count - 1)
-          await page
-            .getByRole('button', { name: 'Next card', exact: true })
-            .click();
+          await page.locator('.rotary-deck').press('ArrowDown');
       }
       for (let i = 1; i < count; i++)
-        await page
-          .getByRole('button', { name: 'Previous card', exact: true })
-          .click();
+        await page.locator('.rotary-deck').press('ArrowUp');
     }
   });
 
@@ -122,28 +116,26 @@ for (const story of stories) {
     await page.evaluate(() => {
       const samples: { transform: string; opacity: string }[] = [];
       Object.assign(window, { rotarySamples: samples });
-      document
-        .querySelector('button[aria-label="Next card"]')!
-        .addEventListener(
-          'click',
-          () => {
-            const until = performance.now() + 1200;
-            const sample = () => {
-              const style = getComputedStyle(
-                document.querySelector('.rotary-card[data-position="1"]')!,
-              );
-              samples.push({
-                transform: style.transform,
-                opacity: style.opacity,
-              });
-              if (performance.now() < until) requestAnimationFrame(sample);
-            };
-            requestAnimationFrame(sample);
-          },
-          { once: true },
-        );
+      document.querySelector('.rotary-deck')!.addEventListener(
+        'keydown',
+        () => {
+          const until = performance.now() + 1200;
+          const sample = () => {
+            const style = getComputedStyle(
+              document.querySelector('.rotary-card[data-position="1"]')!,
+            );
+            samples.push({
+              transform: style.transform,
+              opacity: style.opacity,
+            });
+            if (performance.now() < until) requestAnimationFrame(sample);
+          };
+          requestAnimationFrame(sample);
+        },
+        { once: true },
+      );
     });
-    await page.getByRole('button', { name: 'Next card', exact: true }).click();
+    await page.locator('.rotary-deck').press('ArrowDown');
     await expect(page.locator('.rotary-deck')).toHaveAttribute(
       'data-moving',
       'true',
@@ -170,12 +162,8 @@ for (const story of stories) {
       ),
     ).toBe(true);
     for (let i = 0; i < 3; i++)
-      await page
-        .getByRole('button', { name: 'Next card', exact: true })
-        .click();
-    await page
-      .getByRole('button', { name: 'Previous card', exact: true })
-      .click();
+      await page.locator('.rotary-deck').press('ArrowDown');
+    await page.locator('.rotary-deck').press('ArrowUp');
     await page.setViewportSize({ width: 390, height: 400 });
     await expect(page.locator('.rotary-deck')).toHaveAttribute(
       'data-moving',
@@ -189,9 +177,9 @@ for (const story of stories) {
     await expect.poll(() => page.evaluate(inspectOrbitLayout)).toEqual([]);
     await page.keyboard.press('Escape');
     await expect(page.locator('.orbit-disc')).toBeFocused();
-    await page.locator('.orbit-disc').click();
+    await page.locator('.orbit-disc').click({ position: { x: 12, y: 50 } });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.getByRole('button', { name: 'Next card', exact: true }).click();
+    await page.locator('.rotary-deck').press('ArrowDown');
     await expect(page.locator('.rotary-deck')).toHaveAttribute(
       'data-moving',
       'false',

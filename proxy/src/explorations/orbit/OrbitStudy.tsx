@@ -43,6 +43,7 @@ import '@fontsource/instrument-serif/400.css';
 import './orbit.css';
 import './rotary.css';
 import type { DiskStyle } from '../../scenes/RelativisticHorizon';
+import type { HorizonTreatment } from '../../scenes/relativity/framing';
 
 const OrbitCanvas = lazy(() => import('./OrbitCanvas'));
 const titles = { cubes: 'Blue hour', horizon: 'Event horizon' };
@@ -81,6 +82,7 @@ export interface OrbitStudyProps {
   bloom?: number;
   dockDesign?: DockDesign;
   cardDuration?: number;
+  horizonTreatment?: HorizonTreatment;
 }
 
 export function OrbitStudy({
@@ -97,6 +99,7 @@ export function OrbitStudy({
   bloom = 0.28,
   dockDesign = 'drum',
   cardDuration = 0.68,
+  horizonTreatment = 'limb',
 }: OrbitStudyProps) {
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
@@ -356,6 +359,7 @@ export function OrbitStudy({
         data-scene={scene}
         data-study={study}
         data-dock-design={dockDesign}
+        data-horizon-treatment={horizonTreatment}
         data-entered={entered}
         data-transitioning={busy}
         data-renderer={
@@ -397,6 +401,7 @@ export function OrbitStudy({
                     diskStyle={diskStyle}
                     inclination={inclination}
                     bloom={bloom}
+                    horizonTreatment={horizonTreatment}
                   />
                 </Suspense>
               </GraphicsBoundary>

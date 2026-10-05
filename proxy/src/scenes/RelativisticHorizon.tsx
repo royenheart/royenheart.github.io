@@ -8,6 +8,7 @@ import {
   HORIZON_CENTER,
   HORIZON_VIEW_HEIGHT,
   horizonViewHeight,
+  type HorizonTreatment,
 } from './relativity/framing';
 import definitions from './relativity/bruneton-definitions.glsl?raw';
 import functions from './relativity/bruneton-functions.glsl?raw';
@@ -31,12 +32,14 @@ export function RelativisticHorizon({
   presence,
   diskStyle,
   inclination,
+  treatment,
   onReady,
   onFailure,
 }: SceneProps & {
   presence: SceneSignal;
   diskStyle: DiskStyle;
   inclination: number;
+  treatment: HorizonTreatment;
   onReady(): void;
   onFailure(): void;
 }) {
@@ -62,6 +65,7 @@ export function RelativisticHorizon({
           uPresence: { value: 0 },
           uInclination: { value: 0.2 },
           uTurbulence: { value: 1 },
+          uLimb: { value: 0 },
           uSeed: { value: settings.seed },
           uCenter: { value: new Vector2(0.5, 0.5) },
         },
@@ -102,9 +106,11 @@ export function RelativisticHorizon({
     material.uniforms.uViewHeight!.value = horizonViewHeight(
       size.width,
       size.height,
+      treatment,
     );
     material.uniforms.uInclination!.value = (inclination * Math.PI) / 180;
     material.uniforms.uTurbulence!.value = diskStyle === 'silk' ? 0.12 : 1;
+    material.uniforms.uLimb!.value = treatment === 'limb' ? 1 : 0;
     center.set(...HORIZON_CENTER).project(camera);
     material.uniforms.uCenter!.value.set(
       center.x * 0.5 + 0.5,

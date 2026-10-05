@@ -28,7 +28,9 @@ export function inspectRotaryLayout() {
   ]) {
     if (Math.hypot(x! - cx, y! - cy) > cover.width / 2)
       issues.push('Card attachment escapes the artwork');
-    if (!document.elementFromPoint(x!, y!)?.closest('.orbit-disc'))
+    if (
+      !document.elementFromPoint(x!, y!)?.closest('.orbit-disc, .orbit-sound')
+    )
       issues.push('Artwork does not cover the card attachment');
   }
   for (const element of card.querySelectorAll<HTMLElement>(

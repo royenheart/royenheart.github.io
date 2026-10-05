@@ -6,7 +6,11 @@ import {
   type ShaderMaterial,
   type PerspectiveCamera,
 } from 'three';
-import { HORIZON_CENTER, horizonCaptureRadius } from './relativity/framing';
+import {
+  HORIZON_CENTER,
+  horizonCaptureRadius,
+  type HorizonTreatment,
+} from './relativity/framing';
 import { createCubeGeometry } from './cubeGeometry';
 import vertexShader from './materials/gpuCubeVertexShader.glsl?raw';
 import fragmentShader from './materials/gpuCubeFragmentShader.glsl?raw';
@@ -29,12 +33,14 @@ export function CubeCloud({
   presence,
   swirl = 0,
   linearOutput = false,
+  horizonTreatment = 'optical',
 }: SceneProps & {
   quality: number;
   collapse?: SceneSignal;
   presence?: SceneSignal;
   swirl?: number;
   linearOutput?: boolean;
+  horizonTreatment?: HorizonTreatment;
 }) {
   const size = useThree((state) => state.size);
   const camera = useThree((state) => state.camera);
@@ -87,6 +93,7 @@ export function CubeCloud({
         size.height,
         camera.position.z - HORIZON_CENTER[2],
         (camera as PerspectiveCamera).fov ?? 62,
+        horizonTreatment,
       );
     }
     if (backdrop.current) {

@@ -115,36 +115,19 @@ export function RotaryDeck({
       role="region"
       aria-roledescription="carousel"
       aria-label="Information cards"
+      aria-describedby="rotary-help"
+      tabIndex={0}
       data-card-count={cards.length}
       data-card-index={index}
       data-moving="false"
-      onWheel={(event) => {
-        if (
-          Math.abs(event.deltaY) < 12 ||
-          performance.now() - lastWheel.current < 300
-        )
-          return;
-        lastWheel.current = performance.now();
-        step(event.deltaY);
-      }}
-      onPointerDown={(event) => {
-        if (event.pointerType !== 'mouse') pointer.current = event.clientY;
-      }}
-      onPointerUp={(event) => {
-        if (
-          pointer.current !== null &&
-          Math.abs(event.clientY - pointer.current) > 35
-        )
-          step(pointer.current - event.clientY);
-        pointer.current = null;
-      }}
-      onPointerCancel={() => {
-        pointer.current = null;
-      }}
       onKeyDown={(event) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
           event.preventDefault();
           step(event.key === 'ArrowDown' ? 1 : -1);
+        }
+        if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault();
+          onIndex(event.key === 'Home' ? 0 : cards.length - 1);
         }
         if (event.key === 'Escape') {
           event.preventDefault();
@@ -152,7 +135,37 @@ export function RotaryDeck({
         }
       }}
     >
-      <div className="rotary-stage">
+      <p id="rotary-help" className="sr-only">
+        Scroll over a card or swipe vertically to browse. Use the up and down
+        arrow keys while focused. Home and End jump to the first and last cards.
+        Escape closes the cards.
+      </p>
+      <div
+        className="rotary-stage"
+        onWheel={(event) => {
+          if (
+            Math.abs(event.deltaY) < 12 ||
+            performance.now() - lastWheel.current < 300
+          )
+            return;
+          lastWheel.current = performance.now();
+          step(event.deltaY);
+        }}
+        onPointerDown={(event) => {
+          if (event.pointerType !== 'mouse') pointer.current = event.clientY;
+        }}
+        onPointerUp={(event) => {
+          if (
+            pointer.current !== null &&
+            Math.abs(event.clientY - pointer.current) > 35
+          )
+            step(pointer.current - event.clientY);
+          pointer.current = null;
+        }}
+        onPointerCancel={() => {
+          pointer.current = null;
+        }}
+      >
         {cards.map((card, position) => (
           <RotaryCard
             key={card.id}
@@ -170,20 +183,6 @@ export function RotaryDeck({
           {String(index + 1).padStart(2, '0')}{' '}
           <span>/ {String(cards.length).padStart(2, '0')}</span>
         </span>
-        <button
-          aria-label="Previous card"
-          disabled={index === 0}
-          onClick={() => step(-1)}
-        >
-          ↑
-        </button>
-        <button
-          aria-label="Next card"
-          disabled={index === cards.length - 1}
-          onClick={() => step(1)}
-        >
-          ↓
-        </button>
         <button aria-label="Close information cards" onClick={onClose}>
           ×
         </button>
