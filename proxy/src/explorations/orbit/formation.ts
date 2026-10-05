@@ -5,6 +5,6 @@ export const formationTiming = {
   rupture: 4.8,
   mirror: 5.4,
   glitch: 6.4,
-  cubes: 3.2,
+  cubes: 4.8,
   horizon: 4.6,
 } as const;

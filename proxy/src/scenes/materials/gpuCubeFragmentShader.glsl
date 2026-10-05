@@ -3,6 +3,7 @@ precision mediump float;
 varying vec3 vNormal;
 varying vec3 vLocalPosition;
 varying float vFlightGlow;
+varying float vAccretionHeat;
 varying vec3 vTint;
 varying vec3 vAccent;
 varying vec3 vWorldPosition;
@@ -40,14 +41,16 @@ void main() {
     color = mix(color, deepBlue, bottomOcclusion * 0.2);
     color += vec3(0.0, 0.11, 0.18) * (1.0 - vDepth);
 
+    vec3 originalColor = color;
     color = mix(color, vec3(1.0, 0.64, 0.12) * (0.5 + key), smoothstep(0.35, 0.85, uCollapse));
     if (uChoreography) color = mix(color, vec3(1.35, 0.83, 0.39), smoothstep(0.30, 0.75, uCollapse));
+    if (vAccretionHeat >= 0.0) color = mix(originalColor, vec3(1.35, 0.83, 0.39), vAccretionHeat);
     float opacity = vAlpha;
     if (vFlightGlow > 0.001) {
         float crossSection = exp(-vLocalPosition.y * vLocalPosition.y * 18.0);
         float tail = smoothstep(-0.5, -0.12, vLocalPosition.x) * (1.0 - smoothstep(0.28, 0.5, vLocalPosition.x));
         opacity *= mix(1.0, crossSection * tail, vFlightGlow);
-        vec3 heat = mix(vec3(0.42, 0.86, 1.35), vec3(2.6, 1.48, 0.57), smoothstep(0.32, 0.64, uCollapse));
+        vec3 heat = mix(vec3(0.42, 0.86, 1.35), vec3(2.6, 1.48, 0.57), vAccretionHeat >= 0.0 ? vAccretionHeat : smoothstep(0.32, 0.64, uCollapse));
         heat = mix(heat, vec3(2.8, 2.32, 1.63), smoothstep(0.0, 0.4, vLocalPosition.x) * 0.35);
         color = mix(color, heat, vFlightGlow);
     }

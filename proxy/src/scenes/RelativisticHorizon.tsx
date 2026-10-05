@@ -22,6 +22,8 @@ import functions from './relativity/bruneton-functions.glsl?raw';
 import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
 import mirrorVertex from './materials/mirrorVertex.glsl?raw';
 import mirrorWaves from './materials/mirrorWaves.glsl?raw';
+import { accretionModes, type AccretionStyle } from './accretion';
+import accretionGeometry from './materials/accretion.glsl?raw';
 import { GlitchSurface } from './GlitchSurface';
 import type { GlitchDiagnostic } from './glitch';
 import { createMirrorGeometry } from './mirrorGeometry';
@@ -53,6 +55,7 @@ export function RelativisticHorizon({
   waveOnly = false,
   spatialWaves = false,
   radiationMap,
+  accretionStyle = 'legacy',
   diskStyle,
   inclination,
   treatment,
@@ -65,6 +68,7 @@ export function RelativisticHorizon({
   transition?: SceneSignal;
   direction?: SceneSignal;
   ruptureStyle?: RuptureStyle;
+  accretionStyle?: AccretionStyle;
   glitchDiagnostic?: GlitchDiagnostic;
   waveOnly?: boolean;
   spatialWaves?: boolean;
@@ -93,6 +97,7 @@ export function RelativisticHorizon({
         fragmentShader: fragment
           .replace('/* OPTICAL_FUNCTIONS */', opticalFunctions)
           .replace('/* RIBBON_GEOMETRY */', ribbonGeometry)
+          .replace('/* ACCRETION_GEOMETRY */', accretionGeometry)
           .replace('/* MIRROR_WAVES */', mirrorWaves),
         uniforms: {
           uDeflection: { value: null },
@@ -102,6 +107,7 @@ export function RelativisticHorizon({
           uViewHeight: { value: HORIZON_VIEW_HEIGHT },
           uPresence: { value: 0 },
           uFormation: { value: 1 },
+          uAccretionStyle: { value: 0 },
           uChoreography: { value: false },
           uTransition: { value: 1 },
           uDirection: { value: 1 },
@@ -153,6 +159,7 @@ export function RelativisticHorizon({
   useEffect(() => () => material.dispose(), [material]);
   useFrame(() => {
     material.uniforms.uTime!.value = time.current;
+    material.uniforms.uAccretionStyle!.value = accretionModes[accretionStyle];
     material.uniforms.uPresence!.value = presence.get();
     material.uniforms.uFormation!.value = formation?.get() ?? 1;
     material.uniforms.uChoreography!.value = Boolean(formation);

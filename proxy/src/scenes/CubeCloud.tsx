@@ -12,6 +12,12 @@ import {
   horizonViewHeight,
   type HorizonTreatment,
 } from './relativity/framing';
+import {
+  accretionModes,
+  type AccretionStyle,
+  type CubeArrivalStyle,
+} from './accretion';
+import accretionGeometry from './materials/accretion.glsl?raw';
 import { glitchFractureProgress } from './glitch';
 import { createCubeGeometry } from './cubeGeometry';
 import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
@@ -21,10 +27,9 @@ import atmosphereVertex from './materials/gpuAtmosphereVertexShader.glsl?raw';
 import atmosphereFragment from './materials/gpuAtmosphereFragmentShader.glsl?raw';
 import type { SceneSettings } from '../lib/content/schema';
 
-const vertexShader = vertexSource.replace(
-  '/* RIBBON_GEOMETRY */',
-  ribbonGeometry,
-);
+const vertexShader = vertexSource
+  .replace('/* RIBBON_GEOMETRY */', ribbonGeometry)
+  .replace('/* ACCRETION_GEOMETRY */', accretionGeometry);
 
 export interface SceneProps {
   settings: SceneSettings;
@@ -48,6 +53,8 @@ export function CubeCloud({
   glitchRupture = false,
   direction,
   inclination = 12,
+  accretionStyle = 'legacy',
+  cubeArrival = 'gravity',
 }: SceneProps & {
   quality: number;
   collapse?: SceneSignal;
@@ -61,6 +68,8 @@ export function CubeCloud({
   glitchRupture?: boolean;
   direction?: SceneSignal;
   inclination?: number;
+  accretionStyle?: AccretionStyle;
+  cubeArrival?: CubeArrivalStyle;
 }) {
   const size = useThree((state) => state.size);
   const camera = useThree((state) => state.camera);
@@ -77,6 +86,8 @@ export function CubeCloud({
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
+      uAccretionStyle: { value: 0 },
+      uGravityArrival: { value: true },
       uFallTop: { value: 23 },
       uFallBottom: { value: -17 },
       uVerticalDensityPower: { value: 1.85 },
@@ -113,6 +124,9 @@ export function CubeCloud({
     const entry = presence?.get() ?? 1;
     if (cubes.current) {
       cubes.current.uniforms.uTime!.value = time.current;
+      cubes.current.uniforms.uAccretionStyle!.value =
+        accretionModes[accretionStyle];
+      cubes.current.uniforms.uGravityArrival!.value = cubeArrival === 'gravity';
       cubes.current.uniforms.uCollapse!.value = blend;
       cubes.current.uniforms.uPresence!.value = entry;
       cubes.current.uniforms.uChoreography!.value = choreography;

@@ -2,7 +2,8 @@
 
 > Current direction: [F7 spreading glitch and late fracture](proxy-glitch-transition.md).
 > The user rejected radiation strands. Strand-based reverse transitions below
-> are historical comparisons; the forward collapse and arrivals remain active.
+> are historical comparisons. The latest forward and cube-arrival candidates are
+> [L2 and A/B/C accretion studies](proxy-accretion-studies.md).
 
 ## Brief and scope
 
@@ -49,12 +50,13 @@ A scene transition remains atomic: repeated scene requests while it is active ca
 
 ## Review entry points
 
-The current forward collapse and both arrival animations are shown together at
+The previous forward collapse and arrival animations are archived together at
 `http://127.0.0.1:6008/forward-arrivals/`, with artifacts outside Git at
 `/tmp/proxy-forward-arrivals/final/`. The clips sample the unchanged implementation
 at revision `a42c051`: collapse 6.4 seconds, cube arrival 3.2 seconds, horizon
 arrival 4.6 seconds. The 20-fps WebGL exports use fixed ambient time and short
-endpoint holds; live controls run and scrub the actual renderer. This showcase
+endpoint holds. Live controls use the current renderer and may differ from these
+archived clips. This showcase
 does not revise the accepted F7 reverse transition or imply real-device frame rates.
 
 The selected Orbit stories use this choreography automatically:

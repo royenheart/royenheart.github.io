@@ -7,6 +7,7 @@ import {
 } from 'motion/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
+import type { AccretionStyle, CubeArrivalStyle } from '../../scenes/accretion';
 import OrbitCanvas from './OrbitCanvas';
 import { formationTiming } from './formation';
 import { useReducedMotionPreference } from '../../lib/useReducedMotionPreference';
@@ -23,8 +24,12 @@ function FormationStudy({
   waveMode = 'planar',
   streamingWaves = false,
   glitchDiagnostic = 'beauty',
+  accretionStyle = 'legacy',
+  cubeArrival = 'gravity',
 }: {
   sequence?: Sequence;
+  accretionStyle?: AccretionStyle;
+  cubeArrival?: CubeArrivalStyle;
   expression?: Expression;
   materialOnly?: boolean;
   ruptureStyle?: 'material' | 'mirror' | 'glitch';
@@ -36,7 +41,8 @@ function FormationStudy({
   const startsAtHorizon =
     sequence === 'horizon' ||
     (sequence === 'transition' &&
-      (materialOnly || ruptureStyle !== 'material'));
+      (materialOnly || ruptureStyle !== 'material') &&
+      accretionStyle === 'legacy');
   const blend = useMotionValue(startsAtHorizon ? 1 : 0);
   const entrance = useMotionValue(sequence === 'transition' ? 1 : 0);
   const direction = useMotionValue(startsAtHorizon ? -1 : 1);
@@ -117,6 +123,8 @@ function FormationStudy({
               waveOnly ? 'waves' : materialOnly ? 'material' : 'beauty'
             }
             ruptureStyle={ruptureStyle}
+            accretionStyle={accretionStyle}
+            cubeArrival={cubeArrival}
             glitchDiagnostic={glitchDiagnostic}
             waveMode={waveMode}
             streamingWaves={streamingWaves}
@@ -138,39 +146,47 @@ function FormationStudy({
         aria-label="Motion study controls"
       >
         <p>
-          {sequence === 'transition'
-            ? expression === 'force'
-              ? ruptureStyle === 'glitch'
-                ? glitchDiagnostic === 'field'
-                  ? 'F7 · corruption arrival field'
-                  : materialOnly
-                    ? 'F7 · source distortion / late fracture'
-                    : 'F7 · spreading glitch / mirror fracture'
-                : ruptureStyle === 'mirror'
-                  ? streamingWaves
-                    ? waveOnly
-                      ? 'F6 · coherent smoke-like wave strands'
-                      : materialOnly
-                        ? 'F6 · fractured source with broad refraction'
-                        : 'F6 · mirror fracture / streaming wavefronts'
-                    : waveMode === 'spatial'
+          {sequence === 'transition' && accretionStyle !== 'legacy'
+            ? {
+                split: 'A · split accretion',
+                orbit: 'B · orbital capture',
+                cascade: 'C · crown then strata',
+              }[accretionStyle]
+            : sequence === 'transition'
+              ? expression === 'force'
+                ? ruptureStyle === 'glitch'
+                  ? glitchDiagnostic === 'field'
+                    ? 'F7 · corruption arrival field'
+                    : materialOnly
+                      ? 'F7 · source distortion / late fracture'
+                      : 'F7 · spreading glitch / mirror fracture'
+                  : ruptureStyle === 'mirror'
+                    ? streamingWaves
                       ? waveOnly
-                        ? 'F5 · spatial radial filaments'
+                        ? 'F6 · coherent smoke-like wave strands'
                         : materialOnly
-                          ? 'F5 · fractured source with spatial refraction'
-                          : 'F5 · mirror fracture / spatial radiation'
-                      : waveOnly
-                        ? 'F4 · upright wavefronts only'
-                        : materialOnly
-                          ? 'F4 · fractured source without wave emission'
-                          : 'F4 · mirror fracture / upright wavefronts'
-                  : materialOnly
-                    ? 'F3 · material transport only · no extra particles or flash'
-                    : 'F3 · collapse / material rupture'
-              : 'F1 · continuous gathering'
-            : sequence === 'cubes'
-              ? 'Blue hour · layered arrival'
-              : 'Event horizon · light tracing'}
+                          ? 'F6 · fractured source with broad refraction'
+                          : 'F6 · mirror fracture / streaming wavefronts'
+                      : waveMode === 'spatial'
+                        ? waveOnly
+                          ? 'F5 · spatial radial filaments'
+                          : materialOnly
+                            ? 'F5 · fractured source with spatial refraction'
+                            : 'F5 · mirror fracture / spatial radiation'
+                        : waveOnly
+                          ? 'F4 · upright wavefronts only'
+                          : materialOnly
+                            ? 'F4 · fractured source without wave emission'
+                            : 'F4 · mirror fracture / upright wavefronts'
+                    : materialOnly
+                      ? 'F3 · material transport only · no extra particles or flash'
+                      : 'F3 · collapse / material rupture'
+                : 'F1 · continuous gathering'
+              : sequence === 'cubes'
+                ? cubeArrival === 'gravity'
+                  ? 'Blue hour · falling accumulation'
+                  : 'Blue hour · layered arrival'
+                : 'Event horizon · light tracing'}
           <span role="status" aria-live={ready ? 'off' : 'polite'}>
             {failed
               ? 'Graphics unavailable'
@@ -240,11 +256,16 @@ const meta = {
   component: FormationStudy,
   render: (args) => (
     <FormationStudy
-      key={`${args.sequence ?? 'transition'}-${args.expression ?? 'continuous'}-${args.materialOnly ?? false}-${args.ruptureStyle ?? 'material'}-${args.waveOnly ?? false}-${args.waveMode ?? 'planar'}-${args.streamingWaves ?? false}`}
+      key={`${args.sequence ?? 'transition'}-${args.expression ?? 'continuous'}-${args.materialOnly ?? false}-${args.ruptureStyle ?? 'material'}-${args.waveOnly ?? false}-${args.waveMode ?? 'planar'}-${args.streamingWaves ?? false}-${args.accretionStyle ?? 'legacy'}-${args.cubeArrival ?? 'gravity'}`}
       {...args}
     />
   ),
   argTypes: {
+    accretionStyle: {
+      control: 'radio',
+      options: ['legacy', 'split', 'orbit', 'cascade'],
+    },
+    cubeArrival: { control: 'radio', options: ['gravity', 'layered'] },
     glitchDiagnostic: {
       control: 'radio',
       options: ['beauty', 'field', 'sharp'],
@@ -304,6 +325,22 @@ export const GlitchField: Story = {
 };
 export const GlitchSharp: Story = {
   args: { ...GlitchSurface.args, glitchDiagnostic: 'sharp' },
+};
+export const SplitAccretion: Story = {
+  args: {
+    expression: 'force',
+    ruptureStyle: 'glitch',
+    accretionStyle: 'split',
+  },
+};
+export const OrbitalAccretion: Story = {
+  args: { ...SplitAccretion.args, accretionStyle: 'orbit' },
+};
+export const CascadeAccretion: Story = {
+  args: { ...SplitAccretion.args, accretionStyle: 'cascade' },
+};
+export const LayeredCubeArrival: Story = {
+  args: { sequence: 'cubes', cubeArrival: 'layered' },
 };
 export const CubeArrival: Story = { args: { sequence: 'cubes' } };
 export const HorizonArrival: Story = { args: { sequence: 'horizon' } };

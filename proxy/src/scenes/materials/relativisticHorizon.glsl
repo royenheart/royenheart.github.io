@@ -37,6 +37,7 @@ uniform float uAspect;
 uniform float uViewHeight;
 uniform float uPresence;
 uniform float uFormation;
+uniform float uAccretionStyle;
 uniform bool uChoreography;
 uniform bool uExpressive;
 uniform bool uMirrorRupture;
@@ -171,6 +172,7 @@ float coronaSwell(vec2 surface, float time) {
 }
 
 /* RIBBON_GEOMETRY */
+/* ACCRETION_GEOMETRY */
 
 vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   vec2 unbrokenScreen = screen;
@@ -257,7 +259,11 @@ vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   // would otherwise expose a second, unrelated shadow across the foreground.
   coverage = max(coverage, 1.0 - smoothstep(2.98, 3.0, radius));
   if (uChoreography) {
-    float formation = ribbonFormation(surface, radius, captureRadius, uFormation);
+    bool depositing = uExpressive && uDirection > 0.0 && uAccretionStyle > 0.5;
+    float formation = depositing
+      ? accretionDeposit(radius, azimuth, uAccretionStyle, uTransition)
+      : ribbonFormation(surface, radius, captureRadius, uFormation);
+    if (depositing) coverage *= smoothstep(0.22, 0.58, uTransition);
     color *= formation;
   }
   if (rupture > 0.0) {

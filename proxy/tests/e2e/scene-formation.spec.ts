@@ -115,7 +115,7 @@ test('the horizon traces at its final size and the foreground forms progressivel
   expect(difference((await frame(page)).data, final.data)).toBeGreaterThan(20);
 });
 
-test('cube arrival fills the scene in distinct depth stages', async ({
+test('cube arrival fills the scene through falling accumulation stages', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 640, height: 480 });
@@ -169,9 +169,15 @@ test('both arrival prompts fit the width and height matrix without covering regi
   await page.route('**/song/media/outer/**', (route) => route.abort());
   for (const name of ['selected-cubes', 'selected-horizon']) {
     await page.goto(scene(name));
+    // A fresh 1920px software-GL scene measured 8.4s to finish preparation.
+    // The controls must become ready before geometry checks, without a sleep.
     await expect(
       page.getByRole('button', { name: 'Enter quietly' }),
-    ).toBeEnabled();
+    ).toBeEnabled({ timeout: 15000 });
+    await expect(page.locator('main')).toHaveAttribute(
+      'data-renderer',
+      'webgl',
+    );
     for (const viewport of viewports) {
       await page.setViewportSize(viewport);
       await expect.poll(() => page.evaluate(inspectOrbitLayout)).toEqual([]);

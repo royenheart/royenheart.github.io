@@ -25,12 +25,16 @@ uniform float uFractureOverride;
 uniform float uDirection;
 uniform float uInclination;
 uniform float uWorldPerScreen;
+uniform float uAccretionStyle;
+uniform bool uGravityArrival;
 
 /* RIBBON_GEOMETRY */
+/* ACCRETION_GEOMETRY */
 
 varying vec3 vNormal;
 varying vec3 vLocalPosition;
 varying float vFlightGlow;
+varying float vAccretionHeat;
 varying vec3 vTint;
 varying vec3 vAccent;
 varying vec3 vWorldPosition;
@@ -59,6 +63,7 @@ mat3 rotateZ(float angle) {
 void main() {
     vLocalPosition = position;
     vFlightGlow = 0.0;
+    vAccretionHeat = -1.0;
     float cycle = fract(instanceMotion.w + uTime * instanceMotion.x);
     float normalizedFall = clamp(cycle / uPileHoldStart, 0.0, 1.0);
     float densityFallProgress = 1.0 - pow(1.0 - normalizedFall, uVerticalDensityPower);
@@ -105,6 +110,28 @@ void main() {
         float seed = instanceMotion.w;
         float entry = smoothstep(seed * 0.32, 0.60 + seed * 0.40, uPresence);
         if (uCollapse <= 0.00001) {
+            if (uGravityArrival) {
+                // Release full-sized cubes above the actual camera frustum. Lower
+                // destinations settle first, followed by the upper airborne layers.
+                vec3 settled = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
+                vec3 shape = (modelViewMatrix * vec4(localPosition, 0.0)).xyz;
+                float halfHeight = -settled.z / projectionMatrix[1][1];
+                float heightOrder = clamp((settled.y / halfHeight + 1.0) * 0.5, 0.0, 1.0);
+                float landing = 0.40 + heightOrder * 0.43 + seed * 0.055;
+                float fall = clamp((uPresence - landing + 0.36) / 0.36, 0.0, 1.0);
+                float travel = min(fall / 0.78, 1.0);
+                float above = max(halfHeight - settled.y + length(instanceScale) * 2.0, 5.0);
+                float lift = above * (1.0 - travel * travel);
+                float settle = clamp((fall - 0.78) / 0.22, 0.0, 1.0);
+                lift += sin(settle * 3.141593) * (1.0 - settle) * instanceScale.y * 0.5;
+                settled.y += lift;
+                settled.x += sin(instanceMotion.z) * sin(fall * 3.141593) * 0.45;
+                viewPosition = vec4(settled + shape, 1.0);
+                vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha;
+                vWorldPosition = baseWorldOffset + localPosition;
+                gl_Position = projectionMatrix * viewPosition;
+                return;
+            }
             vec3 arrivalOffset = vec3(sin(instanceMotion.z) * 3.0, 9.0 + seed * 10.0, -12.0) * (1.0 - entry);
             viewPosition = modelViewMatrix * vec4(baseWorldOffset + localPosition * mix(0.16, 1.0, entry), 1.0);
             viewPosition.xyz += arrivalOffset;
@@ -128,6 +155,62 @@ void main() {
             viewPosition = vec4(settled + shape * mix(0.65, 1.0, recovery), 1.0);
             vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha * recovery * entry;
             vWorldPosition = baseWorldOffset + localPosition;
+            gl_Position = projectionMatrix * viewPosition;
+            return;
+        }
+        if (uExpressive && uDirection > 0.0 && uAccretionStyle > 0.5) {
+            // Stable cohorts feed the upper emitting mantle and lower disk. Both
+            // land on the exact material contours used by the horizon shader.
+            bool halo = seed < 0.44;
+            float cohort = halo ? seed / 0.44 : (seed - 0.44) / 0.56;
+            float targetAngle = halo ? 0.035 + instanceMotion.z * 0.489
+                                     : -0.035 - instanceMotion.z * 0.489;
+            float materialRadius = halo ? 3.014 + pow(cohort, 4.0) * 0.65
+                : 3.0 + 7.0 * (exp((1.570796 + floor(cohort * 29.0) * 6.283185) / 140.0) - 1.0);
+            float landing = accretionLanding(materialRadius, targetAngle, uAccretionStyle);
+            float flight = clamp((uCollapse - landing + 0.34) / 0.34, 0.0, 1.0);
+            float travel = pow(flight, 2.0);
+            float fuse = smoothstep(0.73, 1.0, flight);
+            float captureRadius = inversesqrt(4.0 / 27.0 - (1.0 / 900.0) * (1.0 - 1.0 / 30.0));
+            vec2 point = ribbonPoint(materialRadius, targetAngle, captureRadius, uTime);
+            vec2 ahead = ribbonPoint(materialRadius, targetAngle + 0.004, captureRadius, uTime);
+            vec2 tangent = normalize(ahead - point);
+            vec3 anchor = (viewMatrix * vec4(center, 1.0)).xyz;
+            vec3 source = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
+            vec3 target = anchor + vec3(point * uWorldPerScreen, 0.0);
+            vec3 current;
+            if (uAccretionStyle > 1.5 && uAccretionStyle < 2.5) {
+                // Curved orbital capture retains a distinct winding stage before
+                // transport locks to the destination contour and material phase.
+                float winding = sin(flight * 3.141593) * 1.7;
+                float pathAngle = targetAngle + (halo ? winding : -winding);
+                float pathRadius = materialRadius + sin(flight * 3.141593) * (halo ? 2.0 : 4.0);
+                vec2 orbitPoint = ribbonPoint(pathRadius, pathAngle, captureRadius, uTime);
+                vec3 orbit = anchor + vec3(orbitPoint * uWorldPerScreen, -sin(flight * 3.141593) * 6.0);
+                current = mix(source, orbit, smoothstep(0.0, 0.82, flight));
+            } else {
+                vec3 control = target - vec3(tangent * uWorldPerScreen * (halo ? 1.25 : 2.4), 0.0);
+                control.z = mix(source.z, target.z, 0.65) - 3.0;
+                current = mix(mix(source, control, travel), mix(control, target, travel), travel);
+            }
+            vec3 originalShape = (modelViewMatrix * vec4(localPosition, 0.0)).xyz;
+            vec2 flightDirection = normalize(target.xy - source.xy + vec2(0.0001));
+            float strain = sin(flight * 3.141593) * smoothstep(0.15, 0.65, flight);
+            vec3 stressed = vec3(flightDirection * position.x * instanceScale.x * (1.0 + strain * 1.5)
+                + vec2(-flightDirection.y, flightDirection.x) * position.y * instanceScale.y / sqrt(1.0 + strain * 1.5),
+                originalShape.z);
+            vec3 molten = vec3(tangent * position.x * 0.20 * uWorldPerScreen
+                + vec2(-tangent.y, tangent.x) * position.y * 0.015 * uWorldPerScreen,
+                position.z * 0.01 * uWorldPerScreen);
+            vec3 shape = mix(originalShape, stressed, smoothstep(0.25, 0.65, flight));
+            shape = mix(shape, molten, fuse);
+            viewPosition = vec4(current + shape, 1.0);
+            float baseAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha;
+            vAlpha = mix(baseAlpha, 0.94, smoothstep(0.1, 0.55, flight))
+                * (1.0 - smoothstep(landing + 0.025, landing + 0.09, uCollapse));
+            vAccretionHeat = smoothstep(0.32, 0.93, flight);
+            vFlightGlow = smoothstep(0.62, 0.98, flight);
+            vWorldPosition = mix(baseWorldOffset, center, travel);
             gl_Position = projectionMatrix * viewPosition;
             return;
         }

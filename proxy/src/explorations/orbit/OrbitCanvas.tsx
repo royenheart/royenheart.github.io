@@ -7,6 +7,7 @@ import {
   MathUtils,
   type Texture,
 } from 'three';
+import type { AccretionStyle, CubeArrivalStyle } from '../../scenes/accretion';
 import type { GlitchDiagnostic } from '../../scenes/glitch';
 import type { MotionValue } from 'motion/react';
 import {
@@ -73,6 +74,8 @@ export interface OrbitCanvasProps {
   glitchDiagnostic?: GlitchDiagnostic;
   waveMode?: 'planar' | 'spatial';
   streamingWaves?: boolean;
+  accretionStyle?: AccretionStyle;
+  cubeArrival?: CubeArrivalStyle;
 }
 function OpticalPostprocessing({
   presence,
@@ -129,6 +132,8 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     props.horizonRenderer === 'relativistic' &&
     props.horizonTreatment === 'limb';
   const expressive = choreography && props.study === 'collapse';
+  const accretionStyle = props.accretionStyle ?? 'split';
+  const depositing = expressive && accretionStyle !== 'legacy';
   const ruptureStyle = props.ruptureStyle ?? 'glitch';
   const mirror = ruptureStyle !== 'material';
   const glitch = ruptureStyle === 'glitch';
@@ -143,11 +148,13 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           expressive
             ? direction?.get() === -1
               ? 1
-              : MathUtils.smoothstep(blend.get(), 0.44, 0.94)
+              : depositing
+                ? blend.get()
+                : MathUtils.smoothstep(blend.get(), 0.44, 0.94)
             : MathUtils.smoothstep(blend.get(), 0.3, 0.98),
         ),
     }),
-    [entrance, blend, expressive, direction],
+    [entrance, blend, expressive, direction, depositing],
   );
   const reveal = useMemo(
     () => ({
@@ -161,14 +168,22 @@ function World(props: OrbitCanvasProps & { quality: number }) {
             )
           : MathUtils.smoothstep(
               props.blend.get(),
-              expressive ? 0.4 : choreography ? 0.3 : 0.5,
-              expressive ? 0.68 : choreography ? 0.62 : 0.88,
+              depositing ? 0.18 : expressive ? 0.4 : choreography ? 0.3 : 0.5,
+              depositing ? 0.4 : expressive ? 0.68 : choreography ? 0.62 : 0.88,
             )) *
         (choreography
           ? MathUtils.smoothstep(props.entrance.get(), 0, 0.16)
           : props.entrance.get()),
     }),
-    [props.blend, props.entrance, choreography, expressive, direction, mirror],
+    [
+      props.blend,
+      props.entrance,
+      choreography,
+      expressive,
+      direction,
+      mirror,
+      depositing,
+    ],
   );
   useEffect(() => {
     const a = blend.on('change', () => invalidate());
@@ -234,6 +249,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           transition={expressive ? blend : undefined}
           direction={direction}
           ruptureStyle={ruptureStyle}
+          accretionStyle={accretionStyle}
           glitchDiagnostic={props.glitchDiagnostic}
           waveOnly={props.transitionDiagnostic === 'waves'}
           spatialWaves={spatialWaves}
@@ -258,6 +274,8 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           linearOutput={props.horizonRenderer === 'relativistic'}
           horizonTreatment={props.horizonTreatment}
           choreography={choreography}
+          accretionStyle={accretionStyle}
+          cubeArrival={props.cubeArrival}
           expressive={expressive}
           mirrorRupture={mirror}
           glitchRupture={glitch}
@@ -265,15 +283,17 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           inclination={props.inclination}
         />
       )}
-      {expressive && props.transitionDiagnostic !== 'material' && (
-        <SceneImpulse
-          progress={blend}
-          direction={direction}
-          time={time}
-          mirror={mirror}
-          spatialWaves={spatialWaves || glitch}
-        />
-      )}
+      {expressive &&
+        !depositing &&
+        props.transitionDiagnostic !== 'material' && (
+          <SceneImpulse
+            progress={blend}
+            direction={direction}
+            time={time}
+            mirror={mirror}
+            spatialWaves={spatialWaves || glitch}
+          />
+        )}
       {expressive && ruptureStyle === 'mirror' && spatialWaves && (
         <RadiationField
           progress={blend}
