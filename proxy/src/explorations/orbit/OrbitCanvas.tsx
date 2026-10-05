@@ -14,6 +14,7 @@ import {
   type BloomEffect,
   type ToneMappingEffect,
 } from 'postprocessing';
+import { SceneImpulse } from '../../scenes/SceneImpulse';
 import { CubeCloud } from '../../scenes/CubeCloud';
 import { EventHorizon } from '../../scenes/EventHorizon';
 import {
@@ -29,6 +30,9 @@ declare global {
   interface Window {
     __orbitScene?: {
       blend: number;
+      entrance: number;
+      formation: number;
+      direction: number;
       frames: number;
       calls: number;
       geometries: number;
@@ -44,6 +48,7 @@ declare global {
 export interface OrbitCanvasProps {
   blend: MotionValue<number>;
   entrance: MotionValue<number>;
+  direction?: MotionValue<number>;
   study: MotionStudy;
   paused: boolean;
   capture: boolean;
@@ -55,6 +60,7 @@ export interface OrbitCanvasProps {
   bloom: number;
   horizonTreatment: HorizonTreatment;
   horizonDiagnostic: HorizonDiagnostic;
+  transitionDiagnostic?: 'beauty' | 'material';
 }
 function OpticalPostprocessing({
   presence,
@@ -107,17 +113,45 @@ function World(props: OrbitCanvasProps & { quality: number }) {
   const [opticsReady, setOpticsReady] = useState(false);
   const announced = useRef(false);
   const onOpticsReady = useCallback(() => setOpticsReady(true), []);
+  const choreography =
+    props.horizonRenderer === 'relativistic' &&
+    props.horizonTreatment === 'limb';
+  const expressive = choreography && props.study === 'collapse';
+  const direction = props.direction;
+  const formation = useMemo(
+    () => ({
+      get: () =>
+        Math.min(
+          entrance.get(),
+          expressive
+            ? direction?.get() === -1
+              ? 1
+              : MathUtils.smoothstep(blend.get(), 0.44, 0.94)
+            : MathUtils.smoothstep(blend.get(), 0.3, 0.98),
+        ),
+    }),
+    [entrance, blend, expressive, direction],
+  );
   const reveal = useMemo(
     () => ({
       get: () =>
-        MathUtils.smoothstep(props.blend.get(), 0.5, 0.88) *
-        props.entrance.get(),
+        (expressive && direction?.get() === -1
+          ? 1 - MathUtils.smoothstep(1 - props.blend.get(), 0.3, 0.66)
+          : MathUtils.smoothstep(
+              props.blend.get(),
+              expressive ? 0.4 : choreography ? 0.3 : 0.5,
+              expressive ? 0.68 : choreography ? 0.62 : 0.88,
+            )) *
+        (choreography
+          ? MathUtils.smoothstep(props.entrance.get(), 0, 0.16)
+          : props.entrance.get()),
     }),
-    [props.blend, props.entrance],
+    [props.blend, props.entrance, choreography, expressive, direction],
   );
   useEffect(() => {
     const a = blend.on('change', () => invalidate());
     const b = entrance.on('change', () => invalidate());
+    const c = direction?.on('change', () => invalidate());
     const lost = (event: Event) => {
       event.preventDefault();
       onFailure();
@@ -126,9 +160,10 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     return () => {
       a();
       b();
+      c?.();
       gl.domElement.removeEventListener('webglcontextlost', lost);
     };
-  }, [blend, entrance, onFailure, invalidate, gl]);
+  }, [blend, entrance, direction, onFailure, invalidate, gl]);
   useFrame((_, delta) => {
     if (!props.paused && !props.capture) time.current += Math.min(delta, 0.05);
     const mix = props.blend.get();
@@ -138,6 +173,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
       18 + mix * 4,
     );
     camera.lookAt(0, mix * 1.4, -25 - mix * 13);
+    camera.updateMatrixWorld();
     frames.current++;
     if (
       !announced.current &&
@@ -148,6 +184,9 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     }
     window.__orbitScene = {
       blend: mix,
+      entrance: entrance.get(),
+      formation: formation.get(),
+      direction: direction?.get() ?? 1,
       frames: frames.current,
       calls: gl.info.render.calls,
       geometries: gl.info.memory.geometries,
@@ -169,6 +208,9 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           settings={scenes}
           time={time}
           presence={reveal}
+          formation={choreography ? formation : undefined}
+          transition={expressive ? blend : undefined}
+          direction={direction}
           diskStyle={props.diskStyle}
           inclination={props.inclination}
           treatment={props.horizonTreatment}
@@ -177,16 +219,25 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           onFailure={onFailure}
         />
       )}
-      <CubeCloud
-        settings={scenes}
-        time={time}
-        quality={props.quality}
-        collapse={props.blend}
-        presence={props.entrance}
-        swirl={motionStudies[props.study].swirl}
-        linearOutput={props.horizonRenderer === 'relativistic'}
-        horizonTreatment={props.horizonTreatment}
-      />
+      {props.transitionDiagnostic !== 'material' && (
+        <CubeCloud
+          settings={scenes}
+          time={time}
+          quality={props.quality}
+          collapse={props.blend}
+          presence={props.entrance}
+          swirl={motionStudies[props.study].swirl}
+          linearOutput={props.horizonRenderer === 'relativistic'}
+          horizonTreatment={props.horizonTreatment}
+          choreography={choreography}
+          expressive={expressive}
+          direction={direction}
+          inclination={props.inclination}
+        />
+      )}
+      {expressive && props.transitionDiagnostic !== 'material' && (
+        <SceneImpulse progress={blend} direction={direction} time={time} />
+      )}
       {props.horizonRenderer === 'relativistic' && (
         <OpticalPostprocessing
           presence={reveal}

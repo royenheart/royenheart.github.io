@@ -9,14 +9,21 @@ import {
 import {
   HORIZON_CENTER,
   horizonCaptureRadius,
+  horizonViewHeight,
   type HorizonTreatment,
 } from './relativity/framing';
 import { createCubeGeometry } from './cubeGeometry';
-import vertexShader from './materials/gpuCubeVertexShader.glsl?raw';
+import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
+import vertexSource from './materials/gpuCubeVertexShader.glsl?raw';
 import fragmentShader from './materials/gpuCubeFragmentShader.glsl?raw';
 import atmosphereVertex from './materials/gpuAtmosphereVertexShader.glsl?raw';
 import atmosphereFragment from './materials/gpuAtmosphereFragmentShader.glsl?raw';
 import type { SceneSettings } from '../lib/content/schema';
+
+const vertexShader = vertexSource.replace(
+  '/* RIBBON_GEOMETRY */',
+  ribbonGeometry,
+);
 
 export interface SceneProps {
   settings: SceneSettings;
@@ -34,6 +41,10 @@ export function CubeCloud({
   swirl = 0,
   linearOutput = false,
   horizonTreatment = 'optical',
+  choreography = false,
+  expressive = false,
+  direction,
+  inclination = 12,
 }: SceneProps & {
   quality: number;
   collapse?: SceneSignal;
@@ -41,10 +52,16 @@ export function CubeCloud({
   swirl?: number;
   linearOutput?: boolean;
   horizonTreatment?: HorizonTreatment;
+  choreography?: boolean;
+  expressive?: boolean;
+  direction?: SceneSignal;
+  inclination?: number;
 }) {
   const size = useThree((state) => state.size);
   const camera = useThree((state) => state.camera);
-  const count = Math.round(settings.cubeCount * quality);
+  const centerView = useMemo(() => new Vector3(), []);
+  // Keep particle identities stable while adaptive DPR changes during a morph.
+  const count = Math.round(settings.cubeCount * (choreography ? 1 : quality));
   const geometry = useMemo(
     () => createCubeGeometry(count, settings.seed),
     [count, settings.seed],
@@ -63,6 +80,11 @@ export function CubeCloud({
       uLightContrast: { value: 1.34 },
       uCollapse: { value: 0 },
       uPresence: { value: 1 },
+      uChoreography: { value: false },
+      uExpressive: { value: false },
+      uDirection: { value: 1 },
+      uInclination: { value: 0.2 },
+      uWorldPerScreen: { value: 1 },
       uSwirl: { value: 0 },
       uLinearOutput: { value: false },
       uHorizonRadius: { value: 12 },
@@ -86,6 +108,19 @@ export function CubeCloud({
       cubes.current.uniforms.uTime!.value = time.current;
       cubes.current.uniforms.uCollapse!.value = blend;
       cubes.current.uniforms.uPresence!.value = entry;
+      cubes.current.uniforms.uChoreography!.value = choreography;
+      cubes.current.uniforms.uExpressive!.value = expressive;
+      cubes.current.uniforms.uDirection!.value = direction?.get() ?? 1;
+      cubes.current.uniforms.uInclination!.value =
+        (inclination * Math.PI) / 180;
+      centerView.set(...HORIZON_CENTER).applyMatrix4(camera.matrixWorldInverse);
+      cubes.current.uniforms.uWorldPerScreen!.value =
+        (2 *
+          -centerView.z *
+          Math.tan(
+            (((camera as PerspectiveCamera).fov ?? 62) * Math.PI) / 360,
+          )) /
+        horizonViewHeight(size.width, size.height, horizonTreatment);
       cubes.current.uniforms.uSwirl!.value = swirl;
       cubes.current.uniforms.uLinearOutput!.value = linearOutput;
       cubes.current.uniforms.uHorizonRadius!.value = horizonCaptureRadius(
@@ -101,7 +136,21 @@ export function CubeCloud({
       backdrop.current.uniforms.uAspect!.value = size.width / size.height;
       backdrop.current.uniforms.uLinearOutput!.value = linearOutput;
       backdrop.current.uniforms.uPresence!.value =
-        entry * (1 - MathUtils.smoothstep(blend, 0.06, 0.62));
+        entry *
+        (1 -
+          MathUtils.smoothstep(
+            blend,
+            expressive && direction?.get() !== -1
+              ? 0.08
+              : choreography
+                ? 0.14
+                : 0.06,
+            expressive && direction?.get() !== -1
+              ? 0.64
+              : choreography
+                ? 0.7
+                : 0.62,
+          ));
     }
   });
   return (

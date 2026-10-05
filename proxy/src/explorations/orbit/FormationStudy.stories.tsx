@@ -1,0 +1,224 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  animate,
+  useMotionValue,
+  useMotionValueEvent,
+  type AnimationPlaybackControls,
+} from 'motion/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import OrbitCanvas from './OrbitCanvas';
+import { formationTiming } from './formation';
+import { useReducedMotionPreference } from '../../lib/useReducedMotionPreference';
+import './formation-study.css';
+
+type Sequence = 'transition' | 'cubes' | 'horizon';
+type Expression = 'continuous' | 'force';
+function FormationStudy({
+  sequence = 'transition',
+  expression = 'continuous',
+  materialOnly = false,
+}: {
+  sequence?: Sequence;
+  expression?: Expression;
+  materialOnly?: boolean;
+}) {
+  const blend = useMotionValue(sequence === 'horizon' || materialOnly ? 1 : 0);
+  const entrance = useMotionValue(sequence === 'transition' ? 1 : 0);
+  const direction = useMotionValue(materialOnly ? -1 : 1);
+  const progress = sequence === 'transition' ? blend : entrance;
+  const reduced = useReducedMotionPreference();
+  const [value, setValue] = useState(materialOnly ? 1 : 0);
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [mounted, setMounted] = useState(true);
+  const animation = useRef<AnimationPlaybackControls | null>(null);
+  const capture =
+    new URLSearchParams(window.location.search).get('capture') === '1';
+  const onReady = useCallback(() => setReady(true), []);
+  const onFailure = useCallback(() => {
+    setFailed(true);
+    setPlaying(false);
+    animation.current?.stop();
+  }, []);
+  useMotionValueEvent(progress, 'change', setValue);
+  useEffect(() => () => animation.current?.stop(), []);
+  const stop = () => {
+    animation.current?.stop();
+    setPlaying(false);
+  };
+  const play = (target: number) => {
+    stop();
+    const nextDirection = target === 1 ? 1 : -1;
+    if (
+      expression === 'force' &&
+      sequence === 'transition' &&
+      direction.get() !== nextDirection
+    )
+      progress.set(1 - target);
+    direction.set(nextDirection);
+    if (Math.abs(progress.get() - target) < 0.001) progress.set(1 - target);
+    setPlaying(true);
+    animation.current = animate(progress, target, {
+      duration: reduced
+        ? 0
+        : (expression === 'force' && sequence === 'transition'
+            ? formationTiming[target === 1 ? 'collapse' : 'rupture']
+            : formationTiming[sequence]) * Math.abs(target - progress.get()),
+      ease: 'linear',
+      onComplete: () => setPlaying(false),
+    });
+  };
+  return (
+    <main
+      className="formation-study"
+      data-sequence={sequence}
+      data-ready={ready}
+      data-playing={playing}
+      data-expression={expression}
+    >
+      <div
+        className="formation-stage"
+        role="img"
+        aria-label="Scene formation preview"
+      >
+        {mounted && (
+          <OrbitCanvas
+            blend={blend}
+            entrance={entrance}
+            study={expression === 'force' ? 'collapse' : 'gather'}
+            direction={direction}
+            transitionDiagnostic={materialOnly ? 'material' : 'beauty'}
+            paused={reduced}
+            capture={capture}
+            onReady={onReady}
+            onFailure={onFailure}
+            horizonRenderer="relativistic"
+            horizonTreatment="limb"
+            horizonDiagnostic="beauty"
+            diskStyle="turbulent"
+            inclination={12}
+            bloom={0.28}
+          />
+        )}
+      </div>
+      <section
+        className="formation-controls"
+        aria-label="Motion study controls"
+      >
+        <p>
+          {sequence === 'transition'
+            ? expression === 'force'
+              ? materialOnly
+                ? 'F3 · material transport only · no extra particles or flash'
+                : 'F3 · collapse / material rupture'
+              : 'F1 · continuous gathering'
+            : sequence === 'cubes'
+              ? 'Blue hour · layered arrival'
+              : 'Event horizon · light tracing'}
+          <span role="status" aria-live={ready ? 'off' : 'polite'}>
+            {failed
+              ? 'Graphics unavailable'
+              : !ready
+                ? 'Preparing the scene…'
+                : `${(value * 100).toFixed(0)}% · ${direction.get() > 0 ? 'forward' : 'reverse'}`}
+          </span>
+        </p>
+        <label>
+          Progress
+          <input
+            aria-label="Animation progress"
+            type="range"
+            min="0"
+            max="1"
+            step="0.001"
+            value={value}
+            disabled={!ready || failed || !mounted}
+            onChange={(event) => {
+              stop();
+              progress.set(Number(event.target.value));
+            }}
+          />
+        </label>
+        <div className="formation-actions">
+          <button
+            disabled={!ready || failed || !mounted}
+            onClick={() => play(1)}
+          >
+            {sequence === 'transition' ? 'Play forward' : 'Replay arrival'}
+          </button>
+          <button
+            disabled={!ready || failed || !mounted}
+            onClick={() => play(0)}
+          >
+            Play reverse
+          </button>
+          <button disabled={!playing} onClick={stop}>
+            Pause
+          </button>
+          <button
+            onClick={() => {
+              stop();
+              setReady(false);
+              setFailed(false);
+              setMounted((current) => !current);
+            }}
+          >
+            {mounted ? 'Unmount scene' : 'Mount scene'}
+          </button>
+        </div>
+        <small>
+          {capture
+            ? 'Fixed scene time · deterministic material and camera'
+            : 'Live scene time · actual runtime'}
+          {reduced ? ' · reduced motion' : ''}
+          {expression === 'force'
+            ? ' · opposite direction restarts from its source scene'
+            : ''}
+        </small>
+      </section>
+    </main>
+  );
+}
+const meta = {
+  title: 'Explorations/Scene formation',
+  component: FormationStudy,
+  render: (args) => (
+    <FormationStudy
+      key={`${args.sequence ?? 'transition'}-${args.expression ?? 'continuous'}-${args.materialOnly ?? false}`}
+      {...args}
+    />
+  ),
+  argTypes: {
+    expression: { control: 'radio', options: ['continuous', 'force'] },
+    sequence: { control: 'radio', options: ['transition', 'cubes', 'horizon'] },
+  },
+  parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
+} satisfies Meta<typeof FormationStudy>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const GatherAndForm: Story = {};
+export const CollapseAndRupture: Story = { args: { expression: 'force' } };
+export const RuptureMaterial: Story = {
+  args: { expression: 'force', materialOnly: true },
+};
+export const CubeArrival: Story = { args: { sequence: 'cubes' } };
+export const HorizonArrival: Story = { args: { sequence: 'horizon' } };
+export const PlaybackControls: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Play forward' });
+    await waitFor(() => expect(button).toBeEnabled(), { timeout: 15000 });
+    await userEvent.click(button);
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'Pause' })).toBeEnabled(),
+    );
+    await userEvent.click(canvas.getByRole('button', { name: 'Pause' }));
+    await expect(canvas.getByRole('button', { name: 'Pause' })).toBeDisabled();
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Unmount scene' }),
+    );
+    await expect(canvasElement.querySelector('canvas')).toBeNull();
+  },
+};

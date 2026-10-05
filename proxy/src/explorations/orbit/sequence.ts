@@ -1,8 +1,14 @@
 import type { SceneId } from '../../lib/content/schema';
 
 export const sceneOrder: readonly SceneId[] = ['cubes', 'horizon'];
-export type MotionStudy = 'gather' | 'vortex';
+export type MotionStudy = 'gather' | 'vortex' | 'collapse';
 export const motionStudies = {
+  collapse: {
+    id: 'F3',
+    label: 'Collapse and rupture',
+    swirl: 0,
+    duration: 6.4,
+  },
   gather: { id: 'S1', label: 'Gather', swirl: 0, duration: 6 },
   vortex: { id: 'S2', label: 'Vortex', swirl: 1.8, duration: 6 },
 } as const;

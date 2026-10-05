@@ -18,8 +18,17 @@ uniform float uPresence;
 uniform float uSwirl;
 uniform float uHorizonRadius;
 uniform vec3 uHorizonCenter;
+uniform bool uChoreography;
+uniform bool uExpressive;
+uniform float uDirection;
+uniform float uInclination;
+uniform float uWorldPerScreen;
+
+/* RIBBON_GEOMETRY */
 
 varying vec3 vNormal;
+varying vec3 vLocalPosition;
+varying float vFlightGlow;
 varying vec3 vTint;
 varying vec3 vAccent;
 varying vec3 vWorldPosition;
@@ -46,6 +55,8 @@ mat3 rotateZ(float angle) {
 }
 
 void main() {
+    vLocalPosition = position;
+    vFlightGlow = 0.0;
     float cycle = fract(instanceMotion.w + uTime * instanceMotion.x);
     float normalizedFall = clamp(cycle / uPileHoldStart, 0.0, 1.0);
     float densityFallProgress = 1.0 - pow(1.0 - normalizedFall, uVerticalDensityPower);
@@ -87,6 +98,113 @@ void main() {
     vDepth = smoothstep(-42.0, -4.0, instanceOffset.z);
     vPileProgress = pileProgress;
 
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(worldPosition, 1.0);
+    vec4 viewPosition = modelViewMatrix * vec4(worldPosition, 1.0);
+    if (uChoreography) {
+        float seed = instanceMotion.w;
+        float entry = smoothstep(seed * 0.32, 0.60 + seed * 0.40, uPresence);
+        if (uCollapse <= 0.00001) {
+            vec3 arrivalOffset = vec3(sin(instanceMotion.z) * 3.0, 9.0 + seed * 10.0, -12.0) * (1.0 - entry);
+            viewPosition = modelViewMatrix * vec4(baseWorldOffset + localPosition * mix(0.16, 1.0, entry), 1.0);
+            viewPosition.xyz += arrivalOffset;
+            vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha * entry;
+            vWorldPosition = baseWorldOffset + localPosition;
+            gl_Position = projectionMatrix * viewPosition;
+            return;
+        }
+        if (uCollapse >= 0.99999) {
+            vAlpha = 0.0;
+            gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+            return;
+        }
+        float gather = smoothstep(0.035 + seed * 0.065, 0.62 + seed * 0.09, uCollapse);
+        float melt = smoothstep(0.32 + seed * 0.08, 0.77 + seed * 0.05, uCollapse);
+        float materialRadius = seed < 0.68 ? 3.0 + seed * 0.07 :
+            3.0 + 7.0 * (exp((1.570796 + floor((seed - 0.68) / 0.32 * 29.0) * 6.283185) / 140.0) - 1.0);
+        float targetAngle = instanceMotion.z;
+        if (seed < 0.68) targetAngle = mod(targetAngle, 3.141593);
+        else targetAngle = -abs(targetAngle - 3.141593);
+        targetAngle += uSwirl * sin(uCollapse * 3.141593) * 0.18;
+        vec3 sourceView = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
+        vec3 anchorView = (viewMatrix * vec4(center, 1.0)).xyz;
+        if (uExpressive && uDirection > 0.0) {
+            vec2 approach = sourceView.xy - anchorView.xy;
+            targetAngle = atan(approach.y, approach.x) + sin(seed * 6.283185) * 0.12;
+        }
+        float captureRadius = inversesqrt(4.0 / 27.0 - (1.0 / 900.0) * (1.0 - 1.0 / 30.0));
+        if (uExpressive && uDirection > 0.0) {
+            gather = pow(clamp((uCollapse - 0.04 - seed * 0.055) / 0.55, 0.0, 1.0), 2.9);
+            melt = smoothstep(0.51, 0.72, uCollapse);
+            materialRadius = mix(3.02, materialRadius, smoothstep(0.63, 0.83, uCollapse));
+        }
+        vec2 target = ribbonPoint(materialRadius, targetAngle, captureRadius, uTime);
+        vec2 ahead = ribbonPoint(materialRadius, targetAngle + 0.002, captureRadius, uTime);
+        if (uExpressive && uDirection > 0.0 && length(sourceView.xy - anchorView.xy) < captureRadius * uWorldPerScreen * 0.92) {
+            target *= 0.07;
+            ahead *= 0.07;
+        }
+        vec2 tangent = normalize(ahead - target);
+        vec3 targetView = (viewMatrix * vec4(center, 1.0)).xyz;
+        targetView.xy += target * uWorldPerScreen;
+        vec3 startView = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
+        startView += vec3(sin(instanceMotion.z) * 3.0, 9.0 + seed * 10.0, -12.0) * (1.0 - entry);
+        vec3 gatherView = mix(startView, targetView, gather);
+        // A shallow curved approach carries depth until each shard lands on its contour.
+        gatherView.xy += vec2(-tangent.y, tangent.x) * sin(gather * 3.141593) * (2.0 + seed * 2.0);
+        vec3 originalShape = (modelViewMatrix * vec4(localPosition, 0.0)).xyz * mix(0.16, 1.0, entry);
+        float shardLength = mix(0.055, 0.12, seed) * uWorldPerScreen;
+        float shardWidth = 0.008 * uWorldPerScreen;
+        vec3 moltenShape = vec3(tangent * position.x * shardLength + vec2(-tangent.y, tangent.x) * position.y * shardWidth, position.z * shardWidth);
+        viewPosition = vec4(gatherView + mix(originalShape, moltenShape, melt), 1.0);
+        float baseAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha;
+        vAlpha = mix(baseAlpha, 0.88, smoothstep(0.05, 0.38, uCollapse)) * entry;
+        vAlpha *= 1.0 - smoothstep(0.70 + seed * 0.08, 0.88 + seed * 0.10, uCollapse);
+        vWorldPosition = mix(baseWorldOffset, center, gather);
+        if (uExpressive) {
+            vec2 radial = normalize(target + vec2(0.0001));
+            vec2 flightDirection = normalize(targetView.xy - startView.xy + vec2(0.0001));
+            if (uDirection > 0.0) {
+                float strain = pow(gather, 0.65) * (1.0 - smoothstep(0.61, 0.76, uCollapse));
+                float stretch = 1.0 + strain * 2.8;
+                vFlightGlow = smoothstep(0.06, 0.25, strain);
+                float thickness = inversesqrt(stretch);
+                vec3 stressedShape = vec3(flightDirection * position.x * instanceScale.x * stretch
+                  + vec2(-flightDirection.y, flightDirection.x) * position.y * instanceScale.y * thickness,
+                  position.z * instanceScale.z * thickness);
+                vec3 shape = mix(originalShape, stressedShape, smoothstep(0.08, 0.42, gather));
+                shape = mix(shape, moltenShape, melt);
+                // Acceleration into a thin capture shell gives a single decisive inward pull.
+                gatherView = mix(startView, targetView, gather);
+                gatherView.xy += vec2(-flightDirection.y, flightDirection.x) * sin(gather * 3.141593) * (0.4 + seed * 1.2);
+                viewPosition = vec4(gatherView + shape, 1.0);
+                vAlpha = mix(baseAlpha, 0.96, smoothstep(0.08, 0.34, uCollapse)) * entry;
+                vAlpha *= 1.0 - smoothstep(0.63 + seed * 0.04, 0.76 + seed * 0.07, uCollapse);
+            } else {
+                float burst = 1.0 - uCollapse;
+                float release = 0.18 + seed * 0.13;
+                float flight = clamp((burst - release) / (0.83 - release), 0.0, 1.0);
+                float travel = (1.0 - exp(-flight * 5.0)) / (1.0 - exp(-5.0));
+                float impulse = sin(flight * 3.141593) * exp(-flight * 1.7);
+                vec3 core = (viewMatrix * vec4(center, 1.0)).xyz;
+                vec2 transported = rupturePosition(target, release);
+                vec3 emitter = core + vec3(transported * uWorldPerScreen, 0.0);
+                radial = normalize(transported + vec2(0.0001));
+                vec3 ejected = mix(emitter, startView, travel);
+                ejected.xy += radial * impulse * uWorldPerScreen * (3.2 + seed * 2.2);
+                ejected.z += impulse * (seed - 0.5) * 12.0;
+                float stretch = 1.0 + impulse * 4.5;
+                vFlightGlow = smoothstep(0.0, 0.09, flight) * (1.0 - smoothstep(0.38, 0.75, flight));
+                vec3 streak = vec3(radial * position.x * instanceScale.x * stretch
+                    + vec2(-radial.y, radial.x) * position.y * instanceScale.y / sqrt(stretch),
+                    position.z * instanceScale.z / sqrt(stretch));
+                vec3 shard = mix(moltenShape, streak, smoothstep(0.0, 0.18, flight));
+                shard = mix(shard, originalShape, smoothstep(0.22, 0.76, flight));
+                viewPosition = vec4(ejected + shard, 1.0);
+                float birth = smoothstep(release, release + 0.055, burst);
+                vAlpha = mix(0.94, baseAlpha, smoothstep(0.56, 0.92, burst)) * birth * entry;
+                vWorldPosition = mix(center, baseWorldOffset, travel);
+            }
+        }
+    }
+    gl_Position = projectionMatrix * viewPosition;
 }
         

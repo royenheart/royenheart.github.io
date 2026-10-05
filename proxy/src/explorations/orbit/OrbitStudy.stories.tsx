@@ -58,6 +58,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const SelectedCubes: Story = {
   args: {
+    study: 'collapse',
     tracks: sceneTracks,
     resolve: resolvePublicAudio,
     dockDesign: 'drum',
@@ -66,6 +67,7 @@ export const SelectedCubes: Story = {
 };
 export const SelectedHorizon: Story = {
   args: {
+    study: 'collapse',
     dockDesign: 'drum',
     horizonTreatment: 'limb',
     initialScene: 'horizon',

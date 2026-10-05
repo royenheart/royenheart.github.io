@@ -12,6 +12,7 @@ import {
 } from './relativity/framing';
 import definitions from './relativity/bruneton-definitions.glsl?raw';
 import functions from './relativity/bruneton-functions.glsl?raw';
+import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
 import fragment from './materials/relativisticHorizon.glsl?raw';
 
 export type DiskStyle = 'silk' | 'turbulent';
@@ -31,6 +32,9 @@ export function RelativisticHorizon({
   settings,
   time,
   presence,
+  formation,
+  transition,
+  direction,
   diskStyle,
   inclination,
   treatment,
@@ -39,6 +43,9 @@ export function RelativisticHorizon({
   onFailure,
 }: SceneProps & {
   presence: SceneSignal;
+  formation?: SceneSignal;
+  transition?: SceneSignal;
+  direction?: SceneSignal;
   diskStyle: DiskStyle;
   inclination: number;
   treatment: HorizonTreatment;
@@ -55,10 +62,9 @@ export function RelativisticHorizon({
       new ShaderMaterial({
         vertexShader:
           'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 1.0, 1.0); }',
-        fragmentShader: fragment.replace(
-          '/* OPTICAL_FUNCTIONS */',
-          opticalFunctions,
-        ),
+        fragmentShader: fragment
+          .replace('/* OPTICAL_FUNCTIONS */', opticalFunctions)
+          .replace('/* RIBBON_GEOMETRY */', ribbonGeometry),
         uniforms: {
           uDeflection: { value: null },
           uInverseRadius: { value: null },
@@ -66,6 +72,11 @@ export function RelativisticHorizon({
           uAspect: { value: 1 },
           uViewHeight: { value: HORIZON_VIEW_HEIGHT },
           uPresence: { value: 0 },
+          uFormation: { value: 1 },
+          uChoreography: { value: false },
+          uTransition: { value: 1 },
+          uDirection: { value: 1 },
+          uExpressive: { value: false },
           uInclination: { value: 0.2 },
           uTurbulence: { value: 1 },
           uLimb: { value: 0 },
@@ -106,6 +117,11 @@ export function RelativisticHorizon({
   useFrame(() => {
     material.uniforms.uTime!.value = time.current;
     material.uniforms.uPresence!.value = presence.get();
+    material.uniforms.uFormation!.value = formation?.get() ?? 1;
+    material.uniforms.uChoreography!.value = Boolean(formation);
+    material.uniforms.uTransition!.value = transition?.get() ?? 1;
+    material.uniforms.uDirection!.value = direction?.get() ?? 1;
+    material.uniforms.uExpressive!.value = Boolean(transition);
     material.uniforms.uAspect!.value = size.width / size.height;
     material.uniforms.uViewHeight!.value = horizonViewHeight(
       size.width,

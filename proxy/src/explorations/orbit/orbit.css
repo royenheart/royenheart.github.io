@@ -662,3 +662,34 @@
   stroke: #a8c6c9;
   opacity: 0.45;
 }
+
+/* The selected formation uses the scene itself as its loading animation. */
+.orbit-study[data-choreography='true'][data-renderer='loading'] .orbit-poster {
+  opacity: 0;
+}
+.orbit-study[data-choreography='true'] .orbit-arrival {
+  justify-content: flex-end;
+  padding: 24px 20px 48px;
+  background: linear-gradient(transparent 42%, #030912c9);
+}
+.orbit-study[data-choreography='true'] .orbit-arrival-mark {
+  display: none;
+}
+.orbit-study[data-choreography='true'] .orbit-arrival h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  margin: 4px 0 10px;
+}
+.orbit-study[data-choreography='true'] .orbit-enter {
+  margin-top: 14px;
+}
+.orbit-study[data-choreography='true']
+  .orbit-arrival[data-forming='true']
+  > :not([role='status']) {
+  visibility: hidden;
+}
+.orbit-study[data-choreography='true']
+  .orbit-arrival[data-forming='true']
+  [role='status'] {
+  position: absolute;
+  bottom: 64px;
+}

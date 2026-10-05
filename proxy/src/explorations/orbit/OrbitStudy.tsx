@@ -26,6 +26,7 @@ import { sceneTracks, type SceneTracks } from '../../lib/music/scene-tracks';
 import avatar from '../../assets/avatar.webp?url';
 import cubesPoster from '../../assets/cubes.webp?url';
 import horizonPoster from '../../assets/horizon.webp?url';
+import { formationTiming } from './formation';
 import { AudioWheel } from './AudioWheel';
 import { CardDeck, type OrbitCard } from './CardDeck';
 import { RotaryDeck } from './RotaryDeck';
@@ -91,7 +92,7 @@ export interface OrbitStudyProps {
 }
 
 export function OrbitStudy({
-  study = 'gather',
+  study = 'collapse',
   initialScene,
   graphics = 'auto',
   skipEntrance = false,
@@ -125,8 +126,11 @@ export function OrbitStudy({
       new URLSearchParams(window.location.search).get('capture') === '1',
   );
   const reduced = useReducedMotionPreference();
+  const choreography =
+    horizonRenderer === 'relativistic' && horizonTreatment === 'limb';
   const blend = useMotionValue(sceneBlend(scene));
   const entrance = useMotionValue(skipEntrance ? 1 : 0);
+  const direction = useMotionValue(1);
   const accent = useTransform(blend, [0, 1], ['#94dfff', '#f5cc84']);
   const glow = useTransform(blend, [0, 1], ['#527eb933', '#b8813833']);
   const transition = useRef<AnimationPlaybackControls | null>(null);
@@ -144,20 +148,26 @@ export function OrbitStudy({
   const audio = useOrbitAudio(tracks[scene], resolve, () => next.current());
   const { pause, play, ready: audioReady } = audio;
   const navigate = useCallback(
-    (direction: 1 | -1) => {
+    (step: 1 | -1) => {
       if (locked.current || !entered) return;
       locked.current = true;
       setBusy(true);
       setExpanded(false);
       pause();
-      const target = adjacentScene(scene, direction);
+      const target = adjacentScene(scene, step);
+      direction.set(scene === 'cubes' ? 1 : -1);
       transition.current?.stop();
       transition.current = animate(blend, sceneBlend(target), {
-        duration:
-          reduced || failure || graphics === 'poster'
+        duration: reduced
+          ? 0
+          : failure || graphics === 'poster'
             ? 0.2
-            : motionStudies[study].duration,
-        ease: [0.65, 0, 0.35, 1],
+            : choreography
+              ? study === 'collapse'
+                ? formationTiming[scene === 'cubes' ? 'collapse' : 'rupture']
+                : formationTiming.transition
+              : motionStudies[study].duration,
+        ease: choreography ? 'linear' : [0.65, 0, 0.35, 1],
         onComplete: () => {
           setScene(target);
           setIndex(0);
@@ -167,7 +177,18 @@ export function OrbitStudy({
         },
       });
     },
-    [pause, blend, entered, failure, graphics, reduced, scene, study],
+    [
+      pause,
+      blend,
+      entered,
+      failure,
+      graphics,
+      reduced,
+      scene,
+      study,
+      choreography,
+      direction,
+    ],
   );
   useEffect(() => {
     next.current = () => navigate(1);
@@ -195,14 +216,25 @@ export function OrbitStudy({
       duration:
         reduced || failure || graphics === 'poster'
           ? 0
-          : scene === 'cubes'
-            ? 2.2
-            : 2.8,
-      ease: [0.22, 1, 0.36, 1],
+          : choreography
+            ? formationTiming[scene]
+            : scene === 'cubes'
+              ? 2.2
+              : 2.8,
+      ease: choreography ? 'linear' : [0.22, 1, 0.36, 1],
       onComplete: () => setIntroDone(true),
     });
     return () => control.stop();
-  }, [entrance, failure, graphics, graphicsReady, introDone, reduced, scene]);
+  }, [
+    entrance,
+    failure,
+    graphics,
+    graphicsReady,
+    introDone,
+    reduced,
+    scene,
+    choreography,
+  ]);
   useEffect(() => {
     if (
       !entered ||
@@ -372,6 +404,8 @@ export function OrbitStudy({
         data-dock-design={dockDesign}
         data-horizon-treatment={horizonTreatment}
         data-entered={entered}
+        data-intro-done={introDone}
+        data-choreography={choreography}
         data-transitioning={busy}
         data-renderer={
           failure
@@ -403,6 +437,7 @@ export function OrbitStudy({
                   <OrbitCanvas
                     blend={blend}
                     entrance={entrance}
+                    direction={direction}
                     study={study}
                     capture={capture}
                     paused={paused || reduced || !visible}
@@ -427,7 +462,11 @@ export function OrbitStudy({
           </span>
         </header>
         {!entered && (
-          <section className="orbit-arrival" aria-label="Enter the scene">
+          <section
+            className="orbit-arrival"
+            data-forming={!introDone}
+            aria-label="Enter the scene"
+          >
             <div
               className={`orbit-arrival-mark orbit-arrival-${scene}`}
               aria-hidden="true"

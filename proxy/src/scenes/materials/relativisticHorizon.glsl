@@ -36,6 +36,11 @@ uniform float uTime;
 uniform float uAspect;
 uniform float uViewHeight;
 uniform float uPresence;
+uniform float uFormation;
+uniform bool uChoreography;
+uniform bool uExpressive;
+uniform float uTransition;
+uniform float uDirection;
 uniform float uInclination;
 uniform float uTurbulence;
 uniform float uLimb;
@@ -154,53 +159,12 @@ float coronaSwell(vec2 surface, float time) {
   return height * smoothstep(0.25, 0.8, surface.y);
 }
 
-// Inverse height displacement moves the whole emitting surface up and down.
-// Unequal directions, wavelengths and speeds produce travelling swells.
-// The amplitude bound keeps the vertical map monotone at every inclination.
-vec2 waveSurface(vec2 screen, float time) {
-  float vertical = clamp(sin(uInclination) * 1.06, 0.1, 0.65);
-  vec2 p = vec2(screen.x, screen.y / vertical);
-  float height = 0.15 * sin(dot(p, vec2(0.73, 0.31)) - time * 0.62)
-               + 0.09 * sin(dot(p, vec2(-1.13, 0.57)) + time * 0.83 + 1.9)
-               + 0.055 * sin(dot(p, vec2(0.34, 0.17)) - time * 0.48 + 3.4);
-  float nearField = 1.0 - smoothstep(-2.8, -0.72, screen.y);
-  height *= nearField * min(1.0, vertical / 0.22);
-  return screen - vec2(0.0, height);
-}
-
-// Integrate a decreasing radial frequency instead of spacing contours equally.
-// The local interval grows continuously with radius, from the distant inner disk
-// toward the near foreground, without independent per-ring offsets or seams.
-float ribbonPhase(float radius) {
-  return 140.0 * log(1.0 + max(radius - 3.0, -0.5) / 7.0);
-}
-
-// Art-directed nested ribbons preserve the selected framing; these are not
-// additional geodesic images. Both axes increase with material radius, so every
-// screen point has at most one radius and the material map cannot fold radially.
-float ribbonOpening(float y) {
-  return 1.0 / (1.0 + exp(clamp((y + 0.1) / 0.28, -30.0, 30.0)));
-}
-vec2 ribbonAxes(float radius, float opening, float captureRadius) {
-  float upper = captureRadius + 0.33 * log(radius / 3.0);
-  return mix(vec2(upper), radius * vec2(captureRadius / 3.0, clamp(sin(uInclination) * 1.06, 0.1, 0.65)), opening);
-}
-
-vec3 ribbonCoordinates(vec2 screen, float captureRadius) {
-  float opening = ribbonOpening(screen.y);
-  float low = 0.7, high = 64.0;
-  for (int i = 0; i < 16; i++) {
-    float radius = (low + high) * 0.5;
-    vec2 axes = ribbonAxes(radius, opening, captureRadius);
-    if (length(screen / axes) > 1.0) low = radius;
-    else high = radius;
-  }
-  float radius = (low + high) * 0.5;
-  vec2 direction = normalize(screen / ribbonAxes(radius, opening, captureRadius) + vec2(1e-7));
-  return vec3(direction * radius, radius);
-}
+/* RIBBON_GEOMETRY */
 
 vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
+  vec2 unbrokenScreen = screen;
+  float rupture = uExpressive && uDirection < 0.0 ? 1.0 - uTransition : 0.0;
+  if (rupture > 0.0) screen = ruptureSource(screen, rupture);
   vec2 surface = waveSurface(screen, time);
   float swell = coronaSwell(surface, time);
   float heat = clamp(swell / 0.16, 0.0, 1.0);
@@ -281,6 +245,23 @@ vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   // The artistic silhouette occludes its backdrop. A circular geodesic mask
   // would otherwise expose a second, unrelated shadow across the foreground.
   coverage = max(coverage, 1.0 - smoothstep(2.98, 3.0, radius));
+  if (uChoreography) {
+    float formation = ribbonFormation(surface, radius, captureRadius, uFormation);
+    color *= formation;
+  }
+  if (rupture > 0.0) {
+    float pressure = smoothstep(0.0, 0.10, rupture) * (1.0 - smoothstep(0.12, 0.23, rupture));
+    float survival = ruptureSurvival(coordinates, rupture);
+    color *= (1.0 + pressure * 0.65) * survival;
+    // The void opens while its emitting boundary and disk move outward. Do not
+    // leave a stationary intact scene under the ejecta or grow a larger black mask.
+    vec2 originalSurface = waveSurface(unbrokenScreen, time);
+    float originalRadius = ribbonCoordinates(originalSurface, captureRadius).z;
+    float voidCoverage = (1.0 - smoothstep(2.98, 3.0, originalRadius))
+      * (1.0 - smoothstep(0.12, 0.35, rupture));
+    float emittingCoverage = edge * outer * mix(0.5, 0.9, foreground) * pow(profile, 0.35);
+    coverage = max(emittingCoverage * survival, voidCoverage);
+  }
   return vec4(color, coverage);
 }
 
@@ -340,7 +321,8 @@ vec3 sceneColor(vec2 screen) {
   float captureRadius = inversesqrt(4.0 / 27.0 - u * u * (1.0 - u));
   if (uLimb > 0.5) {
     vec4 ribbon = ribbonEmission(screen, captureRadius, uTime);
-    return (color + nebulaSky(screen, uTime)) * (1.0 - ribbon.a) + ribbon.rgb;
+    float skyArrival = uChoreography ? smoothstep(0.28, 1.0, uFormation) : 1.0;
+    return (color + nebulaSky(screen, uTime)) * (1.0 - ribbon.a) * skyArrival + ribbon.rgb;
   }
   float receiver = energy / sqrt(1.0 - u);
   if (u1 > 0.0 && a1 > 0.0 && uLimb < 0.5) {
@@ -360,7 +342,7 @@ vec3 sceneColor(vec2 screen) {
 
 void main() {
   if (uPresence < 0.001) { gl_FragColor = vec4(0.0); return; }
-  float scale = mix(0.22, 1.0, uPresence);
+  float scale = uChoreography ? 1.0 : mix(0.22, 1.0, uPresence);
   vec2 screen = (vUv - uCenter) * vec2(uAspect, 1.0) * uViewHeight / scale;
   gl_FragColor = vec4(sceneColor(screen), uPresence);
 }
