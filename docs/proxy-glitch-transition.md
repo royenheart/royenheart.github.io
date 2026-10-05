@@ -7,8 +7,9 @@ strands. F7 replaces the selected Orbit reverse transition. It begins with a loc
 color anomaly, expands through the image, progressively distorts and blurs the
 horizon, disk and nebula, and only then fractures the scene into mirror panes.
 F3–F6 remain historical comparisons, not selected effects. The settled scenes,
-forward collapse, arrivals, deck and music behavior are preserved. Visual
-acceptance of this new candidate remains pending.
+forward collapse, arrivals, deck and music behavior are preserved. The user
+accepted F7 as workable and requested a showcase of the unchanged forward
+collapse and both scene arrivals.
 
 ## Visual analysis
 
@@ -174,4 +175,4 @@ frames for inspection.
 
 Phone 390×844, tablet 768×1024, short desktop 1280×400 and desktop 1440×900
 captures were inspected. Browser emulation and software WebGL do not establish
-real phone or tablet GPU performance. Visual acceptance remains pending.
+real phone or tablet GPU performance. The user accepted the F7 direction as workable.
