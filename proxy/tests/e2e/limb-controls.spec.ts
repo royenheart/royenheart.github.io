@@ -179,7 +179,6 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
       info.height * 0.04,
     );
     expect(luminance(info.width * 0.5, info.height * 0.42)).toBeLessThan(15);
-    // Follow both visible rim tips into the disk and reject an unlit break.
     // Infer the radius from the rendered crest, independently of shader constants.
     const radius = info.height / 2 - profile.indexOf(peak);
     const outerBand =
@@ -219,16 +218,34 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
       centerBand - Math.min(leftBand, rightBand),
       'The disk must not rise into an isolated central cusp',
     ).toBeGreaterThan(-radius * 0.02);
+    // Track a bright, connected ridge and require it to turn into the disk.
+    // Merely lighting the original circle allowed the rejected vertical crossing.
     for (const side of [-1, 1]) {
-      for (let step = 0; step <= 40; step++) {
-        const dy = radius * (-0.02 + (step / 40) * 0.29);
-        const x = info.width / 2 + side * Math.sqrt(radius ** 2 - dy ** 2);
-        const y = info.height / 2 + dy;
-        const tip = Math.max(
-          ...[-4, -2, 0, 2, 4].map((dx) => luminance(x + dx, y)),
-        );
-        expect(tip, `Disconnected rim at ${side}, ${step}`).toBeGreaterThan(40);
+      let ridgeX = info.width / 2 + side * radius;
+      const reach = Math.max(4, Math.ceil(radius * 0.025));
+      for (let step = 0; step <= 28; step++) {
+        const y = info.height / 2 + radius * 0.19 * (step / 28);
+        let brightest = -1;
+        let nextX = ridgeX;
+        for (let x = Math.round(ridgeX) - reach; x <= ridgeX + reach; x++) {
+          const value = luminance(x, y);
+          if (value > brightest) {
+            brightest = value;
+            nextX = x;
+          }
+        }
+        expect(
+          brightest,
+          `Broken turning ridge at ${side}, ${step}`,
+        ).toBeGreaterThan(125);
+        ridgeX = nextX;
       }
+      const circularX = radius * Math.sqrt(1 - 0.19 ** 2);
+      const inwardTurn = circularX - Math.abs(ridgeX - info.width / 2);
+      expect(
+        inwardTurn,
+        `The ${side} rim must bend into the foreground`,
+      ).toBeGreaterThan(radius * 0.035);
     }
     let bottom = 0,
       count = 0;

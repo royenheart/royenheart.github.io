@@ -104,54 +104,31 @@ float diskWave(vec2 p, float time) {
        + 0.026 * modulation;
 }
 
-vec2 junctionCurve(float t, float radius) {
-  float s = 1.0 - t;
-  return s * s * s * vec2(radius + 0.10, 0.48)
-       + 3.0 * s * s * t * vec2(radius + 0.14, -0.85)
-       + 3.0 * s * t * t * vec2(radius + 0.78, -0.57)
-       + t * t * t * vec2(radius + 1.90, -0.23);
+// A shared scalar field turns circular and disk isophases into one contour family.
+float smoothMaximum(float a, float b, float width) {
+  float h = max(width - abs(a - b), 0.0) / width;
+  return max(a, b) + width * h * h * 0.25;
 }
 
-// Turn the broad arc into the foreground flow with a widening, fading ribbon.
-float junctionEmission(vec2 screen, float radius, float time) {
-  vec2 p = vec2(abs(screen.x), screen.y);
-  if (p.x < radius - 0.6 || p.x > radius + 2.5 || p.y < -1.2 || p.y > 1.1)
-    return 0.0;
-  float distance = 100.0;
-  float progress = 0.0;
-  vec2 previous = junctionCurve(0.0, radius);
-  for (int i = 1; i <= 16; i++) {
-    float t = float(i) / 16.0;
-    vec2 next = junctionCurve(t, radius);
-    vec2 segment = next - previous;
-    float along = clamp(dot(p - previous, segment) / dot(segment, segment), 0.0, 1.0);
-    float candidate = length(p - previous - segment * along);
-    if (candidate < distance) {
-      distance = candidate;
-      progress = (float(i - 1) + along) / 16.0;
-    }
-    previous = next;
-  }
-  float width = mix(0.11, 0.24, smoothstep(0.1, 0.8, progress));
-  float envelope = smoothstep(0.0, 0.16, progress) * (1.0 - smoothstep(0.55, 1.0, progress));
-  float texture = noise(vec3(screen * 2.1, time * 0.06));
-  float body = exp(-pow(distance / width, 2.0));
-  float feather = exp(-pow(distance / (width * 2.2), 2.0));
-  float outside = smoothstep(-0.015, 0.07, length(screen) - radius);
-  return (body * (0.24 + texture * 0.12) + feather * 0.065) * envelope * outside;
+float circularPhase(vec2 screen, float radius, float time) {
+  float distance = length(screen);
+  vec2 direction = screen / max(distance, 0.001);
+  float d = distance - radius;
+  float texture = densityField(vec3(direction * 3.2, d * 3.0 - time * 0.07));
+  return d * 57.0 + texture * 2.5 + direction.y * 1.7;
 }
 
 // A layered emission veil borrows the silhouette of a lensed disk image.
 // This art-directed layer is separate from the geodesic disk and the accepted rim.
-vec3 limbVeil(vec2 screen, float captureRadius, float time) {
+vec3 limbVeil(vec2 screen, float captureRadius, float time, float joinedPhase, float joinedDistance) {
   float distance = length(screen);
-  float d = distance - captureRadius;
+  float d = joinedDistance;
   vec2 direction = screen / max(distance, 0.001);
   float junction = exp(-pow((screen.y + 0.32) / 0.68, 2.0));
   float width = 0.09 + junction * 0.19;
   float offset = 0.13 + junction * 0.08;
   float texture = densityField(vec3(direction * 3.2, d * 3.0 - time * 0.07));
-  float phase = d * 57.0 + texture * 2.5 + direction.y * 1.7;
+  float phase = joinedPhase;
   float aa = max(fwidth(phase), 0.001);
   float filaments = 0.5 + 0.5 * sin(phase) * exp(-aa * aa * 0.15);
   float band = exp(-pow((d - offset) / width, 2.0));
@@ -160,24 +137,19 @@ vec3 limbVeil(vec2 screen, float captureRadius, float time) {
   float arc = smoothstep(-1.35, -0.65, screen.y);
   float emission = band * (0.09 + filaments * 0.11 + texture * 0.08)
                  + haze * (0.018 + junction * 0.095);
-  float turn = (1.0 - smoothstep(-0.3, 0.5, screen.y))
-             * smoothstep(captureRadius - 0.32, captureRadius + 0.04, abs(screen.x));
-  emission = emission * outside * arc * (1.0 - turn * 0.82)
-           + junctionEmission(screen, captureRadius, time);
-  return vec3(1.0, 0.59, 0.27) * emission;
+  return vec3(1.0, 0.59, 0.27) * emission * outside * arc;
 }
 
-vec4 disc(vec2 position, float time, float shift) {
+vec4 disc(vec2 position, float time, float shift, float phase, float seam) {
   float radius = length(position);
   if (uLimb > 0.5) {
     float angle = atan(position.y, position.x);
     float orbit = angle - time * 0.26 * pow(3.0 / max(radius, 3.0), 1.5);
     float structure = densityField(vec3(cos(orbit) * 3.0, sin(orbit) * 3.0, radius * 0.7));
-    float phase = (radius + diskWave(position, uTime)) * 31.0;
     float aa = max(fwidth(phase), 0.001);
     float strands = pow(0.5 + 0.5 * sin(phase) * exp(-aa * aa * 0.15), 5.0);
     float front = 1.0 - smoothstep(-0.8, 0.8, position.y);
-    float inner = smoothstep(3.0, 3.08, radius);
+    float inner = smoothstep(3.0, mix(3.08, 3.6, seam), radius);
     float outer = 1.0 - smoothstep(35.0, 48.0, radius);
     float foreground = (0.1 + strands * 1.8 + structure * 0.2) * pow(3.0 / max(radius, 3.0), 0.7);
     float emission = foreground * front * inner * outer;
@@ -235,36 +207,75 @@ vec3 sceneColor(vec2 screen) {
   float escapeAngle = delta + max(deflection, 0.0);
   vec3 escapeDirection = cos(escapeAngle) * radial + sin(escapeAngle) * tangent;
   vec3 color = deflection >= 0.0 ? sky(escapeDirection) * mix(1.0, 0.45, uLimb) : vec3(0.0);
+  float captureRadius = inversesqrt(4.0 / 27.0 - u * u * (1.0 - u));
+  float circleDistance = length(screen) - captureRadius;
+  float circlePhase = 0.0, diskPhase = 0.0, veilPhase = 0.0;
+  float joinedDistance = circleDistance;
+  float rimShare = 1.0, veilShare = 1.0, seam = 0.0;
+  if (uLimb > 0.5) {
+    circlePhase = circularPhase(screen, captureRadius, uTime);
+    float foregroundPhase = -1000.0;
+    float connection = 0.0;
+    float phaseInverseRadius = u0;
+    if (u0 > 0.0 && a0 < 0.99 && abs(energySquared - kMu) < min(fwidth(energySquared), kMu)) {
+      // TraceRay substitutes a midpoint radius for edge coverage. Phase needs the
+      // unfiltered intersection so that a coverage sample cannot cut the rim.
+      vec2 apsis;
+      vec2 rayAngle = LookupRayDeflection(uDeflection, energySquared, u, apsis);
+      float crossingAngle = mod(rayAngle.x + pi - delta + alpha, pi);
+      phaseInverseRadius = LookupRayInverseRadius(uInverseRadius, energySquared, crossingAngle).x;
+    }
+    if (phaseInverseRadius > 0.0) {
+      vec2 position = ((radial * cos(phi0) + tangent * sin(phi0)) / phaseInverseRadius).xy;
+      // Subtract a whole number of periods to align the two coordinate origins.
+      diskPhase = (length(position) + diskWave(position, uTime)) * 31.0 - 30.0 * pi;
+      float front = 1.0 - smoothstep(-0.8, 0.8, position.y);
+      foregroundPhase = diskPhase;
+      connection = smoothstep(0.95, 1.0, front);
+    }
+    float field = smoothMaximum(circlePhase, foregroundPhase, 24.0);
+    veilPhase = mix(circlePhase, field, connection);
+    joinedDistance += (veilPhase - circlePhase) / 57.0;
+    float diskJoin = connection * (1.0 - smoothstep(0.25, 0.85, circleDistance));
+    // Bound the disk-side displacement before tapering it; otherwise a large
+    // phase difference can fold the outer filaments back over themselves.
+    float difference = max(circlePhase - diskPhase, 0.0);
+    float limitedCircle = min(circlePhase, diskPhase) + 6.0 * (1.0 - exp(-difference / 6.0));
+    float diskField = smoothMaximum(limitedCircle, diskPhase, 24.0);
+    diskPhase = mix(diskPhase, diskField, diskJoin);
+    rimShare = mix(1.0, smoothstep(-24.0, 12.0, circlePhase - foregroundPhase), connection);
+    veilShare = mix(1.0, smoothstep(-70.0, 10.0, circlePhase - foregroundPhase), connection);
+    seam = (1.0 - smoothstep(18.0, 55.0, abs(circlePhase - foregroundPhase))) * diskJoin;
+  }
   if (uLimb > 0.5) {
     // Art-directed limb emission follows the finite observer's capture boundary.
     // This is a visual analogy to rim lighting, not a black-hole atmosphere model.
-    float captureRadius = inversesqrt(4.0 / 27.0 - u * u * (1.0 - u));
-    float d = length(screen) - captureRadius;
-    float pixel = max(fwidth(d), 0.004);
+    float d = joinedDistance;
+    float basePixel = max(fwidth(circleDistance), 0.004);
+    float pixel = clamp(fwidth(d), basePixel, basePixel * 2.0);
     float crest = exp(-pow(d / max(0.018, pixel), 2.0));
     float shoulder = exp(-abs(d) / 0.057);
     float outer = smoothstep(-pixel, pixel, d) * (exp(-max(d, 0.0) / 0.18) * 0.18 + exp(-max(d, 0.0) / 0.5) * 0.035);
-    // Continue the lower rim into the foreground disk; the disk occludes it.
+    // Preserve the upper rim; its lower tips follow the shared disk junction.
     float arc = smoothstep(-1.0, -0.55, screen.y);
-    color += (vec3(1.0, 0.92, 0.79) * crest * 3.8 + vec3(1.0, 0.52, 0.16) * (shoulder * 0.42 + outer)) * arc;
+    color += (vec3(1.0, 0.92, 0.79) * crest * 3.8 + vec3(1.0, 0.52, 0.16) * (shoulder * 0.42 + outer)) * arc * rimShare;
   }
   float receiver = energy / sqrt(1.0 - u);
   if (u1 > 0.0 && a1 > 0.0 && uLimb < 0.5) {
     float source = energy * sqrt(2.0 / (2.0 - 3.0 * u1)) - u1 * sqrt(u1 / (2.0 - 3.0 * u1)) * normal.z;
     vec3 intersection = (radial * cos(phi1) + tangent * sin(phi1)) / u1;
-    vec4 emission = disc(intersection.xy, uTime - t1 * 0.015, receiver / source);
+    vec4 emission = disc(intersection.xy, uTime - t1 * 0.015, receiver / source, 0.0, 0.0);
     color = color * (1.0 - emission.a * a1) + emission.rgb * a1;
   }
   if (u0 > 0.0 && a0 > 0.0) {
     float source = energy * sqrt(2.0 / (2.0 - 3.0 * u0)) - u0 * sqrt(u0 / (2.0 - 3.0 * u0)) * normal.z;
     vec3 intersection = (radial * cos(phi0) + tangent * sin(phi0)) / u0;
-    vec4 emission = disc(intersection.xy, uTime - t0 * 0.015, receiver / source);
+    vec4 emission = disc(intersection.xy, uTime - t0 * 0.015, receiver / source, diskPhase, seam);
     color = color * (1.0 - emission.a * a0) + emission.rgb * a0;
   }
   if (uLimb > 0.5) {
-    float captureRadius = inversesqrt(4.0 / 27.0 - u * u * (1.0 - u));
-    // Let the wide, soft layer cross the join while keeping the inner rim crisp.
-    color += limbVeil(screen, captureRadius, uTime);
+    // The rim, veil and foreground now share the same turning contours.
+    color += limbVeil(screen, captureRadius, uTime, veilPhase, joinedDistance) * veilShare;
   }
   return color;
 }

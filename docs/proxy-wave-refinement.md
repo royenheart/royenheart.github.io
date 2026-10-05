@@ -1,6 +1,6 @@
 # Foreground waves and outer emission veil
 
-Status: the user accepted B / Velvet drum, the first upper rim, the sparse foreground density, and this round's travelling waves and general second-layer treatment. The latest follow-up refines only the side junctions toward the supplied reference. That local refinement remains open to review. Work stays on `refactor/proxy-modernization`; no push, PR, deployment or production homepage replacement is included.
+Status: the user accepted B / Velvet drum, the first upper rim, the sparse foreground density, and this round's travelling waves and general second-layer treatment. The user subsequently rejected the cubic side-junction ribbon described below because the bright contours still crossed the disk. That ribbon is superseded by [the continuous contour revision](proxy-continuity-refinement.md); retain this document as the wave and earlier experiment record. Work stays on `refactor/proxy-modernization`; no push, PR, deployment or production homepage replacement is included.
 
 ## Reference and terminology
 
@@ -62,7 +62,9 @@ WebKit uses the previously documented Fedora compatibility environment with comm
 
 The subsequent junction-only revision passed the same three-browser rendering case again, plus fresh static/Storybook builds and `proxy:check`. Its six viewport captures and 25.56-second recording are in `/tmp/proxy-wave-study/blend`. The recording decoded fully and played after scrolling it into view; the initial offscreen autoplay probe had remained paused. A fixed-size review crop initially overflowed its grid; explicit zero-minimum tracks corrected the artifact page, which now measures 1280 CSS pixels wide in a 1280-pixel viewport. The actual application layout was not changed. The new review is `http://127.0.0.1:6008/waves/blend/`, with equal-scale before/after junction crops, full views and motion. The accepted wave version remains at the parent URL. Logs use `/tmp/wave-blend-*.log` and `/tmp/wave-join-story-build.log`.
 
-## Continuation prompt
+## Superseded continuation prompt
+
+The following prompt records the earlier scope. Use the continuation prompt in the linked contour revision for further work.
 
 ```text
 Continue the selected B / Velvet drum horizon study. Preserve the user-approved
