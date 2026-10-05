@@ -1,6 +1,6 @@
 # Limb glow and hover playback refinement
 
-Status: requested control changes are implemented on `refactor/proxy-modernization`. B / Velvet drum remains the selected card design. The user accepted the upper glow and requested sparser foreground rings joined to the black-hole edge. The latest candidate changes only filament spacing and the lower rim connection; its revised density remains open to review. No push, PR, deployment or production homepage replacement is included.
+Status: requested control changes are implemented on `refactor/proxy-modernization`. B / Velvet drum remains the selected card design. The user accepted the first upper glow and the revised foreground density. The subsequent [wave and outer-glow refinement](proxy-wave-refinement.md) addresses sharp distortions and the abrupt rim/disk connection. No push, PR, deployment or production homepage replacement is included.
 
 ## Reference analysis
 

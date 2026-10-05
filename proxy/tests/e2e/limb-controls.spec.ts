@@ -182,6 +182,43 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
     // Follow both visible rim tips into the disk and reject an unlit break.
     // Infer the radius from the rendered crest, independently of shader constants.
     const radius = info.height / 2 - profile.indexOf(peak);
+    const outerBand =
+      [-1, 0, 1].reduce(
+        (sum, dy) =>
+          sum +
+          luminance(
+            info.width / 2,
+            profile.indexOf(peak) - radius * 0.058 + dy,
+          ),
+        0,
+      ) / 3;
+    expect(outerBand, 'A distinct, dimmer outer glow').toBeGreaterThan(
+      peak * 0.29,
+    );
+    expect(outerBand).toBeLessThan(peak * 0.7);
+    const firstFilament = (x: number) => {
+      for (
+        let y = Math.ceil(info.height / 2 + radius * 0.07);
+        y < info.height / 2 + radius * 0.45;
+        y++
+      ) {
+        const value = luminance(x, y);
+        if (
+          value > 65 &&
+          value >= luminance(x, y - 1) &&
+          value > luminance(x, y + 1)
+        )
+          return y;
+      }
+      throw new Error('The inner foreground filament is missing');
+    };
+    const centerBand = firstFilament(info.width / 2);
+    const leftBand = firstFilament(info.width / 2 - radius * 0.18);
+    const rightBand = firstFilament(info.width / 2 + radius * 0.18);
+    expect(
+      centerBand - Math.min(leftBand, rightBand),
+      'The disk must not rise into an isolated central cusp',
+    ).toBeGreaterThan(-radius * 0.02);
     for (const side of [-1, 1]) {
       for (let step = 0; step <= 40; step++) {
         const dy = radius * (-0.02 + (step / 40) * 0.29);
