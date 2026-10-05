@@ -1,7 +1,10 @@
 # Continuous disk and arc material
 
-Status: implemented after the user authorized the reference-analysis direction;
-visual acceptance remains pending. Work stays on `refactor/proxy-modernization`.
+Status: the user accepted the improved junction. The requested follow-up expands
+foreground intervals with depth and strengthens travelling surface waves; see
+[the depth and wave refinement](proxy-perspective-waves.md). The implementation
+and verification below record the preceding junction revision.
+Work stays on `refactor/proxy-modernization`.
 No push, PR, deployment, or production homepage replacement is included.
 
 ## Construction decision

@@ -105,6 +105,12 @@ rejected independent tip veil with shared disk/arc material coordinates.
 `Horizon Unbloomed Emission` disables Bloom for junction inspection. Both are
 diagnostic Storybook views; the selected scene still uses the normal gold material.
 
+The [depth and wave refinement](../docs/proxy-perspective-waves.md) expands ring
+intervals toward the foreground and displaces the shared surface with travelling
+swells. Orbit Storybook URLs accept `&capture=1&sceneTime=12` (or `16`, `20`) for
+reproducible wave phases. `sceneTime` is ignored outside capture mode; omit
+`capture=1` to inspect normal animation.
+
 The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
 
 ## Release

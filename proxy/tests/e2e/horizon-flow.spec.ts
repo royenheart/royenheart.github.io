@@ -52,7 +52,9 @@ function connectedBand(image: Pixels, seedX: number, seedY: number) {
 test('multiple material bands continue from the foreground through both junctions into the arc', async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 960, height: 640 });
+  // Expanding foreground intervals need a wider view to keep three complete
+  // groups on-screen instead of clipping their outer turns at the viewport edge.
+  await page.setViewportSize({ width: 1280, height: 640 });
   await page.route('**/song/media/outer/**', (route) => route.abort());
   await page.goto(url('coordinates'));
   await expect(page.locator('main')).toHaveAttribute('data-renderer', 'webgl');
@@ -62,7 +64,7 @@ test('multiple material bands continue from the foreground through both junction
     .toBuffer({ resolveWithObject: true });
   const image = { data, width: info.width, height: info.height };
   const connected: ReturnType<typeof connectedBand>[] = [];
-  for (let fraction = 0.64; fraction <= 0.74; fraction += 0.01) {
+  for (let fraction = 0.6; fraction <= 0.84; fraction += 0.01) {
     const band = connectedBand(
       image,
       Math.floor(info.width / 2),
@@ -70,8 +72,10 @@ test('multiple material bands continue from the foreground through both junction
     );
     if (
       band.minY < info.height * 0.22 &&
-      band.minX < info.width * 0.25 &&
-      band.maxX > info.width * 0.75 &&
+      // The arc scales with viewport height. Widening the capture must not
+      // move the required junction positions farther away from the actual arc.
+      band.minX < info.width / 2 - info.height * 0.35 &&
+      band.maxX > info.width / 2 + info.height * 0.35 &&
       band.area > info.width * info.height * 0.005 &&
       connected.every((previous) =>
         previous.color.some(

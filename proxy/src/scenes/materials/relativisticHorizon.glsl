@@ -95,14 +95,25 @@ vec3 sky(vec3 direction) {
          + vec3(1.0, 0.88, 0.7) * star;
 }
 
-// Bounded, independently travelling swells perturb the filaments, not the rim.
-// The unequal wavelengths and slow modulation avoid a single repeating ripple.
-float diskWave(vec2 p, float time) {
-  float modulation = noise(vec3(p * 0.24, time * 0.045)) - 0.5;
-  return 0.075 * sin(dot(p, vec2(0.73, 0.41)) - time * 0.31 + modulation * 0.7)
-       + 0.052 * sin(dot(p, vec2(-1.13, 0.57)) + time * 0.23 + 1.9)
-       + 0.034 * sin(dot(p, vec2(0.34, 1.71)) - time * 0.17 + 3.4)
-       + 0.026 * modulation;
+// Inverse height displacement moves the whole emitting surface up and down.
+// Unequal directions, wavelengths and speeds produce travelling swells.
+// The amplitude bound keeps the vertical map monotone at every inclination.
+vec2 waveSurface(vec2 screen, float time) {
+  float vertical = clamp(sin(uInclination) * 1.06, 0.1, 0.65);
+  vec2 p = vec2(screen.x, screen.y / vertical);
+  float height = 0.15 * sin(dot(p, vec2(0.73, 0.31)) - time * 0.62)
+               + 0.09 * sin(dot(p, vec2(-1.13, 0.57)) + time * 0.83 + 1.9)
+               + 0.055 * sin(dot(p, vec2(0.34, 0.17)) - time * 0.48 + 3.4);
+  float nearField = 1.0 - smoothstep(-2.8, -0.72, screen.y);
+  height *= nearField * min(1.0, vertical / 0.22);
+  return screen - vec2(0.0, height);
+}
+
+// Integrate a decreasing radial frequency instead of spacing contours equally.
+// The local interval grows continuously with radius, from the distant inner disk
+// toward the near foreground, without independent per-ring offsets or seams.
+float ribbonPhase(float radius) {
+  return 140.0 * log(1.0 + max(radius - 3.0, -0.5) / 7.0);
 }
 
 // Art-directed nested ribbons preserve the selected framing; these are not
@@ -131,14 +142,14 @@ vec3 ribbonCoordinates(vec2 screen, float captureRadius) {
 }
 
 vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
-  vec3 coordinates = ribbonCoordinates(screen, captureRadius);
+  vec2 surface = waveSurface(screen, time);
+  vec3 coordinates = ribbonCoordinates(surface, captureRadius);
   float radius = coordinates.z;
-  float foreground = 1.0 - smoothstep(-1.1, 0.05, screen.y);
+  float foreground = 1.0 - smoothstep(-1.1, 0.05, surface.y);
   float angle = atan(coordinates.y, coordinates.x) - time * 0.12;
   vec3 texturePosition = vec3(cos(angle) * 3.0, sin(angle) * 3.0, radius * 0.7);
   float texture = densityField(texturePosition);
-  float swell = diskWave(coordinates.xy, time) * foreground;
-  float phase = (radius - 3.0 + swell + (texture - 0.5) * 0.07) * 20.0;
+  float phase = ribbonPhase(radius + (texture - 0.5) * 0.07);
   if (uFlowView > 0.5 && uFlowView < 1.5) {
     // Broad numbered groups carry the same warped coordinate as the fine strands.
     float group = phase / (2.0 * pi * 4.0);
@@ -158,8 +169,8 @@ vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   vec3 color = (vec3(1.0, 0.59, 0.27) * diffuse + vec3(1.0, 0.74, 0.43) * line) * edge * outer;
   // Measure the inner contour itself; a local radial derivative would saturate
   // far from the logarithmically compressed arc and create a hard halo cutoff.
-  float opening = ribbonOpening(screen.y);
-  float innerContour = length(screen / ribbonAxes(3.0, opening, captureRadius)) - 1.0;
+  float opening = ribbonOpening(surface.y);
+  float innerContour = length(surface / ribbonAxes(3.0, opening, captureRadius)) - 1.0;
   vec2 gradient = vec2(dFdx(innerContour) / max(abs(dFdx(screen.x)), 0.00001),
                        dFdy(innerContour) / max(abs(dFdy(screen.y)), 0.00001));
   float distance = innerContour / max(length(gradient), 0.001);

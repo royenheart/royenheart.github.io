@@ -37,6 +37,7 @@ declare global {
       textures: number;
       quality: number;
       pixelRatio: number;
+      time: number;
     };
   }
 }
@@ -92,7 +93,16 @@ function OpticalPostprocessing({
 function World(props: OrbitCanvasProps & { quality: number }) {
   const { camera, invalidate, gl } = useThree();
   const { blend, entrance, onFailure } = props;
-  const time = useRef(12);
+  const [initialTime] = useState(() => {
+    if (!props.capture) return 12;
+    const requested = Number(
+      new URLSearchParams(window.location.search).get('sceneTime') ?? '12',
+    );
+    return Number.isFinite(requested)
+      ? MathUtils.clamp(requested, 0, 3600)
+      : 12;
+  });
+  const time = useRef(initialTime);
   const frames = useRef(0);
   const [opticsReady, setOpticsReady] = useState(false);
   const announced = useRef(false);
@@ -146,6 +156,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
       textures: gl.info.memory.textures,
       quality: props.quality,
       pixelRatio: gl.getPixelRatio(),
+      time: time.current,
     };
     gl.info.reset();
   }, -3);
