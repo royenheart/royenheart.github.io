@@ -59,6 +59,7 @@ test('the contour oracle detects a forced vertical text rail', async ({
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(url('tangent-glass'));
+  await page.locator('.rotary-deck').press('ArrowDown');
   await expect(page.locator('.rotary-card-active')).toBeVisible();
   await expect.poll(() => page.evaluate(inspectRotaryLayout)).toEqual([]);
   await page

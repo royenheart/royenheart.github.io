@@ -85,3 +85,8 @@ export const resolvePreviewTrack: TrackResolver = async (track, signal) => {
     };
   return resolvePublicAudio(track, signal);
 };
+
+// A real, silent PCM stream distinguishes playback state from audible energy.
+export const resolveSilentPreviewTrack: TrackResolver = async () => ({
+  playback: { kind: 'audio', url: tone(0) },
+});

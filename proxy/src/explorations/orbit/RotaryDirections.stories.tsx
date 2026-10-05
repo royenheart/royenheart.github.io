@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { OrbitStudy } from './OrbitStudy';
 import { sceneTracks } from '../../lib/music/scene-tracks';
-import { previewTracks, resolvePreviewTrack } from '../music-fixtures';
+import {
+  previewTracks,
+  resolvePreviewTrack,
+  resolveSilentPreviewTrack,
+} from '../music-fixtures';
 import { resolvePublicAudio } from '../../lib/music/sources';
 
 const meta = {
@@ -59,7 +63,9 @@ export const InterruptedDrum: Story = {
         'false',
       ),
     );
-    await expect(canvas.getByRole('article')).toHaveAccessibleName('GitHub');
+    await expect(canvas.getByRole('article')).toHaveAccessibleName(
+      'On the turntable',
+    );
     await userEvent.keyboard('{Escape}');
     await expect(
       canvas.getByRole('button', { name: 'Open information cards' }),
@@ -73,5 +79,16 @@ export const NativeDrum: Story = {
     graphics: 'poster',
     tracks: { cubes: previewTracks[1]!, horizon: previewTracks[2]! },
     resolve: resolvePreviewTrack,
+  },
+};
+
+export const SilentDrum: Story = {
+  args: {
+    ...NativeDrum.args,
+    resolve: resolveSilentPreviewTrack,
+    tracks: {
+      cubes: { ...previewTracks[1]!, title: 'Silent audio fixture' },
+      horizon: { ...previewTracks[2]!, title: 'Silent audio fixture' },
+    },
   },
 };

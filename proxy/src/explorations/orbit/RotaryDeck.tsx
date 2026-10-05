@@ -178,15 +178,9 @@ export function RotaryDeck({
           />
         ))}
       </div>
-      <nav className="orbit-card-navigation" aria-label="Card navigation">
-        <span aria-live="polite">
-          {String(index + 1).padStart(2, '0')}{' '}
-          <span>/ {String(cards.length).padStart(2, '0')}</span>
-        </span>
-        <button aria-label="Close information cards" onClick={onClose}>
-          ×
-        </button>
-      </nav>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {cards[index]?.label}. Card {index + 1} of {cards.length}.
+      </p>
     </section>
   );
 }

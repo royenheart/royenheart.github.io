@@ -23,6 +23,7 @@ import { useReducedMotionPreference } from '../../lib/useReducedMotionPreference
 import type { TrackResolver } from '../../lib/music/sources';
 import { resolvePublicAudio } from '../../lib/music/sources';
 import { sceneTracks, type SceneTracks } from '../../lib/music/scene-tracks';
+import avatar from '../../assets/avatar.webp?url';
 import cubesPoster from '../../assets/cubes.webp?url';
 import horizonPoster from '../../assets/horizon.webp?url';
 import { AudioWheel } from './AudioWheel';
@@ -243,29 +244,37 @@ export function OrbitStudy({
       id: 'identity',
       label: 'A little about me',
       content: (
-        <div className="orbit-ribbon-copy">
-          <p className="orbit-eyebrow">A little about me</p>
+        <div className="orbit-ribbon-copy orbit-profile">
+          <img
+            src={avatar}
+            alt={`${site.name}'s avatar`}
+            width="32"
+            height="32"
+          />
           <h2 title={site.name}>{site.name}</h2>
         </div>
       ),
     },
-    ...site.links.map((link) => ({
-      id: `profile-${link.label}`,
-      label: link.label,
+    {
+      id: 'scene',
+      label: 'Inside this scene',
       content: (
-        <a
-          className="orbit-ribbon-link"
-          href={link.href}
-          aria-label={link.label}
-        >
+        <>
           <div className="orbit-ribbon-copy">
-            <p className="orbit-eyebrow">Elsewhere</p>
-            <h2>{link.label}</h2>
+            <p className="orbit-eyebrow">This scene</p>
+            <h2 title={titles[scene]}>{titles[scene]}</h2>
           </div>
-          <span aria-hidden="true">↗</span>
-        </a>
+          <button
+            className="orbit-ribbon-action"
+            aria-label={paused ? 'Resume background' : 'Pause background'}
+            onClick={() => setPaused((value) => !value)}
+            disabled={reduced || failure || graphics === 'poster'}
+          >
+            {paused ? '▷' : 'Ⅱ'}
+          </button>
+        </>
       ),
-    })),
+    },
     {
       id: 'music',
       label: 'On the turntable',
@@ -303,26 +312,23 @@ export function OrbitStudy({
         </a>
       ),
     })),
-    {
-      id: 'scene',
-      label: 'Inside this scene',
+    ...site.links.map((link) => ({
+      id: `profile-${link.label}`,
+      label: link.label,
       content: (
-        <>
+        <a
+          className="orbit-ribbon-link"
+          href={link.href}
+          aria-label={link.label}
+        >
           <div className="orbit-ribbon-copy">
-            <p className="orbit-eyebrow">This scene</p>
-            <h2 title={titles[scene]}>{titles[scene]}</h2>
+            <p className="orbit-eyebrow">Elsewhere</p>
+            <h2>{link.label}</h2>
           </div>
-          <button
-            className="orbit-ribbon-action"
-            aria-label={paused ? 'Resume background' : 'Pause background'}
-            onClick={() => setPaused((value) => !value)}
-            disabled={reduced || failure || graphics === 'poster'}
-          >
-            {paused ? '▷' : 'Ⅱ'}
-          </button>
-        </>
+          <span aria-hidden="true">↗</span>
+        </a>
       ),
-    },
+    })),
     {
       id: 'next',
       label: 'Beyond this scene',
@@ -469,11 +475,13 @@ export function OrbitStudy({
             >
               <div className="orbit-wheel-anchor" inert={busy}>
                 <AudioWheel
+                  key={scene}
                   artwork={tracks[scene].artwork}
                   title={tracks[scene].title}
                   expanded={expanded}
                   playing={audio.playing}
-                  reduced={reduced}
+                  reduced={reduced || !visible}
+                  scene={scene}
                   ready={audio.ready && !busy}
                   analyser={audio.analyser}
                   design={dockDesign}
@@ -506,13 +514,6 @@ export function OrbitStudy({
                   duration={cardDuration}
                 />
               )}
-              <span className="orbit-wheel-caption">
-                {busy
-                  ? 'Passing through'
-                  : expanded
-                    ? 'Scroll to explore'
-                    : 'A world within reach'}
-              </span>
             </motion.div>
             {audio.error && (
               <p className="sr-only" role="status">

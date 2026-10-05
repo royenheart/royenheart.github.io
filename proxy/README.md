@@ -2,6 +2,10 @@
 
 The VPC homepage is an Astro static site with React islands, TypeScript, Tailwind CSS, Motion, and React Three Fiber. It preserves the sidebar/navigation, central artwork, bottom music/registration bar, blue cube cloud, and golden event horizon. OpenResty serves the build output or proxies to an internal static server. It never reads application data or renders templates.
 
+The latest Orbit refinement is documented in [quiet cards and layered audio
+contours](../docs/proxy-audio-contours.md), including card order, contour-aware
+identity layout, actual audio analysis and visual-review evidence.
+
 ## Development
 
 Use Node 24 LTS and run commands from the repository root:

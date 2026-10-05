@@ -231,16 +231,6 @@
   stroke: var(--orbit-accent);
   stroke-width: 1.8;
 }
-.orbit-wheel-caption {
-  position: absolute;
-  inset: auto -16px -36px;
-  text-align: center;
-  font-size: 10px;
-  letter-spacing: 0.13em;
-  color: #b0bccb;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
 /* Preserve the reference's overlap while adapting scale for a compact corner control. */
 .orbit-deck {
   position: absolute;
@@ -401,12 +391,15 @@
 }
 .orbit-footer {
   position: absolute;
-  left: var(--orbit-edge);
-  bottom: max(16px, env(safe-area-inset-bottom));
+  left: max(8px, env(safe-area-inset-left));
+  bottom: max(4px, env(safe-area-inset-bottom));
   display: flex;
   flex-wrap: wrap;
   gap: 0 18px;
-  max-width: calc(100% - var(--orbit-edge) * 2);
+  max-width: calc(
+    100% - max(8px, env(safe-area-inset-left)) -
+      max(8px, env(safe-area-inset-right))
+  );
 }
 .orbit-footer a {
   color: #a8b2c0;
@@ -564,9 +557,6 @@
   .orbit-card-navigation button:last-child {
     display: none;
   }
-  .orbit-wheel-caption {
-    font-size: 8px;
-  }
   .orbit-arrival {
     padding-top: 115px;
   }
@@ -631,10 +621,44 @@
   .orbit-dock {
     bottom: 48px;
   }
-  .orbit-wheel-caption {
-    display: none;
-  }
-  .orbit-footer {
-    bottom: 6px;
-  }
+}
+
+.orbit-profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.orbit-profile img {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px var(--surface-edge, #a3d6ef80);
+}
+.orbit-profile h2 {
+  min-width: 0;
+  margin-top: 0;
+}
+.orbit-spectrum path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+}
+.orbit-spectrum path:nth-child(1) {
+  stroke: #ffe5b5;
+  opacity: 0.9;
+}
+.orbit-spectrum path:nth-child(2) {
+  stroke: #d69861;
+  opacity: 0.75;
+}
+.orbit-spectrum path:nth-child(3) {
+  stroke: #e8b9a4;
+  opacity: 0.58;
+}
+.orbit-spectrum path:nth-child(4) {
+  stroke: #a8c6c9;
+  opacity: 0.45;
 }

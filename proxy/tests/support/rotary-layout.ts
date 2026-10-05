@@ -53,7 +53,7 @@ export function inspectRotaryLayout() {
     '.rotary-surface-base',
   )!;
   for (const line of card.querySelectorAll<HTMLElement>(
-    '.orbit-ribbon-copy > p, .orbit-ribbon-copy > h2',
+    '.orbit-ribbon-copy:not(.orbit-profile) > p, .orbit-ribbon-copy:not(.orbit-profile) > h2, .orbit-profile',
   )) {
     const box = line.getBoundingClientRect();
     if (!box.width || !box.height) continue;
@@ -67,6 +67,17 @@ export function inspectRotaryLayout() {
     const far = new DOMPoint(((textX - 21) / c.width) * 600, y);
     if (!outline.isPointInFill(near) || outline.isPointInFill(far))
       issues.push('Text line does not follow the painted contour');
+  }
+  const profile = card.querySelector('.orbit-profile');
+  if (profile) {
+    const avatar = profile.querySelector('img')!.getBoundingClientRect();
+    const name = profile.querySelector('h2')!.getBoundingClientRect();
+    if (avatar.right + 5 > name.left || avatar.height < 28)
+      issues.push('Profile avatar and name collide or shrink excessively');
+    if (avatar.top < c.top || avatar.bottom > c.bottom)
+      issues.push('Profile avatar escapes the card');
+    if (profile.querySelector('h2')!.scrollWidth > name.width + 1)
+      issues.push('Profile name is clipped');
   }
   if (surface.querySelectorAll('path, ellipse, circle').length < 30)
     issues.push('Procedural surface texture is absent');

@@ -54,10 +54,10 @@ test('every card fits phone, tablet, desktop, short viewports and breakpoint edg
         await expect(page.getByRole('article')).toHaveAttribute(
           'aria-label',
           [
+            'Inside this scene',
+            'On the turntable',
             'Blog',
             'GitHub',
-            'On the turntable',
-            'Inside this scene',
             'Beyond this scene',
           ][index]!,
         );
@@ -114,7 +114,9 @@ test('Tab opens the wheel, Escape restores focus, and scrolling is scoped to the
   ).toBeVisible();
   await page.locator('.orbit-card-front').hover();
   await page.mouse.wheel(0, 300);
-  await expect(page.getByRole('article', { name: 'Blog' })).toBeVisible();
+  await expect(
+    page.getByRole('article', { name: 'Inside this scene' }),
+  ).toBeVisible();
 });
 
 test('repeated navigation advances once, resizes in flight, and reverses the same geometry', async ({
@@ -227,6 +229,8 @@ test('reduced motion rests the renderer and graphics failure retains navigation'
     'data-renderer',
     'fallback',
   );
+  await page.getByRole('button', { name: 'Next card', exact: true }).click();
+  await page.getByRole('button', { name: 'Next card', exact: true }).click();
   await page.getByRole('button', { name: 'Next card', exact: true }).click();
   await expect(page.getByRole('link', { name: 'Blog' })).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(0);

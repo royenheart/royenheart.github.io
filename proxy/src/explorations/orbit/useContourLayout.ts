@@ -19,7 +19,7 @@ export function useContourLayout(
       if (!path || !card.clientHeight) return;
       const changes = Array.from(
         card.querySelectorAll<HTMLElement>(
-          '.orbit-ribbon-copy > p, .orbit-ribbon-copy > h2',
+          '.orbit-ribbon-copy:not(.orbit-profile) > p, .orbit-ribbon-copy:not(.orbit-profile) > h2, .orbit-profile',
         ),
       ).map((line) => {
         let x = 0,

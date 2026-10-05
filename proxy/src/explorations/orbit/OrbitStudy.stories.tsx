@@ -144,7 +144,7 @@ export const LongMusicMetadata: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    for (let index = 0; index < 3; index++)
+    for (let index = 0; index < 2; index++)
       await userEvent.click(canvas.getByRole('button', { name: 'Next card' }));
     await waitFor(() =>
       expect(
