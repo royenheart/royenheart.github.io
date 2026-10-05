@@ -1,6 +1,6 @@
 # Continuous rim-to-disk contours
 
-Status: implemented for visual review on `refactor/proxy-modernization`. The user rejected the previous glow-only junction at `5b737b7`. After the contour revision at `0b54fef`, the user requested that exposed outer strand tips dissolve into glow. That localized follow-up is documented below; its strength remains open to visual feedback. No push, PR, deployment or production homepage replacement is included.
+Status: historical contour and initial edge-veil record on `refactor/proxy-modernization`. The user rejected the previous glow-only junction at `5b737b7`. After the contour revision at `0b54fef`, the edge treatment at `bebefc8` still showed translucent strand tips and a dark trough against the halo. The [unified opaque veil](proxy-unified-veil.md) supersedes that treatment. No push, PR, deployment or production homepage replacement is included.
 
 ## Observed problem
 
@@ -69,7 +69,9 @@ The focused rendering test now requires a lit, low-contrast edge, a return to da
 
 Reproduce with the capture command above, using `/tmp/proxy-edge-study/final` as output. Analysis and equal-scale before/after details remain in `/tmp/proxy-edge-study`; the review copy is `/tmp/proxy-limb-study/final/edges`, served at `http://127.0.0.1:6008/edges/`. Logs use `/tmp/edge-*.log`. The same browser-emulation and audio limitations apply. No broad UI suite was rerun for this shader-only change.
 
-## Continuation prompt
+## Superseded continuation prompt
+
+Use the continuation prompt in the unified-veil record for further work.
 
 ```text
 Continue the selected B / Velvet drum horizon study. Preserve the accepted upper

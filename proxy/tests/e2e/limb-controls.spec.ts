@@ -247,8 +247,8 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
         `The ${side} rim must bend into the foreground`,
       ).toBeGreaterThan(radius * 0.035);
     }
-    // Where the outer disk is visible, strand tips must dissolve into light.
-    // A dim background between bright, abruptly ending tips fails this check.
+    // Check the entire exposed-tip region, not just its uppermost row.
+    // Translucent tips can pass the latter while remaining visible below it.
     if (info.width / 2 > radius * 1.9) {
       for (const side of [-1, 1]) {
         const sampleRow = (offset: number) =>
@@ -267,6 +267,30 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
           tips[72]! - tips[8]!,
           'No high-contrast tips at the exposed edge',
         ).toBeLessThan(40);
+        for (const offset of [0, 0.04, 0.08, 0.12]) {
+          const covered = sampleRow(offset);
+          expect(covered[8], 'The covering veil remains lit').toBeGreaterThan(
+            20,
+          );
+          expect(
+            covered[72]! - covered[8]!,
+            `No strand contrast through the veil at ${side}, ${offset}`,
+          ).toBeLessThan(12);
+        }
+        for (const offset of [-0.1, -0.06, -0.015]) {
+          const join = Array.from({ length: 40 }, (_, index) => {
+            const x =
+              info.width / 2 + side * radius * (1.36 - (index / 39) * 0.34);
+            const y = info.height / 2 + radius * offset;
+            return [-2, -1, 0, 1, 2]
+              .map((dy) => luminance(x, y + dy))
+              .sort((a, b) => a - b)[2]!;
+          });
+          expect(
+            Math.min(...join),
+            `No dark trough between veil and halo at ${side}, ${offset}`,
+          ).toBeGreaterThan(join[0]! - 5);
+        }
         const sky = sampleRow(-0.3);
         expect(sky[40], 'The edge veil fades back into the sky').toBeLessThan(
           15,

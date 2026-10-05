@@ -120,7 +120,7 @@ float circularPhase(vec2 screen, float radius, float time) {
 
 // A layered emission veil borrows the silhouette of a lensed disk image.
 // This art-directed layer is separate from the geodesic disk and the accepted rim.
-vec3 limbVeil(vec2 screen, float captureRadius, float time, float joinedPhase, float joinedDistance) {
+vec4 limbVeil(vec2 screen, float time, float joinedPhase, float joinedDistance, float visibility) {
   float distance = length(screen);
   float d = joinedDistance;
   vec2 direction = screen / max(distance, 0.001);
@@ -137,10 +137,30 @@ vec3 limbVeil(vec2 screen, float captureRadius, float time, float joinedPhase, f
   float arc = smoothstep(-1.35, -0.65, screen.y);
   float emission = band * (0.09 + filaments * 0.11 + texture * 0.08)
                  + haze * (0.018 + junction * 0.095);
-  return vec3(1.0, 0.59, 0.27) * emission * outside * arc;
+  emission *= outside * arc * visibility;
+
+  // Merge arc and disk bands before mapping their shared field to emission.
+  // These are artistic distance bounds, not additional geodesic intersections.
+  float edgeNoise = noise(vec3(screen.x * 0.65, 2.4, time * 0.045));
+  float edgeY = screen.y - 0.02 - (edgeNoise - 0.5) * 0.09;
+  float arcDistance = abs(d - offset) - width;
+  float diskDistance = smoothMaximum(abs(edgeY + 0.08) - 0.28, 0.04 - d, 0.12);
+  float mergedDistance = -smoothMaximum(-arcDistance, -diskDistance, 0.48);
+  float density = exp(-pow((mergedDistance + 0.28) / 0.40, 2.0));
+  float local = (1.0 - smoothstep(0.4, 1.0, screen.y)) * smoothstep(-1.0, -0.65, screen.y);
+  float joinedEmission = smoothMaximum(emission, density * (0.12 + edgeNoise * 0.06), 0.06);
+  emission = mix(emission, joinedEmission * outside, local);
+
+  // The central veil is fully opaque: line ends cannot show through it.
+  // Only the margins feather back to the existing sky and foreground.
+  float coverage = smoothstep(0.025, 0.16, d)
+                 * (1.0 - smoothstep(0.12, 0.50, mergedDistance))
+                 * smoothstep(-0.85, -0.45, edgeY)
+                 * (1.0 - smoothstep(0.24, 0.65, edgeY));
+  return vec4(vec3(1.0, 0.59, 0.27) * emission, coverage);
 }
 
-vec4 disc(vec2 position, float time, float shift, float phase, float seam, float edgeDissolve) {
+vec4 disc(vec2 position, float time, float shift, float phase, float seam) {
   float radius = length(position);
   if (uLimb > 0.5) {
     float angle = atan(position.y, position.x);
@@ -148,7 +168,6 @@ vec4 disc(vec2 position, float time, float shift, float phase, float seam, float
     float structure = densityField(vec3(cos(orbit) * 3.0, sin(orbit) * 3.0, radius * 0.7));
     float aa = max(fwidth(phase), 0.001);
     float strands = pow(0.5 + 0.5 * sin(phase) * exp(-aa * aa * 0.15), 5.0);
-    strands *= 1.0 - edgeDissolve;
     float front = 1.0 - smoothstep(-0.8, 0.8, position.y);
     float inner = smoothstep(3.0, mix(3.08, 3.6, seam), radius);
     float outer = 1.0 - smoothstep(35.0, 48.0, radius);
@@ -213,17 +232,7 @@ vec3 sceneColor(vec2 screen) {
   float circlePhase = 0.0, diskPhase = 0.0, veilPhase = 0.0;
   float joinedDistance = circleDistance;
   float rimShare = 1.0, veilShare = 1.0, seam = 0.0;
-  float edgeDissolve = 0.0;
-  vec3 edgeGlow = vec3(0.0);
   if (uLimb > 0.5) {
-    // Dissolve the exposed outer strand tips into a soft emission veil.
-    // Work in scene coordinates so the feather scales with the artwork.
-    float edgeSides = smoothstep(0.3, 0.9, circleDistance);
-    float edgeNoise = noise(vec3(screen.x * 0.65, 2.4, uTime * 0.045));
-    float edgeHeight = 0.02 + (edgeNoise - 0.5) * 0.09;
-    edgeDissolve = edgeSides * smoothstep(-0.48, 0.12, screen.y - edgeHeight);
-    float edgeMist = exp(-pow((screen.y - edgeHeight) / 0.30, 2.0));
-    edgeGlow = vec3(1.0, 0.59, 0.27) * edgeMist * edgeSides * (0.12 + edgeNoise * 0.06);
     circlePhase = circularPhase(screen, captureRadius, uTime);
     float foregroundPhase = -1000.0;
     float connection = 0.0;
@@ -275,19 +284,19 @@ vec3 sceneColor(vec2 screen) {
   if (u1 > 0.0 && a1 > 0.0 && uLimb < 0.5) {
     float source = energy * sqrt(2.0 / (2.0 - 3.0 * u1)) - u1 * sqrt(u1 / (2.0 - 3.0 * u1)) * normal.z;
     vec3 intersection = (radial * cos(phi1) + tangent * sin(phi1)) / u1;
-    vec4 emission = disc(intersection.xy, uTime - t1 * 0.015, receiver / source, 0.0, 0.0, 0.0);
+    vec4 emission = disc(intersection.xy, uTime - t1 * 0.015, receiver / source, 0.0, 0.0);
     color = color * (1.0 - emission.a * a1) + emission.rgb * a1;
   }
   if (u0 > 0.0 && a0 > 0.0) {
     float source = energy * sqrt(2.0 / (2.0 - 3.0 * u0)) - u0 * sqrt(u0 / (2.0 - 3.0 * u0)) * normal.z;
     vec3 intersection = (radial * cos(phi0) + tangent * sin(phi0)) / u0;
-    vec4 emission = disc(intersection.xy, uTime - t0 * 0.015, receiver / source, diskPhase, seam, edgeDissolve);
+    vec4 emission = disc(intersection.xy, uTime - t0 * 0.015, receiver / source, diskPhase, seam);
     color = color * (1.0 - emission.a * a0) + emission.rgb * a0;
   }
   if (uLimb > 0.5) {
     // The rim, veil and foreground now share the same turning contours.
-    color += limbVeil(screen, captureRadius, uTime, veilPhase, joinedDistance) * veilShare;
-    color += edgeGlow;
+    vec4 veil = limbVeil(screen, uTime, veilPhase, joinedDistance, veilShare);
+    color = color * (1.0 - veil.a) + veil.rgb;
   }
   return color;
 }
