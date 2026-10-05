@@ -99,6 +99,12 @@ The user selected **B / Velvet drum** in `Explorations/Rotary directions`. The O
 
 The latest [limb-glow refinement](../docs/proxy-limb-refinement.md) removes card arrow buttons, reveals playback inside the artwork and restores a foreground disk reaching the bottom. The selected stories use the `limb` treatment; `optical` retains the previous disk image. Capture the current state with `node proxy/scripts/capture-limb.mjs /tmp/proxy-limb-study/final`.
 
+The [continuous ribbon refinement](../docs/proxy-continuous-ribbon.md) replaces the
+rejected independent tip veil with shared disk/arc material coordinates.
+`Horizon Flow Coordinates` displays connected material groups, and
+`Horizon Unbloomed Emission` disables Bloom for junction inspection. Both are
+diagnostic Storybook views; the selected scene still uses the normal gold material.
+
 The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
 
 ## Release

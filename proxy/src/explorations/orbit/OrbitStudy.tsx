@@ -42,7 +42,10 @@ import '@fontsource/space-grotesk/500.css';
 import '@fontsource/instrument-serif/400.css';
 import './orbit.css';
 import './rotary.css';
-import type { DiskStyle } from '../../scenes/RelativisticHorizon';
+import type {
+  DiskStyle,
+  HorizonDiagnostic,
+} from '../../scenes/RelativisticHorizon';
 import type { HorizonTreatment } from '../../scenes/relativity/framing';
 
 const OrbitCanvas = lazy(() => import('./OrbitCanvas'));
@@ -83,6 +86,7 @@ export interface OrbitStudyProps {
   dockDesign?: DockDesign;
   cardDuration?: number;
   horizonTreatment?: HorizonTreatment;
+  horizonDiagnostic?: HorizonDiagnostic;
 }
 
 export function OrbitStudy({
@@ -100,6 +104,7 @@ export function OrbitStudy({
   dockDesign = 'drum',
   cardDuration = 0.68,
   horizonTreatment = 'limb',
+  horizonDiagnostic = 'beauty',
 }: OrbitStudyProps) {
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
@@ -402,6 +407,7 @@ export function OrbitStudy({
                     inclination={inclination}
                     bloom={bloom}
                     horizonTreatment={horizonTreatment}
+                    horizonDiagnostic={horizonDiagnostic}
                   />
                 </Suspense>
               </GraphicsBoundary>

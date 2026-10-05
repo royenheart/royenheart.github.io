@@ -23,3 +23,11 @@ The tables total 2,162,704 bytes including dimension headers. `manifest.json` re
 Independent symplectic Euler integration checks capture, deflection and disk intersections against the tables. Other tests cover energy conservation, the photon circular orbit, weak-field behavior, inverse-radius accuracy, asset corruption, loading deadlines and real rendered pixels. These checks establish the tested optical approximation, not scientific fidelity of artistic emission.
 
 `framing.ts` shares the center and apparent capture radius with cube aggregation. Both directions use the same geometry and scalar progress; resizing updates both projections together.
+
+The selected `limb` treatment retains optical sky deflection and the capture scale,
+but its disk and outer light band now use a common art-directed ribbon mapping.
+The mapping compresses material radius around the upper arc and expands it into
+the foreground; it is not an additional geodesic disk image or fluid simulation.
+The separate `optical` treatment retains both physical disk intersections.
+See [the ribbon study](../../../../docs/proxy-continuous-ribbon.md) for the mapping,
+diagnostic views, comparison artifacts, and visual-review status.

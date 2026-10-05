@@ -19,6 +19,7 @@ import { EventHorizon } from '../../scenes/EventHorizon';
 import {
   RelativisticHorizon,
   type DiskStyle,
+  type HorizonDiagnostic,
 } from '../../scenes/RelativisticHorizon';
 import { scenes } from '../../lib/content/load';
 import { motionStudies, type MotionStudy } from './sequence';
@@ -52,6 +53,7 @@ export interface OrbitCanvasProps {
   inclination: number;
   bloom: number;
   horizonTreatment: HorizonTreatment;
+  horizonDiagnostic: HorizonDiagnostic;
 }
 function OpticalPostprocessing({
   presence,
@@ -159,6 +161,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           diskStyle={props.diskStyle}
           inclination={props.inclination}
           treatment={props.horizonTreatment}
+          diagnostic={props.horizonDiagnostic}
           onReady={onOpticsReady}
           onFailure={onFailure}
         />
@@ -174,7 +177,10 @@ function World(props: OrbitCanvasProps & { quality: number }) {
         horizonTreatment={props.horizonTreatment}
       />
       {props.horizonRenderer === 'relativistic' && (
-        <OpticalPostprocessing presence={reveal} amount={props.bloom} />
+        <OpticalPostprocessing
+          presence={reveal}
+          amount={props.horizonDiagnostic === 'beauty' ? props.bloom : 0}
+        />
       )}
     </>
   );

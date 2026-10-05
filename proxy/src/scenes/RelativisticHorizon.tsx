@@ -15,6 +15,7 @@ import functions from './relativity/bruneton-functions.glsl?raw';
 import fragment from './materials/relativisticHorizon.glsl?raw';
 
 export type DiskStyle = 'silk' | 'turbulent';
+export type HorizonDiagnostic = 'beauty' | 'coordinates' | 'emission';
 const opticalFunctions = `
 ${definitions}
 #define IN(x) x
@@ -33,6 +34,7 @@ export function RelativisticHorizon({
   diskStyle,
   inclination,
   treatment,
+  diagnostic,
   onReady,
   onFailure,
 }: SceneProps & {
@@ -40,6 +42,7 @@ export function RelativisticHorizon({
   diskStyle: DiskStyle;
   inclination: number;
   treatment: HorizonTreatment;
+  diagnostic: HorizonDiagnostic;
   onReady(): void;
   onFailure(): void;
 }) {
@@ -66,6 +69,7 @@ export function RelativisticHorizon({
           uInclination: { value: 0.2 },
           uTurbulence: { value: 1 },
           uLimb: { value: 0 },
+          uFlowView: { value: 0 },
           uSeed: { value: settings.seed },
           uCenter: { value: new Vector2(0.5, 0.5) },
         },
@@ -111,6 +115,8 @@ export function RelativisticHorizon({
     material.uniforms.uInclination!.value = (inclination * Math.PI) / 180;
     material.uniforms.uTurbulence!.value = diskStyle === 'silk' ? 0.12 : 1;
     material.uniforms.uLimb!.value = treatment === 'limb' ? 1 : 0;
+    material.uniforms.uFlowView!.value =
+      diagnostic === 'coordinates' ? 1 : diagnostic === 'emission' ? 2 : 0;
     center.set(...HORIZON_CENTER).project(camera);
     material.uniforms.uCenter!.value.set(
       center.x * 0.5 + 0.5,

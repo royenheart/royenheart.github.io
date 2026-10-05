@@ -28,8 +28,13 @@ const meta = {
     diskStyle: 'turbulent',
     inclination: 12,
     bloom: 0.28,
+    horizonDiagnostic: 'beauty',
   },
   argTypes: {
+    horizonDiagnostic: {
+      control: 'radio',
+      options: ['beauty', 'coordinates', 'emission'],
+    },
     horizonTreatment: {
       type: 'string',
       control: 'radio',
@@ -66,6 +71,20 @@ export const SelectedHorizon: Story = {
     initialScene: 'horizon',
     tracks: sceneTracks,
     resolve: resolvePublicAudio,
+  },
+};
+export const HorizonFlowCoordinates: Story = {
+  args: {
+    ...SelectedHorizon.args,
+    skipEntrance: true,
+    horizonDiagnostic: 'coordinates',
+  },
+};
+export const HorizonUnbloomedEmission: Story = {
+  args: {
+    ...SelectedHorizon.args,
+    skipEntrance: true,
+    horizonDiagnostic: 'emission',
   },
 };
 export const HorizonBaseline: Story = {

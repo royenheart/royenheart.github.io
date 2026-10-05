@@ -1,6 +1,6 @@
 # Connected halo and opaque strand coverage
 
-Status: implemented for visual review on `refactor/proxy-modernization`. The user requested complete coverage of the outer strand tips and a continuous connection between the horizontal veil and curved halo. They explicitly requested procedural-method research before this refinement. This candidate remains open to aesthetic feedback; no push, PR, deployment or production homepage replacement is included.
+Status: rejected in subsequent visual review on `refactor/proxy-modernization`. The user still observes a gap and discontinuous texture between the covering veil and curved halo. The measurements below describe this intermediate candidate, not aesthetic acceptance. See [Reference continuity analysis](proxy-reference-continuity-analysis.md) for the current diagnosis and research. No push, PR, deployment or production homepage replacement is included.
 
 ## Diagnosis and previous construction
 
