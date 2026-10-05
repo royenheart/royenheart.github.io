@@ -247,6 +247,37 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
         `The ${side} rim must bend into the foreground`,
       ).toBeGreaterThan(radius * 0.035);
     }
+    // Where the outer disk is visible, strand tips must dissolve into light.
+    // A dim background between bright, abruptly ending tips fails this check.
+    if (info.width / 2 > radius * 1.9) {
+      for (const side of [-1, 1]) {
+        const sampleRow = (offset: number) =>
+          Array.from({ length: 80 }, (_, index) =>
+            luminance(
+              info.width / 2 + side * radius * (1.4 + (index / 79) * 0.5),
+              info.height / 2 + radius * offset,
+            ),
+          ).sort((a, b) => a - b);
+        const tips = sampleRow(-0.04);
+        expect(
+          tips[8],
+          'A diffuse veil fills the spaces between tips',
+        ).toBeGreaterThan(20);
+        expect(
+          tips[72]! - tips[8]!,
+          'No high-contrast tips at the exposed edge',
+        ).toBeLessThan(40);
+        const sky = sampleRow(-0.3);
+        expect(sky[40], 'The edge veil fades back into the sky').toBeLessThan(
+          15,
+        );
+        const disk = sampleRow(0.25);
+        expect(
+          disk[72]! - disk[8]!,
+          'Foreground strands remain distinct',
+        ).toBeGreaterThan(50);
+      }
+    }
     let bottom = 0,
       count = 0;
     for (let y = Math.floor(info.height * 0.94); y < info.height * 0.985; y++)
