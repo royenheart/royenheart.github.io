@@ -1,5 +1,9 @@
 # Continuous scene formation
 
+> Current direction: [F7 spreading glitch and late fracture](proxy-glitch-transition.md).
+> The user rejected radiation strands. Strand-based reverse transitions below
+> are historical comparisons; the forward collapse and arrivals remain active.
+
 ## Brief and scope
 
 The selected Orbit scene now gathers the original blue cube cloud into the golden horizon, with an individual arrival for each scene. This implements the requested continuous transformation inside the existing exploration; it does not replace the production homepage, publish the branch, or change music sources.

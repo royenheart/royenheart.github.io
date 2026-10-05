@@ -83,14 +83,13 @@ The compressed budget covers **all emitted JavaScript**, including the dynamical
 
 ## Design exploration
 
-The latest [mirror fracture and spatial radiation study](../docs/proxy-mirror-wave-transition.md)
-uses actual scene-bearing panes and world-space upright filaments travelling radially
-through a tilted disk fan. `streaming-mirror`, `streaming-surface` and
-`streaming-waves` isolate the complete sequence, displaced source and emission.
-`Explorations/Spatial radiation` exposes the same curves with top, oblique and
-front views plus drag-to-orbit controls and a short/continuous strand comparison.
-The earlier `radiating-*` stories preserve F5's accepted paths with short strands. F4's planar waves and F3's material
-rupture remain separate comparisons.
+The selected [F7 glitch transition](../docs/proxy-glitch-transition.md) expands a
+local color anomaly through the actual horizon, disk and nebula, progressively
+warps and blurs that source, then separates scene-bearing mirror panes.
+`glitch-and-fracture`, `glitch-surface`, `glitch-field` and `glitch-sharp` expose
+the complete sequence, source-only view, growing field and no-blur comparison.
+Radiation strands are absent from the selected path. F3–F6 remain historical
+comparisons, including the orbitable `Explorations/Spatial radiation` study.
 
 Four interactive directions live under `Explorations/Design directions` in Storybook. They share the original two scenes and the new `UnifiedPlayer`; the production `HomeFrame` remains the previous design until a direction is selected. See [the research and capability report](../docs/proxy-design-exploration.md) for current playback support and remaining integration work.
 

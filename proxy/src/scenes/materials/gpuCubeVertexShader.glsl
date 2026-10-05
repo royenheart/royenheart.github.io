@@ -21,6 +21,7 @@ uniform vec3 uHorizonCenter;
 uniform bool uChoreography;
 uniform bool uExpressive;
 uniform bool uMirrorRupture;
+uniform float uFractureOverride;
 uniform float uDirection;
 uniform float uInclination;
 uniform float uWorldPerScreen;
@@ -118,7 +119,7 @@ void main() {
             return;
         }
         if (uExpressive && uMirrorRupture && uDirection < 0.0) {
-            float release = 1.0 - uCollapse;
+            float release = uFractureOverride >= 0.0 ? uFractureOverride : 1.0 - uCollapse;
             float recovery = smoothstep(0.26 + seed * 0.06, 0.76 + seed * 0.12, release);
             vec3 settled = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
             vec3 shape = (modelViewMatrix * vec4(localPosition, 0.0)).xyz;

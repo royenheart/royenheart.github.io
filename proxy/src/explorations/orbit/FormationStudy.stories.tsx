@@ -22,18 +22,21 @@ function FormationStudy({
   waveOnly = false,
   waveMode = 'planar',
   streamingWaves = false,
+  glitchDiagnostic = 'beauty',
 }: {
   sequence?: Sequence;
   expression?: Expression;
   materialOnly?: boolean;
-  ruptureStyle?: 'material' | 'mirror';
+  ruptureStyle?: 'material' | 'mirror' | 'glitch';
+  glitchDiagnostic?: 'beauty' | 'field' | 'sharp';
   waveOnly?: boolean;
   waveMode?: 'planar' | 'spatial';
   streamingWaves?: boolean;
 }) {
   const startsAtHorizon =
     sequence === 'horizon' ||
-    (sequence === 'transition' && (materialOnly || ruptureStyle === 'mirror'));
+    (sequence === 'transition' &&
+      (materialOnly || ruptureStyle !== 'material'));
   const blend = useMotionValue(startsAtHorizon ? 1 : 0);
   const entrance = useMotionValue(sequence === 'transition' ? 1 : 0);
   const direction = useMotionValue(startsAtHorizon ? -1 : 1);
@@ -80,9 +83,11 @@ function FormationStudy({
             ? formationTiming[
                 target === 1
                   ? 'collapse'
-                  : ruptureStyle === 'mirror'
-                    ? 'mirror'
-                    : 'rupture'
+                  : ruptureStyle === 'glitch'
+                    ? 'glitch'
+                    : ruptureStyle === 'mirror'
+                      ? 'mirror'
+                      : 'rupture'
               ]
             : formationTiming[sequence]) * Math.abs(target - progress.get()),
       ease: 'linear',
@@ -112,6 +117,7 @@ function FormationStudy({
               waveOnly ? 'waves' : materialOnly ? 'material' : 'beauty'
             }
             ruptureStyle={ruptureStyle}
+            glitchDiagnostic={glitchDiagnostic}
             waveMode={waveMode}
             streamingWaves={streamingWaves}
             paused={reduced}
@@ -134,27 +140,33 @@ function FormationStudy({
         <p>
           {sequence === 'transition'
             ? expression === 'force'
-              ? ruptureStyle === 'mirror'
-                ? streamingWaves
-                  ? waveOnly
-                    ? 'F6 · coherent smoke-like wave strands'
-                    : materialOnly
-                      ? 'F6 · fractured source with broad refraction'
-                      : 'F6 · mirror fracture / streaming wavefronts'
-                  : waveMode === 'spatial'
+              ? ruptureStyle === 'glitch'
+                ? glitchDiagnostic === 'field'
+                  ? 'F7 · corruption arrival field'
+                  : materialOnly
+                    ? 'F7 · source distortion / late fracture'
+                    : 'F7 · spreading glitch / mirror fracture'
+                : ruptureStyle === 'mirror'
+                  ? streamingWaves
                     ? waveOnly
-                      ? 'F5 · spatial radial filaments'
+                      ? 'F6 · coherent smoke-like wave strands'
                       : materialOnly
-                        ? 'F5 · fractured source with spatial refraction'
-                        : 'F5 · mirror fracture / spatial radiation'
-                    : waveOnly
-                      ? 'F4 · upright wavefronts only'
-                      : materialOnly
-                        ? 'F4 · fractured source without wave emission'
-                        : 'F4 · mirror fracture / upright wavefronts'
-                : materialOnly
-                  ? 'F3 · material transport only · no extra particles or flash'
-                  : 'F3 · collapse / material rupture'
+                        ? 'F6 · fractured source with broad refraction'
+                        : 'F6 · mirror fracture / streaming wavefronts'
+                    : waveMode === 'spatial'
+                      ? waveOnly
+                        ? 'F5 · spatial radial filaments'
+                        : materialOnly
+                          ? 'F5 · fractured source with spatial refraction'
+                          : 'F5 · mirror fracture / spatial radiation'
+                      : waveOnly
+                        ? 'F4 · upright wavefronts only'
+                        : materialOnly
+                          ? 'F4 · fractured source without wave emission'
+                          : 'F4 · mirror fracture / upright wavefronts'
+                  : materialOnly
+                    ? 'F3 · material transport only · no extra particles or flash'
+                    : 'F3 · collapse / material rupture'
               : 'F1 · continuous gathering'
             : sequence === 'cubes'
               ? 'Blue hour · layered arrival'
@@ -233,9 +245,16 @@ const meta = {
     />
   ),
   argTypes: {
+    glitchDiagnostic: {
+      control: 'radio',
+      options: ['beauty', 'field', 'sharp'],
+    },
     expression: { control: 'radio', options: ['continuous', 'force'] },
     sequence: { control: 'radio', options: ['transition', 'cubes', 'horizon'] },
-    ruptureStyle: { control: 'radio', options: ['material', 'mirror'] },
+    ruptureStyle: {
+      control: 'radio',
+      options: ['material', 'mirror', 'glitch'],
+    },
     waveMode: { control: 'radio', options: ['planar', 'spatial'] },
   },
   parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
@@ -274,12 +293,25 @@ export const StreamingSurface: Story = {
 export const StreamingWaves: Story = {
   args: { ...StreamingMirror.args, waveOnly: true },
 };
+export const GlitchAndFracture: Story = {
+  args: { expression: 'force', ruptureStyle: 'glitch' },
+};
+export const GlitchSurface: Story = {
+  args: { ...GlitchAndFracture.args, materialOnly: true },
+};
+export const GlitchField: Story = {
+  args: { ...GlitchSurface.args, glitchDiagnostic: 'field' },
+};
+export const GlitchSharp: Story = {
+  args: { ...GlitchSurface.args, glitchDiagnostic: 'sharp' },
+};
 export const CubeArrival: Story = { args: { sequence: 'cubes' } };
 export const HorizonArrival: Story = { args: { sequence: 'horizon' } };
 export const PlaybackControls: Story = {
+  args: GlitchAndFracture.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: 'Play forward' });
+    const button = canvas.getByRole('button', { name: 'Play reverse' });
     await waitFor(() => expect(button).toBeEnabled(), { timeout: 15000 });
     await userEvent.click(button);
     await waitFor(() =>

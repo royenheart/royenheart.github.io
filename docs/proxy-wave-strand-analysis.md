@@ -1,5 +1,9 @@
 # From isolated filaments to coherent wave strands
 
+> Current direction: [F7 spreading glitch and late fracture](proxy-glitch-transition.md).
+> The user rejected radiation strands. Strand-based reverse transitions below
+> are historical comparisons; the forward collapse and arrivals remain active.
+
 ## Confirmed direction and remaining problem
 
 The user accepted F5's world-space fan: upright curves advance radially over the disk, and foreground curves approach the observer with natural perspective growth. Preserve those trajectories, packet timing and the mirror fracture. The remaining complaint is that short, separate lines read as objects floating in the scene rather than a propagating disturbance.

@@ -89,7 +89,7 @@ export interface OrbitStudyProps {
   cardDuration?: number;
   horizonTreatment?: HorizonTreatment;
   horizonDiagnostic?: HorizonDiagnostic;
-  ruptureStyle?: 'material' | 'mirror';
+  ruptureStyle?: 'material' | 'mirror' | 'glitch';
 }
 
 export function OrbitStudy({
@@ -108,7 +108,7 @@ export function OrbitStudy({
   cardDuration = 0.68,
   horizonTreatment = 'limb',
   horizonDiagnostic = 'beauty',
-  ruptureStyle = 'mirror',
+  ruptureStyle = 'glitch',
 }: OrbitStudyProps) {
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
@@ -169,9 +169,11 @@ export function OrbitStudy({
                 ? formationTiming[
                     scene === 'cubes'
                       ? 'collapse'
-                      : ruptureStyle === 'mirror'
-                        ? 'mirror'
-                        : 'rupture'
+                      : ruptureStyle === 'glitch'
+                        ? 'glitch'
+                        : ruptureStyle === 'mirror'
+                          ? 'mirror'
+                          : 'rupture'
                   ]
                 : formationTiming.transition
               : motionStudies[study].duration,

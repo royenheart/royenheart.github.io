@@ -1,4 +1,5 @@
 uniform bool uMirrorRupture;
+uniform float uFractureOverride;
 uniform bool uExpressive;
 uniform float uTransition;
 uniform float uDirection;
@@ -24,7 +25,7 @@ void main() {
   vShardOpacity = 1.0;
   gl_Position = vec4(position.xy, 1.0, 1.0);
   if (!uMirrorRupture || !uExpressive || uDirection >= 0.0) return;
-  float q = 1.0 - uTransition;
+  float q = uFractureOverride >= 0.0 ? uFractureOverride : 1.0 - uTransition;
   vec2 metric = vec2(uAspect, 1.0) * uViewHeight;
   vec2 center = (aCenter * 0.5 + 0.5 - uCenter) * metric;
   vec2 local = (position.xy - aCenter) * 0.5 * metric;

@@ -40,6 +40,7 @@ uniform float uFormation;
 uniform bool uChoreography;
 uniform bool uExpressive;
 uniform bool uMirrorRupture;
+uniform bool uGlitchSource;
 uniform bool uWaveOnly;
 uniform bool uSpatialWaves;
 uniform sampler2D uRadiationMap;
@@ -173,7 +174,7 @@ float coronaSwell(vec2 surface, float time) {
 
 vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   vec2 unbrokenScreen = screen;
-  float rupture = uExpressive && !uMirrorRupture && uDirection < 0.0 ? 1.0 - uTransition : 0.0;
+  float rupture = uExpressive && !uMirrorRupture && !uGlitchSource && uDirection < 0.0 ? 1.0 - uTransition : 0.0;
   if (rupture > 0.0) screen = ruptureSource(screen, rupture);
   vec2 surface = waveSurface(screen, time);
   float swell = coronaSwell(surface, time);

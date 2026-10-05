@@ -1,5 +1,9 @@
 # Mirror fracture and spatial radiation
 
+> Current direction: [F7 spreading glitch and late fracture](proxy-glitch-transition.md).
+> The user rejected radiation strands. Strand-based reverse transitions below
+> are historical comparisons; the forward collapse and arrivals remain active.
+
 ## Current brief: F6 on the accepted F5 spatial paths
 
 The user corrected F4's interpretation of outward propagation. Upright filaments must be distributed in a **three-dimensional fan over the disk**, then repeatedly travel beyond the rings along radial world-space paths. Screen-plane left/right translation is insufficient. The near-facing filaments move toward the observer, descend in the image and grow through perspective; lateral filaments travel diagonally outward. Preserve the mirror fracture and move the actual rim, disk, shadow and nebula with the panes.

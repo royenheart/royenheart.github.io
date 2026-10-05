@@ -22,12 +22,14 @@ import functions from './relativity/bruneton-functions.glsl?raw';
 import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
 import mirrorVertex from './materials/mirrorVertex.glsl?raw';
 import mirrorWaves from './materials/mirrorWaves.glsl?raw';
+import { GlitchSurface } from './GlitchSurface';
+import type { GlitchDiagnostic } from './glitch';
 import { createMirrorGeometry } from './mirrorGeometry';
 import fragment from './materials/relativisticHorizon.glsl?raw';
 
 export type DiskStyle = 'silk' | 'turbulent';
 export type HorizonDiagnostic = 'beauty' | 'coordinates' | 'emission';
-export type RuptureStyle = 'material' | 'mirror';
+export type RuptureStyle = 'material' | 'mirror' | 'glitch';
 const opticalFunctions = `
 ${definitions}
 #define IN(x) x
@@ -47,6 +49,7 @@ export function RelativisticHorizon({
   transition,
   direction,
   ruptureStyle = 'material',
+  glitchDiagnostic = 'beauty',
   waveOnly = false,
   spatialWaves = false,
   radiationMap,
@@ -62,6 +65,7 @@ export function RelativisticHorizon({
   transition?: SceneSignal;
   direction?: SceneSignal;
   ruptureStyle?: RuptureStyle;
+  glitchDiagnostic?: GlitchDiagnostic;
   waveOnly?: boolean;
   spatialWaves?: boolean;
   radiationMap?: RefObject<Texture | null>;
@@ -103,6 +107,8 @@ export function RelativisticHorizon({
           uDirection: { value: 1 },
           uExpressive: { value: false },
           uMirrorRupture: { value: false },
+          uFractureOverride: { value: -1 },
+          uGlitchSource: { value: false },
           uWaveOnly: { value: false },
           uSpatialWaves: { value: false },
           uRadiationMap: { value: null },
@@ -154,6 +160,7 @@ export function RelativisticHorizon({
     material.uniforms.uDirection!.value = direction?.get() ?? 1;
     material.uniforms.uExpressive!.value = Boolean(transition);
     material.uniforms.uMirrorRupture!.value = ruptureStyle === 'mirror';
+    material.uniforms.uGlitchSource!.value = ruptureStyle === 'glitch';
     material.uniforms.uWaveOnly!.value = waveOnly;
     material.uniforms.uSpatialWaves!.value = spatialWaves;
     material.uniforms.uRadiationMap!.value = radiationMap?.current ?? null;
@@ -180,6 +187,22 @@ export function RelativisticHorizon({
       center.y * 0.5 + 0.5,
     );
   }, -2);
+  const announceReady = () => {
+    if (!ready.current) {
+      ready.current = true;
+      onReady();
+    }
+  };
+  if (textures && ruptureStyle === 'glitch')
+    return (
+      <GlitchSurface
+        geometry={geometry}
+        source={material}
+        diagnostic={glitchDiagnostic}
+        onReady={announceReady}
+        onFailure={onFailure}
+      />
+    );
   return (
     textures && (
       <mesh
@@ -188,12 +211,7 @@ export function RelativisticHorizon({
         material={material}
         frustumCulled={false}
         renderOrder={-100}
-        onAfterRender={() => {
-          if (!ready.current) {
-            ready.current = true;
-            onReady();
-          }
-        }}
+        onAfterRender={announceReady}
       />
     )
   );

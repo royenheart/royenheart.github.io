@@ -12,6 +12,7 @@ import {
   horizonViewHeight,
   type HorizonTreatment,
 } from './relativity/framing';
+import { glitchFractureProgress } from './glitch';
 import { createCubeGeometry } from './cubeGeometry';
 import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
 import vertexSource from './materials/gpuCubeVertexShader.glsl?raw';
@@ -44,6 +45,7 @@ export function CubeCloud({
   choreography = false,
   expressive = false,
   mirrorRupture = false,
+  glitchRupture = false,
   direction,
   inclination = 12,
 }: SceneProps & {
@@ -56,6 +58,7 @@ export function CubeCloud({
   choreography?: boolean;
   expressive?: boolean;
   mirrorRupture?: boolean;
+  glitchRupture?: boolean;
   direction?: SceneSignal;
   inclination?: number;
 }) {
@@ -85,6 +88,7 @@ export function CubeCloud({
       uChoreography: { value: false },
       uExpressive: { value: false },
       uMirrorRupture: { value: false },
+      uFractureOverride: { value: -1 },
       uDirection: { value: 1 },
       uInclination: { value: 0.2 },
       uWorldPerScreen: { value: 1 },
@@ -114,6 +118,9 @@ export function CubeCloud({
       cubes.current.uniforms.uChoreography!.value = choreography;
       cubes.current.uniforms.uExpressive!.value = expressive;
       cubes.current.uniforms.uMirrorRupture!.value = mirrorRupture;
+      cubes.current.uniforms.uFractureOverride!.value = glitchRupture
+        ? glitchFractureProgress(1 - blend)
+        : -1;
       cubes.current.uniforms.uDirection!.value = direction?.get() ?? 1;
       cubes.current.uniforms.uInclination!.value =
         (inclination * Math.PI) / 180;

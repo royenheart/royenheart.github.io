@@ -79,6 +79,7 @@ for (const [complete, source] of [
   ['mirror-and-waves', 'mirror-surface'],
   ['radiating-mirror', 'radiating-surface'],
   ['streaming-mirror', 'streaming-surface'],
+  ['glitch-and-fracture', 'glitch-surface'],
 ]) {
   test(`${complete}: fractured source moves without wave emission and retains both resting endpoints`, async ({
     page,
@@ -95,7 +96,8 @@ for (const [complete, source] of [
     await release(page, 0);
     expect(difference(rest.data, (await pixels(page)).data)).toBeLessThan(0.08);
     await open(page, source!);
-    await release(page, 0.36);
+    const middle = complete === 'glitch-and-fracture' ? 0.82 : 0.36;
+    await release(page, middle);
     const shattered = await pixels(page);
     // No added wave plane or destination cubes render in this diagnostic.
     // Background content above the rim must also change, not just the disk.
@@ -110,7 +112,7 @@ for (const [complete, source] of [
     expect(difference(rest.data, shattered.data)).toBeGreaterThan(12);
     await release(page, 0);
     expect(difference(rest.data, (await pixels(page)).data)).toBeLessThan(0.08);
-    await release(page, 0.36);
+    await release(page, middle);
     expect(difference(shattered.data, (await pixels(page)).data)).toBeLessThan(
       0.08,
     );
@@ -119,6 +121,8 @@ for (const [complete, source] of [
   test(`${complete}: panels resize without errors or accumulating resources`, async ({
     page,
   }) => {
+    // Four software-WebGL resizes can exceed the suite's 30-second total budget.
+    test.setTimeout(45000);
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (message) => {

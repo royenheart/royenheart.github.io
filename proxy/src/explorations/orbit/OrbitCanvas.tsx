@@ -7,6 +7,7 @@ import {
   MathUtils,
   type Texture,
 } from 'three';
+import type { GlitchDiagnostic } from '../../scenes/glitch';
 import type { MotionValue } from 'motion/react';
 import {
   Bloom,
@@ -69,6 +70,7 @@ export interface OrbitCanvasProps {
   horizonDiagnostic: HorizonDiagnostic;
   transitionDiagnostic?: 'beauty' | 'material' | 'waves';
   ruptureStyle?: RuptureStyle;
+  glitchDiagnostic?: GlitchDiagnostic;
   waveMode?: 'planar' | 'spatial';
   streamingWaves?: boolean;
 }
@@ -127,7 +129,9 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     props.horizonRenderer === 'relativistic' &&
     props.horizonTreatment === 'limb';
   const expressive = choreography && props.study === 'collapse';
-  const mirror = props.ruptureStyle !== 'material';
+  const ruptureStyle = props.ruptureStyle ?? 'glitch';
+  const mirror = ruptureStyle !== 'material';
+  const glitch = ruptureStyle === 'glitch';
   const spatialWaves = props.waveMode !== 'planar';
   const radiationMap = useRef<Texture | null>(null);
   const direction = props.direction;
@@ -229,7 +233,8 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           formation={choreography ? formation : undefined}
           transition={expressive ? blend : undefined}
           direction={direction}
-          ruptureStyle={mirror ? 'mirror' : 'material'}
+          ruptureStyle={ruptureStyle}
+          glitchDiagnostic={props.glitchDiagnostic}
           waveOnly={props.transitionDiagnostic === 'waves'}
           spatialWaves={spatialWaves}
           radiationMap={radiationMap}
@@ -255,6 +260,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           choreography={choreography}
           expressive={expressive}
           mirrorRupture={mirror}
+          glitchRupture={glitch}
           direction={direction}
           inclination={props.inclination}
         />
@@ -265,10 +271,10 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           direction={direction}
           time={time}
           mirror={mirror}
-          spatialWaves={spatialWaves}
+          spatialWaves={spatialWaves || glitch}
         />
       )}
-      {expressive && mirror && spatialWaves && (
+      {expressive && ruptureStyle === 'mirror' && spatialWaves && (
         <RadiationField
           progress={blend}
           direction={direction}
