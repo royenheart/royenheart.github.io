@@ -100,7 +100,7 @@ vec4 disc(vec2 position, float time, float shift) {
     float angle = atan(position.y, position.x);
     float orbit = angle - time * 0.26 * pow(3.0 / max(radius, 3.0), 1.5);
     float structure = densityField(vec3(cos(orbit) * 3.0, sin(orbit) * 3.0, radius * 0.7));
-    float phase = radius * 47.0 + structure * 12.0 + sin(orbit * 11.0 + radius * 0.8) * 1.8;
+    float phase = radius * 31.0 + structure * 12.0 + sin(orbit * 11.0 + radius * 0.8) * 1.8;
     float aa = max(fwidth(phase), 0.001);
     float strands = pow(0.5 + 0.5 * sin(phase) * exp(-aa * aa * 0.15), 5.0);
     float front = 1.0 - smoothstep(-0.8, 0.8, position.y);
@@ -163,7 +163,8 @@ vec3 sceneColor(vec2 screen) {
     float crest = exp(-pow(d / max(0.018, pixel), 2.0));
     float shoulder = exp(-abs(d) / 0.057);
     float outer = smoothstep(-pixel, pixel, d) * (exp(-max(d, 0.0) / 0.18) * 0.18 + exp(-max(d, 0.0) / 0.5) * 0.035);
-    float arc = smoothstep(-0.15, 0.3, screen.y);
+    // Continue the lower rim into the foreground disk; the disk occludes it.
+    float arc = smoothstep(-1.0, -0.55, screen.y);
     color += (vec3(1.0, 0.92, 0.79) * crest * 3.8 + vec3(1.0, 0.52, 0.16) * (shoulder * 0.42 + outer)) * arc;
   }
   float receiver = energy / sqrt(1.0 - u);

@@ -1,6 +1,6 @@
 # Limb glow and hover playback refinement
 
-Status: requested control changes are implemented on `refactor/proxy-modernization`. B / Velvet drum remains the selected card design. The new horizon treatment is a reference-informed candidate for review; its aesthetic match has not been confirmed. No push, PR, deployment or production homepage replacement is included.
+Status: requested control changes are implemented on `refactor/proxy-modernization`. B / Velvet drum remains the selected card design. The user accepted the upper glow and requested sparser foreground rings joined to the black-hole edge. The latest candidate changes only filament spacing and the lower rim connection; its revised density remains open to review. No push, PR, deployment or production homepage replacement is included.
 
 ## Reference analysis
 
@@ -22,6 +22,8 @@ The `limb` treatment retains the existing Schwarzschild lookup tables for the fo
 
 The upper glow is an explicitly art-directed emission layer following the finite-observer capture boundary. It combines an antialiased narrow crest, an exponential colored shoulder and two softer exterior falloffs. This is a rim-lighting visual analogy, not a simulated black-hole atmosphere or a claim that a black-hole surface has Fresnel reflectance. The unchanged `optical` treatment preserves the previous two-image disk study.
 
+The follow-up refinement reduces radial phase frequency from 47 to 31, retaining the same noise, animation and colors. Its lower arc mask now extends from screen-space y=-1.0 to -0.55, allowing the rim tips to meet the foreground disk before fading. Foreground opacity occludes the extended tips. The upper crest, shoulder and outer falloff formulas are unchanged. This is a compositional seam adjustment, not a change to the geodesic lookup tables or the physical inner disk radius.
+
 The new view height is 7.2, with the existing aspect adaptation. Cube collapse and the horizon share the same framing choice so the scene transition still targets the visible capture region. R3F owns rendering and resource lifetime; the existing postprocessing package owns bloom. No rendering dependency or custom GPU lifecycle was added.
 
 The carousel's up/down buttons are removed. Wheel input is scoped to the card stage; vertical pointer gestures and focused ArrowUp/ArrowDown remain available. Home/End jump to the sequence endpoints and Escape restores cover focus. The count and close control remain. Inactive cards remain inert.
@@ -33,7 +35,7 @@ Playback is a separate sibling button centered inside the artwork bounds, not a 
 With Storybook running on port 6006:
 
 ```sh
-node proxy/scripts/capture-limb.mjs /tmp/proxy-limb-study/final
+node proxy/scripts/capture-limb.mjs /tmp/proxy-limb-study/join
 ```
 
 The script produces desktop, phone and short-screen captures for both scenes, hover details, a real-time interaction recording and a local review page. Artist media requests are disabled for visual capture. Playback tests use explicitly labeled original preview tones; they do not establish live artist-stream availability. Screenshots freeze background time at 12, while the recording uses normal animation.
@@ -44,7 +46,7 @@ The script produces desktop, phone and short-screen captures for both scenes, ho
 - Hover playback is centered within the actual artwork circle, with no detached button below the wheel.
 - Mouse leave, keyboard entry/exit, touch entry, cancelled gestures and interrupted card transitions remain usable.
 - Preserve the B capsule, contour-based text insets, scene metadata and final-card scene traversal.
-- The upper arc has a narrow white-gold crest around a dark core; procedural foreground emission reaches the bottom on desktop and phone.
+- Preserve the accepted narrow white-gold upper crest around a dark core. Sparser procedural foreground emission reaches the bottom on desktop and phone, with no unlit break between the rim tips and the disk.
 - Preserve the prior optical treatment for comparison, real animation, graphics fallback and reduced motion.
 - Keep review captures outside Git and retain the user's untracked blog post.
 
@@ -53,16 +55,17 @@ The script produces desktop, phone and short-screen captures for both scenes, ho
 ```text
 Continue from B / Velvet drum with scoped wheel and touch card navigation and
 playback revealed inside the song artwork. Keep its shape, proportions, text
-insets and blue/gold surface materials. Preserve the current foreground disk
-extension and the prior optical comparison. Refine only the user's next feedback
-on the upper limb crest, shoulder or soft glow. Use the supplied-reference analysis
+insets and blue/gold surface materials. Preserve the accepted upper limb glow,
+the foreground disk extension and the prior optical comparison. The latest user
+feedback requests sparser filaments and no gap between the disk and lower rim.
+Refine only the next feedback on those two variables. Use the supplied-reference analysis
 as a visual guide, not proof of a physical lighting model. Render actual WebGL
 previews on desktop, phone and short screens; check input, geometry, accessibility,
 interrupted motion and normal rendering. Keep artifacts outside Git. Do not push,
 open a PR or replace the production homepage in this review round.
 ```
 
-## Verification record
+## Original control and glow verification
 
 - `npm run proxy:check`: 78 files, zero Astro errors/warnings/hints; ESLint and formatting passed.
 - `npm run proxy:test`: 37 tests passed.
@@ -76,3 +79,13 @@ open a PR or replace the production homepage in this review round.
 The desktop candidate's central upper crest spans eight rows above 75% of its peak luminance; the sampled bottom region averages 17.91/255 luminance. The tests separately verify a dark core, narrow crest and visible foreground emission near the lower edge. These measurements establish the intended structure, not aesthetic acceptance.
 
 Browser emulation, synthetic touch pointer sequences and local preview-tone playback are not evidence of physical-phone GPU behavior, assistive-technology certification or artist-stream availability. Review files remain in `/tmp/proxy-limb-study/final`, and command logs remain under `/tmp/limb-*.log`.
+
+## Foreground spacing and connection follow-up
+
+The accepted glow capture remains in `/tmp/proxy-limb-study/final`; the revision is in `/tmp/proxy-limb-study/join` and its review copy in `/tmp/proxy-limb-study/final/join`. The comparison page is `http://127.0.0.1:6008/join/comparison.html`. The new recording is 22.96 seconds at 1280 × 800 and 25 encoded frames/second; full FFmpeg decoding passed. Both scenes were captured at 1440 × 900, 390 × 844 and 390 × 400.
+
+At fixed time 12 on the 1440 × 900 captures, the central foreground strip (x=695–744, y=570–859) has 29 luminance peaks instead of 45, measured with prominence 8 and minimum separation 3 pixels. Along the left rim at y=435–539, the minimum sampled luminance rises from 0 to 186/255; dark samples below 20 fall from 38 rows to zero. The upper region (x=340–1099, y=40–349) has zero pixel difference. The bottom sample remains illuminated at 18.29/255. Sampling data are retained in `join/measurements.json`; these comparisons verify spacing and continuity without establishing the user's preferred final density.
+
+The existing renderer regression now follows both rim tips using a radius inferred from the rendered upper crest and rejects an unlit break. It also checks the narrow upper crest, dark core, bottom emission and changing normal-runtime frames at desktop and phone sizes. The focused case passed in Chromium, Firefox and WebKit. WebKit's first launch failed host dependency validation on Fedora before page execution; rerunning with the documented local compatibility environment (`PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1`) passed the actual rendering assertions. Logs are `/tmp/limb-join-browsers.log` and `/tmp/limb-join-webkit.log`.
+
+`npm run proxy:check`, `npm run proxy:build` and `npm run proxy:storybook:build` passed for this revision. The controls are unchanged; the earlier interaction suite is recorded separately above. No review captures are committed.

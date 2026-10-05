@@ -179,6 +179,20 @@ test('the limb has a thin upper crest, dark core and foreground emission reachin
       info.height * 0.04,
     );
     expect(luminance(info.width * 0.5, info.height * 0.42)).toBeLessThan(15);
+    // Follow both visible rim tips into the disk and reject an unlit break.
+    // Infer the radius from the rendered crest, independently of shader constants.
+    const radius = info.height / 2 - profile.indexOf(peak);
+    for (const side of [-1, 1]) {
+      for (let step = 0; step <= 40; step++) {
+        const dy = radius * (-0.02 + (step / 40) * 0.29);
+        const x = info.width / 2 + side * Math.sqrt(radius ** 2 - dy ** 2);
+        const y = info.height / 2 + dy;
+        const tip = Math.max(
+          ...[-4, -2, 0, 2, 4].map((dx) => luminance(x + dx, y)),
+        );
+        expect(tip, `Disconnected rim at ${side}, ${step}`).toBeGreaterThan(40);
+      }
+    }
     let bottom = 0,
       count = 0;
     for (let y = Math.floor(info.height * 0.94); y < info.height * 0.985; y++)
