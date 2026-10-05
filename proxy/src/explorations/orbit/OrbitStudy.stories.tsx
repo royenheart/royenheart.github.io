@@ -20,6 +20,7 @@ const meta = {
   args: {
     initialScene: 'cubes',
     study: 'gather',
+    dockDesign: 'classic',
     tracks: { cubes: previewTracks[1]!, horizon: previewTracks[2]! },
     resolve: resolvePreviewTrack,
     horizonRenderer: 'relativistic',
@@ -28,6 +29,11 @@ const meta = {
     bloom: 0.28,
   },
   argTypes: {
+    dockDesign: {
+      type: 'string',
+      control: 'radio',
+      options: ['classic', 'tangent', 'drum', 'orbit'],
+    },
     horizonRenderer: {
       control: 'radio',
       options: ['baseline', 'relativistic'],
@@ -40,10 +46,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const SelectedCubes: Story = {
-  args: { tracks: sceneTracks, resolve: resolvePublicAudio },
+  args: {
+    tracks: sceneTracks,
+    resolve: resolvePublicAudio,
+    dockDesign: 'drum',
+  },
 };
 export const SelectedHorizon: Story = {
   args: {
+    dockDesign: 'drum',
     initialScene: 'horizon',
     tracks: sceneTracks,
     resolve: resolvePublicAudio,

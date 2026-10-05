@@ -86,23 +86,6 @@
   gap: 16px;
   pointer-events: none;
 }
-.orbit-monogram {
-  font:
-    italic 46px/1 'Instrument Serif',
-    serif;
-  color: var(--orbit-accent);
-}
-.orbit-heading p {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: #c0cad5;
-}
-.orbit-heading h1 {
-  font-size: 15px;
-  font-weight: 400;
-  margin-top: 3px;
-}
 .orbit-scene-number {
   margin-left: auto;
   font-size: 12px;
@@ -622,9 +605,6 @@
   }
   .orbit-heading {
     top: 14px;
-  }
-  .orbit-heading p {
-    font-size: 9px;
   }
   .orbit-arrival-mark {
     display: none;

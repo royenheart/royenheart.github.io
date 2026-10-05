@@ -1,5 +1,7 @@
 import { useRef, useState, type RefObject } from 'react';
 import { useAnimationFrame } from 'motion/react';
+import type { DockDesign } from './rotary-designs';
+import { WheelTrim } from './WheelTrim';
 
 export function AudioWheel({
   artwork,
@@ -12,6 +14,9 @@ export function AudioWheel({
   onFocus,
   onSound,
   ready,
+  design = 'classic',
+  cardIndex = 0,
+  cardDuration = 0.68,
 }: {
   artwork?: string;
   title: string;
@@ -19,6 +24,9 @@ export function AudioWheel({
   playing: boolean;
   reduced: boolean;
   ready: boolean;
+  design?: DockDesign;
+  cardIndex?: number;
+  cardDuration?: number;
   analyser: RefObject<AnalyserNode | null>;
   onToggle(): void;
   onFocus(): void;
@@ -50,6 +58,14 @@ export function AudioWheel({
   });
   return (
     <div className="orbit-wheel" data-playing={playing}>
+      {design !== 'classic' && (
+        <WheelTrim
+          design={design}
+          index={cardIndex}
+          duration={cardDuration}
+          reduced={reduced}
+        />
+      )}
       <svg
         ref={ring}
         className="orbit-spectrum"

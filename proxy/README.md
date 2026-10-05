@@ -89,11 +89,13 @@ node proxy/scripts/capture-concepts.mjs /tmp/proxy-style-previews
 
 Run this command from the repository root. It refuses an output directory inside the repository. Screenshots, comparison pages and rendering evidence are local review artifacts, not committed design assets.
 
-`Explorations/Orbit study` develops the subsequent full-screen direction: compact artwork controls, stacked trapezoid ribbons, and a reversible cube-to-horizon sequence. Its optical renderer uses precomputed Schwarzschild light paths and procedural disk emission. See [the current implementation notes](../docs/proxy-relativistic-horizon.md) for model limits, source attribution, controls and verification. Generate the comparison page and motion recordings with:
+`Explorations/Orbit study` develops the subsequent full-screen direction: compact artwork controls, a rounded capsule deck with cylindrical card travel, and a reversible cube-to-horizon sequence. Its optical renderer uses precomputed Schwarzschild light paths and procedural disk emission. See [the current implementation notes](../docs/proxy-relativistic-horizon.md) for model limits, source attribution, controls and verification. Generate the comparison page and motion recordings with:
 
 ```bash
 node proxy/scripts/capture-optical-study.mjs /tmp/proxy-optical-study/final
 ```
+
+The user selected **B / Velvet drum** in `Explorations/Rotary directions`. The Orbit component and `Selected Cubes` / `Selected Horizon` stories now use it. A/C and the classic trapezoid stories remain comparisons; older capture scripts explicitly select the classic baseline. [The rotary decision record](../docs/proxy-rotary-directions.md) documents contour-aware text placement, scene textures, motion and responsive verification. Generate the out-of-repository review with `node proxy/scripts/capture-rotary.mjs /tmp/proxy-rotary-study/final`.
 
 The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
 

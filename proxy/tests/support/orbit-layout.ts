@@ -113,7 +113,15 @@ export function inspectOrbitLayout() {
     if (overlap(front, heading)) issues.push('Card overlaps scene heading');
   }
   const wheel = root.querySelector('.orbit-wheel');
-  if (wheel && rect(wheel).width > (innerWidth < 640 ? 125 : 165))
+  const wheelLimit =
+    root.dataset.dockDesign === 'classic'
+      ? innerWidth < 640
+        ? 125
+        : 165
+      : innerWidth < 640
+        ? 137
+        : 153;
+  if (wheel && rect(wheel).width > wheelLimit)
     issues.push('Wheel exceeds its compact size budget');
   const canvas = root.querySelector('canvas');
   if (

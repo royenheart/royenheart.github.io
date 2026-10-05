@@ -10,7 +10,7 @@ if (!local.startsWith('..') && !isAbsolute(local))
   throw new Error('Keep review artifacts outside Git.');
 const base = process.env.STORYBOOK_URL ?? 'http://127.0.0.1:6006';
 const story = (name, fixed = true, extra = '') =>
-  `${base}/iframe.html?id=explorations-orbit-study--${name}&args=skipEntrance:true${extra}${fixed ? '&capture=1' : ''}`;
+  `${base}/iframe.html?id=explorations-orbit-study--${name}&args=skipEntrance:true;dockDesign:classic${extra}${fixed ? '&capture=1' : ''}`;
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch();
 const metadata = {

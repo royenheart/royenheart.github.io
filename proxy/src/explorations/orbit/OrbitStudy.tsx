@@ -27,6 +27,8 @@ import cubesPoster from '../../assets/cubes.webp?url';
 import horizonPoster from '../../assets/horizon.webp?url';
 import { AudioWheel } from './AudioWheel';
 import { CardDeck, type OrbitCard } from './CardDeck';
+import { RotaryDeck } from './RotaryDeck';
+import type { DockDesign } from './rotary-designs';
 import { useOrbitAudio } from './useOrbitAudio';
 import {
   adjacentScene,
@@ -39,6 +41,7 @@ import '@fontsource/space-grotesk/400.css';
 import '@fontsource/space-grotesk/500.css';
 import '@fontsource/instrument-serif/400.css';
 import './orbit.css';
+import './rotary.css';
 import type { DiskStyle } from '../../scenes/RelativisticHorizon';
 
 const OrbitCanvas = lazy(() => import('./OrbitCanvas'));
@@ -76,6 +79,8 @@ export interface OrbitStudyProps {
   diskStyle?: DiskStyle;
   inclination?: number;
   bloom?: number;
+  dockDesign?: DockDesign;
+  cardDuration?: number;
 }
 
 export function OrbitStudy({
@@ -90,6 +95,8 @@ export function OrbitStudy({
   diskStyle = 'turbulent',
   inclination = 12,
   bloom = 0.28,
+  dockDesign = 'drum',
+  cardDuration = 0.68,
 }: OrbitStudyProps) {
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
@@ -348,6 +355,7 @@ export function OrbitStudy({
         className="orbit-study"
         data-scene={scene}
         data-study={study}
+        data-dock-design={dockDesign}
         data-entered={entered}
         data-transitioning={busy}
         data-renderer={
@@ -396,13 +404,7 @@ export function OrbitStudy({
           )}
         </div>
         <header className="orbit-heading">
-          <span className="orbit-monogram" aria-hidden="true">
-            r.
-          </span>
-          <div>
-            <p>RoyenHeart / Space</p>
-            <h1>{titles[scene]}</h1>
-          </div>
+          <h1 className="sr-only">{titles[scene]}</h1>
           <span className="orbit-scene-number">
             {scene === 'cubes' ? '01' : '02'} <span>/ 02</span>
           </span>
@@ -463,6 +465,9 @@ export function OrbitStudy({
                   reduced={reduced}
                   ready={audio.ready && !busy}
                   analyser={audio.analyser}
+                  design={dockDesign}
+                  cardIndex={index}
+                  cardDuration={cardDuration}
                   onToggle={() => setExpanded((value) => !value)}
                   onFocus={() => {
                     if (!ignoreFocus.current) setExpanded(true);
@@ -470,13 +475,24 @@ export function OrbitStudy({
                   onSound={toggleSound}
                 />
               </div>
-              {expanded && !busy && (
+              {expanded && !busy && dockDesign === 'classic' && (
                 <CardDeck
                   cards={cards}
                   index={index}
                   onIndex={setIndex}
                   reduced={reduced}
                   onClose={close}
+                />
+              )}
+              {expanded && !busy && dockDesign !== 'classic' && (
+                <RotaryDeck
+                  cards={cards}
+                  index={index}
+                  onIndex={setIndex}
+                  reduced={reduced}
+                  onClose={close}
+                  design={dockDesign}
+                  duration={cardDuration}
                 />
               )}
               <span className="orbit-wheel-caption">

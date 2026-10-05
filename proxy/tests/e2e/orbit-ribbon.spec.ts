@@ -14,7 +14,11 @@ test('selected soundtracks keep every ribbon behind the artwork during forward a
     ]) {
       await page.setViewportSize(viewport);
       await page.goto(
-        `http://127.0.0.1:6006/iframe.html?id=explorations-orbit-study--selected-${scene}&args=skipEntrance:true;startOpen:true;graphics:poster`,
+        `http://127.0.0.1:6006/iframe.html?id=explorations-orbit-study--selected-${scene}&args=skipEntrance:true;startOpen:true;graphics:poster;dockDesign:classic`,
+      );
+      await expect(page.locator('main')).toHaveAttribute(
+        'data-dock-design',
+        'classic',
       );
       await expect(page.getByRole('article')).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
