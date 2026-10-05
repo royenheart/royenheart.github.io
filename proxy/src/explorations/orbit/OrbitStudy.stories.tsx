@@ -75,6 +75,23 @@ export const SelectedHorizon: Story = {
     resolve: resolvePublicAudio,
   },
 };
+export const SelectedSoundCheck: Story = {
+  args: {
+    study: 'collapse',
+    dockDesign: 'drum',
+    horizonTreatment: 'limb',
+  },
+};
+export const UnavailableNextTrack: Story = {
+  args: {
+    ...SelectedSoundCheck.args,
+    resolve: async (track, signal) => {
+      if (track.id === 'golden-orbit')
+        throw new Error('Destination unavailable');
+      return resolvePreviewTrack(track, signal);
+    },
+  },
+};
 export const HorizonFlowCoordinates: Story = {
   args: {
     ...SelectedHorizon.args,

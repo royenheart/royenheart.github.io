@@ -173,7 +173,8 @@ test('real audio drives the ring and completion; quiet entry has no automatic sc
     window.Audio = class extends NativeAudio {
       constructor(src?: string) {
         super(src);
-        (window as unknown as { testAudio: HTMLAudioElement }).testAudio = this;
+        const scope = window as unknown as { testAudio: HTMLAudioElement[] };
+        (scope.testAudio ??= []).push(this);
       }
     };
   });
@@ -196,9 +197,9 @@ test('real audio drives the ring and completion; quiet entry has no automatic sc
   );
   await page.getByRole('button', { name: 'Play music', exact: true }).click();
   await page.evaluate(() => {
-    (
-      window as unknown as { testAudio: HTMLAudioElement }
-    ).testAudio.currentTime = 11.85;
+    (window as unknown as { testAudio: HTMLAudioElement[] }).testAudio.find(
+      (audio) => !audio.paused,
+    )!.currentTime = 11.85;
   });
   await expect(page.locator('main')).toHaveAttribute('data-scene', 'horizon');
   await expect(page.locator('.orbit-wheel')).toHaveAttribute(

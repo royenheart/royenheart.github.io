@@ -5,15 +5,16 @@
 The user accepted F7's reverse glitch/fracture direction and requested a new cube
 arrival plus alternative forward transitions. Keep the settled cube composition,
 golden horizon, continuous disk/halo junction, foreground waves, and F7 unchanged.
-The arrival now uses falling accumulation. Forward A is the provisional Orbit
-preview; A/B/C are candidates awaiting the user's visual selection.
+The arrival now uses falling accumulation. The user selected live B (orbital
+capture) for the Orbit forward transition. A/C remain historical comparisons.
+The subsequent [continuous journey](proxy-scene-continuity.md) checks handoffs.
 
 | ID | Story | Mechanism | Decision |
 | --- | --- | --- | --- |
 | L2 | `cube-arrival` | Full-sized cubes fall from above the frustum; lower destinations settle first | Pending visual feedback |
-| A | `split-accretion` | Two simultaneous curved transport streams into the crown and disk | Pending |
-| B | `orbital-accretion` | Orbital winding before cubes fuse into the two contour families | Pending |
-| C | `cascade-accretion` | Crown first, then progressively deeper foreground strata | Pending |
+| A | `split-accretion` | Two simultaneous curved transport streams into the crown and disk | Comparison |
+| B | `orbital-accretion` | Orbital winding before cubes fuse into the two contour families | Selected |
+| C | `cascade-accretion` | Crown first, then progressively deeper foreground strata | Comparison |
 
 `layered-cube-arrival` retains the earlier arrival mechanism. Existing F1 and F3
 stories retain the earlier forward transformations. Historical preview videos

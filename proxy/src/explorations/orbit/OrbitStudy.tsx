@@ -11,9 +11,11 @@ import {
 } from 'react';
 import {
   animate,
+  AnimatePresence,
   motion,
   MotionConfig,
   useMotionValue,
+  useIsPresent,
   useTransform,
   type AnimationPlaybackControls,
 } from 'motion/react';
@@ -31,7 +33,7 @@ import { AudioWheel } from './AudioWheel';
 import { CardDeck, type OrbitCard } from './CardDeck';
 import { RotaryDeck } from './RotaryDeck';
 import type { DockDesign } from './rotary-designs';
-import { useOrbitAudio } from './useOrbitAudio';
+import { useOrbitSoundtrack } from './useOrbitSoundtrack';
 import {
   adjacentScene,
   motionStudies,
@@ -71,6 +73,31 @@ class GraphicsBoundary extends Component<
   render() {
     return this.state.failed ? null : this.props.children;
   }
+}
+
+function ArrivalVeil({
+  forming,
+  reduced,
+  children,
+}: {
+  forming: boolean;
+  reduced: boolean;
+  children: ReactNode;
+}) {
+  const present = useIsPresent();
+  return (
+    <motion.section
+      initial={false}
+      exit={{ opacity: 0, pointerEvents: 'none' }}
+      transition={{ duration: reduced ? 0 : 0.6 }}
+      inert={!present}
+      className="orbit-arrival"
+      data-forming={forming}
+      aria-label="Enter the scene"
+    >
+      {children}
+    </motion.section>
+  );
 }
 
 export interface OrbitStudyProps {
@@ -117,6 +144,7 @@ export function OrbitStudy({
   const [expanded, setExpanded] = useState(startOpen && skipEntrance);
   const [index, setIndex] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [targetScene, setTargetScene] = useState<SceneId | null>(null);
   const [graphicsReady, setGraphicsReady] = useState(graphics === 'poster');
   const [failure, setFailure] = useState(false);
   const [introDone, setIntroDone] = useState(skipEntrance);
@@ -137,8 +165,6 @@ export function OrbitStudy({
   const glow = useTransform(blend, [0, 1], ['#527eb933', '#b8813833']);
   const transition = useRef<AnimationPlaybackControls | null>(null);
   const locked = useRef(false);
-  const wanted = useRef(false);
-  const resumed = useRef('');
   const root = useRef<HTMLElement>(null);
   const ignoreFocus = useRef(false);
   const onReady = useCallback(() => setGraphicsReady(true), []);
@@ -147,16 +173,23 @@ export function OrbitStudy({
     setGraphicsReady(true);
   }, []);
   const next = useRef<() => void>(() => {});
-  const audio = useOrbitAudio(tracks[scene], resolve, () => next.current());
-  const { pause, play, ready: audioReady } = audio;
+  const audio = useOrbitSoundtrack(
+    tracks,
+    resolve,
+    scene,
+    targetScene,
+    blend,
+    () => next.current(),
+  );
+  const { pause, play } = audio;
   const navigate = useCallback(
     (step: 1 | -1) => {
       if (locked.current || !entered) return;
       locked.current = true;
       setBusy(true);
       setExpanded(false);
-      pause();
       const target = adjacentScene(scene, step);
+      setTargetScene(target);
       direction.set(scene === 'cubes' ? 1 : -1);
       transition.current?.stop();
       transition.current = animate(blend, sceneBlend(target), {
@@ -181,14 +214,13 @@ export function OrbitStudy({
         onComplete: () => {
           setScene(target);
           setIndex(0);
-          resumed.current = '';
+          setTargetScene(null);
           locked.current = false;
           setBusy(false);
         },
       });
     },
     [
-      pause,
       blend,
       entered,
       failure,
@@ -246,18 +278,6 @@ export function OrbitStudy({
     scene,
     choreography,
   ]);
-  useEffect(() => {
-    if (
-      !entered ||
-      busy ||
-      !audioReady ||
-      !wanted.current ||
-      resumed.current === scene
-    )
-      return;
-    resumed.current = scene;
-    void play();
-  }, [play, audioReady, busy, entered, scene]);
   const close = () => {
     setExpanded(false);
     ignoreFocus.current = true;
@@ -268,17 +288,12 @@ export function OrbitStudy({
   };
   const toggleSound = () => {
     if (audio.playing) {
-      wanted.current = false;
       pause();
     } else {
-      wanted.current = true;
-      resumed.current = scene;
       void play();
     }
   };
   const enter = (sound: boolean) => {
-    wanted.current = sound;
-    resumed.current = scene;
     if (sound) void play();
     setEntered(true);
   };
@@ -412,6 +427,7 @@ export function OrbitStudy({
         className="orbit-study"
         data-scene={scene}
         data-study={study}
+        data-accretion-style="orbit"
         data-dock-design={dockDesign}
         data-horizon-treatment={horizonTreatment}
         data-entered={entered}
@@ -473,49 +489,47 @@ export function OrbitStudy({
             {scene === 'cubes' ? '01' : '02'} <span>/ 02</span>
           </span>
         </header>
-        {!entered && (
-          <section
-            className="orbit-arrival"
-            data-forming={!introDone}
-            aria-label="Enter the scene"
-          >
-            <div
-              className={`orbit-arrival-mark orbit-arrival-${scene}`}
-              aria-hidden="true"
-            >
-              <i />
-              <i />
-              <i />
-            </div>
-            <p className="orbit-eyebrow">
-              {scene === 'cubes'
-                ? 'Finding a little order'
-                : 'Following the last light'}
-            </p>
-            <h2>{titles[scene]}</h2>
-            <p role="status">
-              {!introDone
-                ? 'Forming your space…'
-                : audio.ready
-                  ? 'Your space is ready.'
-                  : (audio.error ?? 'Preparing the music…')}
-            </p>
-            <button
-              className="orbit-enter"
-              onClick={() => enter(true)}
-              disabled={!introDone || !audio.ready}
-            >
-              Enter with sound <span aria-hidden="true">↗</span>
-            </button>
-            <button
-              className="orbit-quiet"
-              onClick={() => enter(false)}
-              disabled={!introDone}
-            >
-              Enter quietly
-            </button>
-          </section>
-        )}
+        <AnimatePresence>
+          {!entered && (
+            <ArrivalVeil forming={!introDone} reduced={reduced}>
+              <div
+                className={`orbit-arrival-mark orbit-arrival-${scene}`}
+                aria-hidden="true"
+              >
+                <i />
+                <i />
+                <i />
+              </div>
+              <p className="orbit-eyebrow">
+                {scene === 'cubes'
+                  ? 'Finding a little order'
+                  : 'Following the last light'}
+              </p>
+              <h2>{titles[scene]}</h2>
+              <p role="status">
+                {!introDone
+                  ? 'Forming your space…'
+                  : audio.ready
+                    ? 'Your space is ready.'
+                    : (audio.error ?? 'Preparing the music…')}
+              </p>
+              <button
+                className="orbit-enter"
+                onClick={() => enter(true)}
+                disabled={!introDone || !audio.ready}
+              >
+                Enter with sound <span aria-hidden="true">↗</span>
+              </button>
+              <button
+                className="orbit-quiet"
+                onClick={() => enter(false)}
+                disabled={!introDone}
+              >
+                Enter quietly
+              </button>
+            </ArrivalVeil>
+          )}
+        </AnimatePresence>
         {entered && (
           <>
             <motion.div

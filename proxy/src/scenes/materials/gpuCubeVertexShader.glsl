@@ -210,7 +210,7 @@ void main() {
                 * (1.0 - smoothstep(landing + 0.025, landing + 0.09, uCollapse));
             vAccretionHeat = smoothstep(0.32, 0.93, flight);
             vFlightGlow = smoothstep(0.62, 0.98, flight);
-            vWorldPosition = mix(baseWorldOffset, center, travel);
+            vWorldPosition = mix(baseWorldOffset + localPosition, center, travel);
             gl_Position = projectionMatrix * viewPosition;
             return;
         }

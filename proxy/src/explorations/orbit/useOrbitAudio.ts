@@ -10,6 +10,9 @@ export function useOrbitAudio(
   const analyser = useRef<AnalyserNode | null>(null);
   const context = useRef<AudioContext | null>(null);
   const source = useRef<MediaElementAudioSourceNode | null>(null);
+  const gain = useRef<GainNode | null>(null);
+  const level = useRef(1);
+  const requested = useRef(false);
   const request = useRef(0);
   const ended = useRef(onEnded);
   const [status, setStatus] = useState<{
@@ -90,6 +93,7 @@ export function useOrbitAudio(
       })
       .catch(failed);
     return () => {
+      requested.current = false;
       controller.abort();
       clearTimeout(timeout);
       for (const [name, handler] of Object.entries(listeners))
@@ -107,32 +111,52 @@ export function useOrbitAudio(
       void context.current?.close();
       context.current = null;
       analyser.current = null;
+      gain.current = null;
     },
     [],
   );
   const pause = useCallback(() => {
     request.current++;
+    requested.current = false;
     element.current?.pause();
+  }, []);
+  const setGain = useCallback((value: number) => {
+    level.current = Math.max(0, Math.min(1, value));
+    if (gain.current && context.current)
+      gain.current.gain.setTargetAtTime(
+        level.current,
+        context.current.currentTime,
+        0.025,
+      );
+  }, []);
+  const prime = useCallback(async () => {
+    if (!context.current) {
+      context.current = new AudioContext();
+      analyser.current = context.current.createAnalyser();
+      analyser.current.fftSize = 256;
+      analyser.current.smoothingTimeConstant = 0.8;
+      gain.current = context.current.createGain();
+      gain.current.gain.value = level.current;
+      analyser.current.connect(gain.current);
+      gain.current.connect(context.current.destination);
+    }
+    await context.current.resume();
   }, []);
   const play = useCallback(async () => {
     const audio = element.current;
     if (!audio || audio.readyState < 3) return false;
+    requested.current = true;
+    if (!audio.paused && !audio.ended) return true;
     const intent = ++request.current;
     try {
-      if (!context.current) {
-        context.current = new AudioContext();
-        analyser.current = context.current.createAnalyser();
-        analyser.current.fftSize = 256;
-        analyser.current.smoothingTimeConstant = 0.8;
-        analyser.current.connect(context.current.destination);
-      }
+      const primed = prime();
       if (!source.current) {
-        source.current = context.current.createMediaElementSource(audio);
+        source.current = context.current!.createMediaElementSource(audio);
         source.current.connect(analyser.current!);
       }
-      await Promise.all([context.current.resume(), audio.play()]);
+      await Promise.all([primed, audio.play()]);
       if (request.current !== intent || element.current !== audio) {
-        audio.pause();
+        if (!requested.current || element.current !== audio) audio.pause();
         return false;
       }
       return true;
@@ -145,10 +169,10 @@ export function useOrbitAudio(
         }));
       return false;
     }
-  }, []);
+  }, [prime]);
   const current =
     status.id === track.id
       ? status
       : { ready: false, playing: false, error: null, time: 0, duration: 0 };
-  return { ...current, element, analyser, play, pause };
+  return { ...current, element, analyser, play, pause, prime, setGain };
 }

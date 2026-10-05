@@ -85,8 +85,10 @@ The compressed budget covers **all emitted JavaScript**, including the dynamical
 
 The latest [falling arrival and accretion studies](../docs/proxy-accretion-studies.md)
 compare `split-accretion`, `orbital-accretion` and `cascade-accretion`, with a
-full-sized falling `cube-arrival`. Forward A is a provisional Orbit preview;
-A/B/C await visual selection. The accepted F7 reverse remains unchanged.
+full-sized falling `cube-arrival`. The user selected live B (`orbital-accretion`);
+A/C remain comparisons. The accepted F7 reverse remains selected.
+The [continuous journey](../docs/proxy-scene-continuity.md) runs arrival, both
+backgrounds and both transitions on one canvas with advancing material time.
 
 The selected [F7 glitch transition](../docs/proxy-glitch-transition.md) expands a
 local color anomaly through the actual horizon, disk and nebula, progressively

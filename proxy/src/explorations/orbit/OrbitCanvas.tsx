@@ -76,6 +76,7 @@ export interface OrbitCanvasProps {
   streamingWaves?: boolean;
   accretionStyle?: AccretionStyle;
   cubeArrival?: CubeArrivalStyle;
+  sceneTime?: MotionValue<number>;
 }
 function OpticalPostprocessing({
   presence,
@@ -132,7 +133,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     props.horizonRenderer === 'relativistic' &&
     props.horizonTreatment === 'limb';
   const expressive = choreography && props.study === 'collapse';
-  const accretionStyle = props.accretionStyle ?? 'split';
+  const accretionStyle = props.accretionStyle ?? 'orbit';
   const depositing = expressive && accretionStyle !== 'legacy';
   const ruptureStyle = props.ruptureStyle ?? 'glitch';
   const mirror = ruptureStyle !== 'material';
@@ -189,6 +190,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     const a = blend.on('change', () => invalidate());
     const b = entrance.on('change', () => invalidate());
     const c = direction?.on('change', () => invalidate());
+    const d = props.sceneTime?.on('change', () => invalidate());
     const lost = (event: Event) => {
       event.preventDefault();
       onFailure();
@@ -198,18 +200,23 @@ function World(props: OrbitCanvasProps & { quality: number }) {
       a();
       b();
       c?.();
+      d?.();
       gl.domElement.removeEventListener('webglcontextlost', lost);
     };
-  }, [blend, entrance, direction, onFailure, invalidate, gl]);
+  }, [blend, entrance, direction, props.sceneTime, onFailure, invalidate, gl]);
   useFrame((_, delta) => {
-    if (!props.paused && !props.capture) time.current += Math.min(delta, 0.05);
+    if (props.sceneTime) time.current = props.sceneTime.get();
+    else if (!props.paused && !props.capture)
+      time.current += Math.min(delta, 0.05);
     const mix = props.blend.get();
+    // The master material clock is linear; the camera arrives with zero velocity.
+    const pose = depositing ? MathUtils.smootherstep(mix, 0, 1) : mix;
     camera.position.set(
       Math.sin(time.current * 0.08) * 0.7,
-      1.2 + mix * 0.2,
-      18 + mix * 4,
+      1.2 + pose * 0.2,
+      18 + pose * 4,
     );
-    camera.lookAt(0, mix * 1.4, -25 - mix * 13);
+    camera.lookAt(0, pose * 1.4, -25 - pose * 13);
     camera.updateMatrixWorld();
     frames.current++;
     if (
