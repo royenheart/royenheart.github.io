@@ -1,14 +1,23 @@
 precision highp float;
 uniform float uProgress;
 uniform float uDirection;
+uniform bool uMirror;
 uniform float uTime;
 uniform float uAspect;
 uniform float uViewHeight;
 uniform vec2 uCenter;
 varying vec2 vUv;
 
+/* MIRROR_WAVES */
+
 void main() {
   vec2 p = (vUv - uCenter) * vec2(uAspect, 1.0) * uViewHeight;
+  if (uMirror && uDirection < 0.0) {
+    vec3 wave = mirrorWaveField(p, 1.0 - uProgress, uViewHeight * uAspect * 0.5, uViewHeight * 0.5);
+    vec3 pearl = vec3(1.6, 1.27, 0.82);
+    gl_FragColor = vec4(pearl * wave.y + vec3(0.8, 0.39, 0.14) * wave.z, 1.0);
+    return;
+  }
   float radius = length(p);
   float angle = atan(p.y, p.x);
   float light = 0.0;

@@ -43,6 +43,7 @@ export function CubeCloud({
   horizonTreatment = 'optical',
   choreography = false,
   expressive = false,
+  mirrorRupture = false,
   direction,
   inclination = 12,
 }: SceneProps & {
@@ -54,6 +55,7 @@ export function CubeCloud({
   horizonTreatment?: HorizonTreatment;
   choreography?: boolean;
   expressive?: boolean;
+  mirrorRupture?: boolean;
   direction?: SceneSignal;
   inclination?: number;
 }) {
@@ -82,6 +84,7 @@ export function CubeCloud({
       uPresence: { value: 1 },
       uChoreography: { value: false },
       uExpressive: { value: false },
+      uMirrorRupture: { value: false },
       uDirection: { value: 1 },
       uInclination: { value: 0.2 },
       uWorldPerScreen: { value: 1 },
@@ -110,6 +113,7 @@ export function CubeCloud({
       cubes.current.uniforms.uPresence!.value = entry;
       cubes.current.uniforms.uChoreography!.value = choreography;
       cubes.current.uniforms.uExpressive!.value = expressive;
+      cubes.current.uniforms.uMirrorRupture!.value = mirrorRupture;
       cubes.current.uniforms.uDirection!.value = direction?.get() ?? 1;
       cubes.current.uniforms.uInclination!.value =
         (inclination * Math.PI) / 180;

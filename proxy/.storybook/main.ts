@@ -13,6 +13,15 @@ const config: StorybookConfig = {
   viteFinal: async (config) => ({
     ...config,
     plugins: [...(config.plugins ?? []), tailwind()],
+    optimizeDeps: {
+      ...config.optimizeDeps,
+      include: [
+        ...(config.optimizeDeps?.include ?? []),
+        '@react-three/drei/core/Fbo',
+        '@react-three/drei/core/Line',
+        '@react-three/drei/core/OrbitControls',
+      ],
+    },
     server: {
       ...config.server,
       watch: {

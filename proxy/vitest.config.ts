@@ -21,6 +21,8 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          // Allow graphics preparation and interaction checks separate time budgets.
+          testTimeout: 30000,
           browser: {
             enabled: true,
             headless: true,

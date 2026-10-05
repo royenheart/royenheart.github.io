@@ -1,6 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { ShaderMaterial, Vector2, Vector3 } from 'three';
+import {
+  DoubleSide,
+  ShaderMaterial,
+  Vector2,
+  Vector3,
+  type Mesh,
+  type Texture,
+} from 'three';
 import type { SceneProps, SceneSignal } from './CubeCloud';
 import { loadOpticalTextures, type OpticalTextures } from './relativity/tables';
 import { TABLE_SIZES } from './relativity/optics';
@@ -13,10 +20,14 @@ import {
 import definitions from './relativity/bruneton-definitions.glsl?raw';
 import functions from './relativity/bruneton-functions.glsl?raw';
 import ribbonGeometry from './materials/ribbonGeometry.glsl?raw';
+import mirrorVertex from './materials/mirrorVertex.glsl?raw';
+import mirrorWaves from './materials/mirrorWaves.glsl?raw';
+import { createMirrorGeometry } from './mirrorGeometry';
 import fragment from './materials/relativisticHorizon.glsl?raw';
 
 export type DiskStyle = 'silk' | 'turbulent';
 export type HorizonDiagnostic = 'beauty' | 'coordinates' | 'emission';
+export type RuptureStyle = 'material' | 'mirror';
 const opticalFunctions = `
 ${definitions}
 #define IN(x) x
@@ -35,6 +46,10 @@ export function RelativisticHorizon({
   formation,
   transition,
   direction,
+  ruptureStyle = 'material',
+  waveOnly = false,
+  spatialWaves = false,
+  radiationMap,
   diskStyle,
   inclination,
   treatment,
@@ -46,6 +61,10 @@ export function RelativisticHorizon({
   formation?: SceneSignal;
   transition?: SceneSignal;
   direction?: SceneSignal;
+  ruptureStyle?: RuptureStyle;
+  waveOnly?: boolean;
+  spatialWaves?: boolean;
+  radiationMap?: RefObject<Texture | null>;
   diskStyle: DiskStyle;
   inclination: number;
   treatment: HorizonTreatment;
@@ -53,18 +72,24 @@ export function RelativisticHorizon({
   onReady(): void;
   onFailure(): void;
 }) {
-  const { size, camera, invalidate } = useThree();
+  const { size, camera, invalidate, gl } = useThree();
   const [textures, setTextures] = useState<OpticalTextures | null>(null);
   const ready = useRef(false);
   const center = useMemo(() => new Vector3(), []);
+  const mesh = useRef<Mesh>(null);
+  const geometry = useMemo(
+    () => createMirrorGeometry(settings.seed, size.width / size.height),
+    [settings.seed, size.width, size.height],
+  );
+  useEffect(() => () => geometry.dispose(), [geometry]);
   const material = useMemo(
     () =>
       new ShaderMaterial({
-        vertexShader:
-          'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 1.0, 1.0); }',
+        vertexShader: mirrorVertex,
         fragmentShader: fragment
           .replace('/* OPTICAL_FUNCTIONS */', opticalFunctions)
-          .replace('/* RIBBON_GEOMETRY */', ribbonGeometry),
+          .replace('/* RIBBON_GEOMETRY */', ribbonGeometry)
+          .replace('/* MIRROR_WAVES */', mirrorWaves),
         uniforms: {
           uDeflection: { value: null },
           uInverseRadius: { value: null },
@@ -77,6 +102,11 @@ export function RelativisticHorizon({
           uTransition: { value: 1 },
           uDirection: { value: 1 },
           uExpressive: { value: false },
+          uMirrorRupture: { value: false },
+          uWaveOnly: { value: false },
+          uSpatialWaves: { value: false },
+          uRadiationMap: { value: null },
+          uResolution: { value: new Vector2() },
           uInclination: { value: 0.2 },
           uTurbulence: { value: 1 },
           uLimb: { value: 0 },
@@ -87,6 +117,7 @@ export function RelativisticHorizon({
         transparent: true,
         depthWrite: false,
         depthTest: false,
+        side: DoubleSide,
       }),
     [settings.seed],
   );
@@ -122,6 +153,16 @@ export function RelativisticHorizon({
     material.uniforms.uTransition!.value = transition?.get() ?? 1;
     material.uniforms.uDirection!.value = direction?.get() ?? 1;
     material.uniforms.uExpressive!.value = Boolean(transition);
+    material.uniforms.uMirrorRupture!.value = ruptureStyle === 'mirror';
+    material.uniforms.uWaveOnly!.value = waveOnly;
+    material.uniforms.uSpatialWaves!.value = spatialWaves;
+    material.uniforms.uRadiationMap!.value = radiationMap?.current ?? null;
+    gl.getDrawingBufferSize(material.uniforms.uResolution!.value);
+    if (mesh.current)
+      mesh.current.renderOrder =
+        transition && ruptureStyle === 'mirror' && direction?.get() === -1
+          ? 10
+          : -100;
     material.uniforms.uAspect!.value = size.width / size.height;
     material.uniforms.uViewHeight!.value = horizonViewHeight(
       size.width,
@@ -142,6 +183,8 @@ export function RelativisticHorizon({
   return (
     textures && (
       <mesh
+        ref={mesh}
+        geometry={geometry}
         material={material}
         frustumCulled={false}
         renderOrder={-100}
@@ -151,9 +194,7 @@ export function RelativisticHorizon({
             onReady();
           }
         }}
-      >
-        <planeGeometry args={[2, 2]} />
-      </mesh>
+      />
     )
   );
 }

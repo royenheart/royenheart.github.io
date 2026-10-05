@@ -6,13 +6,15 @@ The selected Orbit scene now gathers the original blue cube cloud into the golde
 
 Preserve the accepted horizon at rest: the fixed black boundary, thin inner edge, gently raised outer emitting mantle, colored halation, continuous disk junction, depth-dependent strand spacing, travelling surface waves and procedural nebulae. The optical and baseline comparison studies retain their earlier transition.
 
-## Current direction: F3 material rupture
+## Preserved comparison: F3 material rupture
+
+Superseded for the selected reverse transition by [F6 mirror fracture and spatial wave strands](proxy-mirror-wave-transition.md). F3 remains a separate comparison. The forward collapse and arrivals documented here are retained.
 
 The subsequent feedback requests inward force and a separate stellar-release impression. The first F2 implementation was rejected because added bright debris dominated while the original rim and disk stayed recognizable underneath. F3 addresses the source material directly: a shared forward/inverse transport map strains, twists and expands the actual emitting contour and disk; curved cracks separate material groups; surviving groups move outward and disappear at different times. The black void opens instead of growing into a larger intact mask. Ejecta begin at positions obtained from the same transported ribbon map.
 
 `rupture-material` removes both the transient pulse plane and added cube particles. The original rim and disk must visibly move and break in this view. This is the key diagnostic, alongside the complete scene. F3 is procedural material-coordinate transport in the existing 2.5D artistic renderer, not rigid-body or fluid simulation.
 
-The selected experience now uses a 6.4-second collapse and a 4.8-second rupture. F1's 7.2-second reversible path and both arrivals remain available as comparisons. See `proxy-collapse-motion-language.md` for atomic descriptions, sources and reusable prompts. The construction and timing table below document F1; they do not override the new asymmetric default.
+F3 uses a 6.4-second collapse and a 4.8-second rupture. The selected F6 reverse lasts 5.4 seconds. F1's 7.2-second reversible path and both arrivals remain available as comparisons. See `proxy-collapse-motion-language.md` for atomic descriptions, sources and reusable prompts. The construction and timing table below document F1; they do not override the new asymmetric default.
 
 ## F1 construction
 
@@ -50,7 +52,7 @@ The selected Orbit stories use this choreography automatically:
 
 The new `Explorations/Scene formation` stories isolate the actual renderer:
 
-- `collapse-and-rupture`: the current independent inward and outward sequences.
+- `collapse-and-rupture`: the preserved F3 independent inward and outward sequences.
 - `rupture-material`: original source material only, with added particles and the impulse plane removed.
 - `gather-and-form`: forward/reverse playback, pause and timeline scrubbing.
 - `cube-arrival` and `horizon-arrival`: replay and inspect each arrival.

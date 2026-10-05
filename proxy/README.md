@@ -83,6 +83,15 @@ The compressed budget covers **all emitted JavaScript**, including the dynamical
 
 ## Design exploration
 
+The latest [mirror fracture and spatial radiation study](../docs/proxy-mirror-wave-transition.md)
+uses actual scene-bearing panes and world-space upright filaments travelling radially
+through a tilted disk fan. `streaming-mirror`, `streaming-surface` and
+`streaming-waves` isolate the complete sequence, displaced source and emission.
+`Explorations/Spatial radiation` exposes the same curves with top, oblique and
+front views plus drag-to-orbit controls and a short/continuous strand comparison.
+The earlier `radiating-*` stories preserve F5's accepted paths with short strands. F4's planar waves and F3's material
+rupture remain separate comparisons.
+
 Four interactive directions live under `Explorations/Design directions` in Storybook. They share the original two scenes and the new `UnifiedPlayer`; the production `HomeFrame` remains the previous design until a direction is selected. See [the research and capability report](../docs/proxy-design-exploration.md) for current playback support and remaining integration work.
 
 With Storybook running on port 6006, capture both scenes on desktop, phone and tablet:

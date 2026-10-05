@@ -18,17 +18,30 @@ function FormationStudy({
   sequence = 'transition',
   expression = 'continuous',
   materialOnly = false,
+  ruptureStyle = 'material',
+  waveOnly = false,
+  waveMode = 'planar',
+  streamingWaves = false,
 }: {
   sequence?: Sequence;
   expression?: Expression;
   materialOnly?: boolean;
+  ruptureStyle?: 'material' | 'mirror';
+  waveOnly?: boolean;
+  waveMode?: 'planar' | 'spatial';
+  streamingWaves?: boolean;
 }) {
-  const blend = useMotionValue(sequence === 'horizon' || materialOnly ? 1 : 0);
+  const startsAtHorizon =
+    sequence === 'horizon' ||
+    (sequence === 'transition' && (materialOnly || ruptureStyle === 'mirror'));
+  const blend = useMotionValue(startsAtHorizon ? 1 : 0);
   const entrance = useMotionValue(sequence === 'transition' ? 1 : 0);
-  const direction = useMotionValue(materialOnly ? -1 : 1);
+  const direction = useMotionValue(startsAtHorizon ? -1 : 1);
   const progress = sequence === 'transition' ? blend : entrance;
   const reduced = useReducedMotionPreference();
-  const [value, setValue] = useState(materialOnly ? 1 : 0);
+  const [value, setValue] = useState(
+    sequence === 'transition' && startsAtHorizon ? 1 : 0,
+  );
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -64,7 +77,13 @@ function FormationStudy({
       duration: reduced
         ? 0
         : (expression === 'force' && sequence === 'transition'
-            ? formationTiming[target === 1 ? 'collapse' : 'rupture']
+            ? formationTiming[
+                target === 1
+                  ? 'collapse'
+                  : ruptureStyle === 'mirror'
+                    ? 'mirror'
+                    : 'rupture'
+              ]
             : formationTiming[sequence]) * Math.abs(target - progress.get()),
       ease: 'linear',
       onComplete: () => setPlaying(false),
@@ -89,7 +108,12 @@ function FormationStudy({
             entrance={entrance}
             study={expression === 'force' ? 'collapse' : 'gather'}
             direction={direction}
-            transitionDiagnostic={materialOnly ? 'material' : 'beauty'}
+            transitionDiagnostic={
+              waveOnly ? 'waves' : materialOnly ? 'material' : 'beauty'
+            }
+            ruptureStyle={ruptureStyle}
+            waveMode={waveMode}
+            streamingWaves={streamingWaves}
             paused={reduced}
             capture={capture}
             onReady={onReady}
@@ -110,9 +134,27 @@ function FormationStudy({
         <p>
           {sequence === 'transition'
             ? expression === 'force'
-              ? materialOnly
-                ? 'F3 · material transport only · no extra particles or flash'
-                : 'F3 · collapse / material rupture'
+              ? ruptureStyle === 'mirror'
+                ? streamingWaves
+                  ? waveOnly
+                    ? 'F6 · coherent smoke-like wave strands'
+                    : materialOnly
+                      ? 'F6 · fractured source with broad refraction'
+                      : 'F6 · mirror fracture / streaming wavefronts'
+                  : waveMode === 'spatial'
+                    ? waveOnly
+                      ? 'F5 · spatial radial filaments'
+                      : materialOnly
+                        ? 'F5 · fractured source with spatial refraction'
+                        : 'F5 · mirror fracture / spatial radiation'
+                    : waveOnly
+                      ? 'F4 · upright wavefronts only'
+                      : materialOnly
+                        ? 'F4 · fractured source without wave emission'
+                        : 'F4 · mirror fracture / upright wavefronts'
+                : materialOnly
+                  ? 'F3 · material transport only · no extra particles or flash'
+                  : 'F3 · collapse / material rupture'
               : 'F1 · continuous gathering'
             : sequence === 'cubes'
               ? 'Blue hour · layered arrival'
@@ -186,13 +228,15 @@ const meta = {
   component: FormationStudy,
   render: (args) => (
     <FormationStudy
-      key={`${args.sequence ?? 'transition'}-${args.expression ?? 'continuous'}-${args.materialOnly ?? false}`}
+      key={`${args.sequence ?? 'transition'}-${args.expression ?? 'continuous'}-${args.materialOnly ?? false}-${args.ruptureStyle ?? 'material'}-${args.waveOnly ?? false}-${args.waveMode ?? 'planar'}-${args.streamingWaves ?? false}`}
       {...args}
     />
   ),
   argTypes: {
     expression: { control: 'radio', options: ['continuous', 'force'] },
     sequence: { control: 'radio', options: ['transition', 'cubes', 'horizon'] },
+    ruptureStyle: { control: 'radio', options: ['material', 'mirror'] },
+    waveMode: { control: 'radio', options: ['planar', 'spatial'] },
   },
   parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
 } satisfies Meta<typeof FormationStudy>;
@@ -202,6 +246,33 @@ export const GatherAndForm: Story = {};
 export const CollapseAndRupture: Story = { args: { expression: 'force' } };
 export const RuptureMaterial: Story = {
   args: { expression: 'force', materialOnly: true },
+};
+export const MirrorAndWaves: Story = {
+  args: { expression: 'force', ruptureStyle: 'mirror' },
+};
+export const MirrorSurface: Story = {
+  args: { expression: 'force', ruptureStyle: 'mirror', materialOnly: true },
+};
+export const UprightWaves: Story = {
+  args: { expression: 'force', ruptureStyle: 'mirror', waveOnly: true },
+};
+export const RadiatingMirror: Story = {
+  args: { expression: 'force', ruptureStyle: 'mirror', waveMode: 'spatial' },
+};
+export const RadiatingSurface: Story = {
+  args: { ...RadiatingMirror.args, materialOnly: true },
+};
+export const RadiatingWaves: Story = {
+  args: { ...RadiatingMirror.args, waveOnly: true },
+};
+export const StreamingMirror: Story = {
+  args: { ...RadiatingMirror.args, streamingWaves: true },
+};
+export const StreamingSurface: Story = {
+  args: { ...StreamingMirror.args, materialOnly: true },
+};
+export const StreamingWaves: Story = {
+  args: { ...StreamingMirror.args, waveOnly: true },
 };
 export const CubeArrival: Story = { args: { sequence: 'cubes' } };
 export const HorizonArrival: Story = { args: { sequence: 'horizon' } };

@@ -39,6 +39,11 @@ uniform float uPresence;
 uniform float uFormation;
 uniform bool uChoreography;
 uniform bool uExpressive;
+uniform bool uMirrorRupture;
+uniform bool uWaveOnly;
+uniform bool uSpatialWaves;
+uniform sampler2D uRadiationMap;
+uniform vec2 uResolution;
 uniform float uTransition;
 uniform float uDirection;
 uniform float uInclination;
@@ -48,6 +53,11 @@ uniform float uFlowView;
 uniform float uSeed;
 uniform vec2 uCenter;
 varying vec2 vUv;
+varying float vShardEdge;
+varying float vShardSeed;
+varying float vShardOpacity;
+
+/* MIRROR_WAVES */
 
 const float pi = 3.141592653589793;
 const float rad = 1.0;
@@ -163,7 +173,7 @@ float coronaSwell(vec2 surface, float time) {
 
 vec4 ribbonEmission(vec2 screen, float captureRadius, float time) {
   vec2 unbrokenScreen = screen;
-  float rupture = uExpressive && uDirection < 0.0 ? 1.0 - uTransition : 0.0;
+  float rupture = uExpressive && !uMirrorRupture && uDirection < 0.0 ? 1.0 - uTransition : 0.0;
   if (rupture > 0.0) screen = ruptureSource(screen, rupture);
   vec2 surface = waveSurface(screen, time);
   float swell = coronaSwell(surface, time);
@@ -341,8 +351,24 @@ vec3 sceneColor(vec2 screen) {
 }
 
 void main() {
-  if (uPresence < 0.001) { gl_FragColor = vec4(0.0); return; }
+  if (uPresence < 0.001 || uWaveOnly) { gl_FragColor = vec4(0.0); return; }
   float scale = uChoreography ? 1.0 : mix(0.22, 1.0, uPresence);
   vec2 screen = (vUv - uCenter) * vec2(uAspect, 1.0) * uViewHeight / scale;
-  gl_FragColor = vec4(sceneColor(screen), uPresence);
+  if (uMirrorRupture && uExpressive && uDirection < 0.0) {
+    float q = 1.0 - uTransition;
+    vec2 displayPoint = (gl_FragCoord.xy / uResolution - uCenter) * vec2(uAspect, 1.0) * uViewHeight;
+    // Re-evaluate the actual horizon, disk and nebula behind each tilted fragment.
+    if (uSpatialWaves) {
+      screen += texture2D(uRadiationMap, gl_FragCoord.xy / uResolution).xy * vec2(uAspect, 1.0) * uViewHeight;
+    } else {
+      vec3 wave = mirrorWaveField(displayPoint, q, uViewHeight * uAspect * 0.5, uViewHeight * 0.5);
+      screen.x += wave.x;
+    }
+    screen += vec2(vShardSeed - 0.5, sin(vShardSeed * 21.0) * 0.35) * smoothstep(0.05, 0.26, q) * 0.42;
+    vec3 color = sceneColor(screen);
+    float edge = 1.0 - smoothstep(0.0, max(fwidth(vShardEdge) * 1.25, 0.003), vShardEdge);
+    float glint = smoothstep(0.08, 0.25, q) * (1.0 - smoothstep(0.50, 0.80, q));
+    color += vec3(0.55, 0.34, 0.15) * edge * glint * (0.45 + vShardSeed * 0.55);
+    gl_FragColor = vec4(color, uPresence * vShardOpacity);
+  } else gl_FragColor = vec4(sceneColor(screen), uPresence);
 }

@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { PerformanceMonitor } from '@react-three/drei/core/PerformanceMonitor';
-import { ACESFilmicToneMapping, SRGBColorSpace, MathUtils } from 'three';
+import {
+  ACESFilmicToneMapping,
+  SRGBColorSpace,
+  MathUtils,
+  type Texture,
+} from 'three';
 import type { MotionValue } from 'motion/react';
 import {
   Bloom,
@@ -15,12 +20,14 @@ import {
   type ToneMappingEffect,
 } from 'postprocessing';
 import { SceneImpulse } from '../../scenes/SceneImpulse';
+import { RadiationField } from '../../scenes/RadiationField';
 import { CubeCloud } from '../../scenes/CubeCloud';
 import { EventHorizon } from '../../scenes/EventHorizon';
 import {
   RelativisticHorizon,
   type DiskStyle,
   type HorizonDiagnostic,
+  type RuptureStyle,
 } from '../../scenes/RelativisticHorizon';
 import { scenes } from '../../lib/content/load';
 import { motionStudies, type MotionStudy } from './sequence';
@@ -60,7 +67,10 @@ export interface OrbitCanvasProps {
   bloom: number;
   horizonTreatment: HorizonTreatment;
   horizonDiagnostic: HorizonDiagnostic;
-  transitionDiagnostic?: 'beauty' | 'material';
+  transitionDiagnostic?: 'beauty' | 'material' | 'waves';
+  ruptureStyle?: RuptureStyle;
+  waveMode?: 'planar' | 'spatial';
+  streamingWaves?: boolean;
 }
 function OpticalPostprocessing({
   presence,
@@ -117,6 +127,9 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     props.horizonRenderer === 'relativistic' &&
     props.horizonTreatment === 'limb';
   const expressive = choreography && props.study === 'collapse';
+  const mirror = props.ruptureStyle !== 'material';
+  const spatialWaves = props.waveMode !== 'planar';
+  const radiationMap = useRef<Texture | null>(null);
   const direction = props.direction;
   const formation = useMemo(
     () => ({
@@ -136,7 +149,12 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     () => ({
       get: () =>
         (expressive && direction?.get() === -1
-          ? 1 - MathUtils.smoothstep(1 - props.blend.get(), 0.3, 0.66)
+          ? 1 -
+            MathUtils.smoothstep(
+              1 - props.blend.get(),
+              mirror ? 0.92 : 0.3,
+              mirror ? 1 : 0.66,
+            )
           : MathUtils.smoothstep(
               props.blend.get(),
               expressive ? 0.4 : choreography ? 0.3 : 0.5,
@@ -146,7 +164,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           ? MathUtils.smoothstep(props.entrance.get(), 0, 0.16)
           : props.entrance.get()),
     }),
-    [props.blend, props.entrance, choreography, expressive, direction],
+    [props.blend, props.entrance, choreography, expressive, direction, mirror],
   );
   useEffect(() => {
     const a = blend.on('change', () => invalidate());
@@ -211,6 +229,10 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           formation={choreography ? formation : undefined}
           transition={expressive ? blend : undefined}
           direction={direction}
+          ruptureStyle={mirror ? 'mirror' : 'material'}
+          waveOnly={props.transitionDiagnostic === 'waves'}
+          spatialWaves={spatialWaves}
+          radiationMap={radiationMap}
           diskStyle={props.diskStyle}
           inclination={props.inclination}
           treatment={props.horizonTreatment}
@@ -219,7 +241,8 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           onFailure={onFailure}
         />
       )}
-      {props.transitionDiagnostic !== 'material' && (
+      {(!props.transitionDiagnostic ||
+        props.transitionDiagnostic === 'beauty') && (
         <CubeCloud
           settings={scenes}
           time={time}
@@ -231,12 +254,29 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           horizonTreatment={props.horizonTreatment}
           choreography={choreography}
           expressive={expressive}
+          mirrorRupture={mirror}
           direction={direction}
           inclination={props.inclination}
         />
       )}
       {expressive && props.transitionDiagnostic !== 'material' && (
-        <SceneImpulse progress={blend} direction={direction} time={time} />
+        <SceneImpulse
+          progress={blend}
+          direction={direction}
+          time={time}
+          mirror={mirror}
+          spatialWaves={spatialWaves}
+        />
+      )}
+      {expressive && mirror && spatialWaves && (
+        <RadiationField
+          progress={blend}
+          direction={direction}
+          time={time}
+          streaming={props.streamingWaves !== false}
+          map={radiationMap}
+          showEmission={props.transitionDiagnostic !== 'material'}
+        />
       )}
       {props.horizonRenderer === 'relativistic' && (
         <OpticalPostprocessing

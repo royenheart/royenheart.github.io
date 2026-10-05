@@ -20,6 +20,7 @@ uniform float uHorizonRadius;
 uniform vec3 uHorizonCenter;
 uniform bool uChoreography;
 uniform bool uExpressive;
+uniform bool uMirrorRupture;
 uniform float uDirection;
 uniform float uInclination;
 uniform float uWorldPerScreen;
@@ -114,6 +115,19 @@ void main() {
         if (uCollapse >= 0.99999) {
             vAlpha = 0.0;
             gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+            return;
+        }
+        if (uExpressive && uMirrorRupture && uDirection < 0.0) {
+            float release = 1.0 - uCollapse;
+            float recovery = smoothstep(0.26 + seed * 0.06, 0.76 + seed * 0.12, release);
+            vec3 settled = (modelViewMatrix * vec4(baseWorldOffset, 1.0)).xyz;
+            vec3 shape = (modelViewMatrix * vec4(localPosition, 0.0)).xyz;
+            settled.xy += normalize(settled.xy + vec2(0.001)) * (1.0 - recovery) * 1.4;
+            settled.z -= (1.0 - recovery) * 3.0;
+            viewPosition = vec4(settled + shape * mix(0.65, 1.0, recovery), 1.0);
+            vAlpha = instanceAlpha * topFade * bottomFade * verticalDensityAlpha * recovery * entry;
+            vWorldPosition = baseWorldOffset + localPosition;
+            gl_Position = projectionMatrix * viewPosition;
             return;
         }
         float gather = smoothstep(0.035 + seed * 0.065, 0.62 + seed * 0.09, uCollapse);
