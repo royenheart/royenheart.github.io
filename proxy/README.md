@@ -111,6 +111,13 @@ swells. Orbit Storybook URLs accept `&capture=1&sceneTime=12` (or `16`, `20`) fo
 reproducible wave phases. `sceneTime` is ignored outside capture mode; omit
 `capture=1` to inspect normal animation.
 
+The [nebula and luminous-mantle study](../docs/proxy-nebula-corona.md) adds seeded
+clouds, dust, supporting colors and rounded outer-glow protrusions. The inner
+rim and black shadow stay fixed; the raised mantle is filled with light. The
+[reference analysis](../docs/proxy-nebula-reference-analysis.md) records the
+user's corrected sketches and excludes the building-associated streak in the
+sixth reference. The existing limb capture command includes the current material.
+
 The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
 
 ## Release
