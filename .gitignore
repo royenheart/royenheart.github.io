@@ -13,7 +13,6 @@ _site
 
 # NPM dependencies
 node_modules
-package-lock.json
 test-results
 playwright-report
 
@@ -260,3 +259,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend source uses lib directories.
+!proxy/src/lib/
+!proxy/src/lib/**
