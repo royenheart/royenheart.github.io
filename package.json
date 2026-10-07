@@ -2,11 +2,25 @@
   "name": "royenheart-github-io",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "proxy"
+  ],
   "scripts": {
-    "test": "node proxy/scene.test.mjs && python3 -m unittest proxy/test_dev_preview.py",
-    "perf": "playwright test -c playwright.config.mjs tests/perf",
-    "perf:headed": "playwright test -c playwright.config.mjs tests/perf --headed",
-    "perf:install": "playwright install chromium"
+    "test": "npm run proxy:check && npm run proxy:test",
+    "proxy:dev": "npm run dev -w @royenheart/home --",
+    "proxy:check": "npm run check -w @royenheart/home --",
+    "proxy:test": "npm run test -w @royenheart/home --",
+    "proxy:build": "npm run build -w @royenheart/home --",
+    "proxy:preview": "npm run preview -w @royenheart/home --",
+    "proxy:storybook": "npm run storybook -w @royenheart/home --",
+    "proxy:storybook:build": "npm run build-storybook -w @royenheart/home --",
+    "proxy:storybook:test": "npm run test-storybook -w @royenheart/home --",
+    "proxy:e2e": "npm run e2e -w @royenheart/home --",
+    "perf:install": "playwright install chromium firefox webkit",
+    "proxy:bundle": "npm run bundle-report -w @royenheart/home --",
+    "proxy:audio:install": "node proxy/scripts/scene-audio.mjs install",
+    "proxy:audio:check": "node proxy/scripts/scene-audio.mjs check --require-all",
+    "proxy:deploy:test": "npm run test-deploy -w @royenheart/home --"
   },
   "devDependencies": {
     "@playwright/test": "1.61.0"

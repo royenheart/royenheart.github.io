@@ -1,0 +1,71 @@
+---
+import { HomeExperience } from '../components/home/HomeExperience';
+import { site } from '../lib/content/load';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="RoyenHeart's personal space, between Axolotl's blue cube clouds and a golden event horizon."
+    />
+    <meta name="theme-color" content="#030a12" />
+    <title>{site.title}</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+  </head>
+  <body>
+    <HomeExperience client:only="react" />
+    <noscript>
+      <main>
+        <h1>{site.name}</h1>
+        <p>Enable JavaScript to enter the interactive scenes.</p>
+        <nav aria-label="Elsewhere">
+          {site.links.map((link) => <a href={link.href}>{link.label}</a>)}
+        </nav>
+        <footer>
+          {
+            site.registrations.map((link) => (
+              <a href={link.href}>{link.label}</a>
+            ))
+          }
+        </footer>
+      </main>
+    </noscript>
+  </body>
+</html>
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #030a12;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  noscript {
+    color: #e5edf5;
+    font: 16px/1.6 sans-serif;
+  }
+  noscript main {
+    padding: 2rem;
+  }
+  noscript a {
+    color: #94dfff;
+    margin-right: 1rem;
+  }
+</style>

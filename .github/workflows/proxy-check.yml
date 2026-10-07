@@ -1,0 +1,55 @@
+name: Proxy checks and static artifact
+
+on:
+  pull_request:
+    paths: ['proxy/**', 'package*.json', '.github/workflows/proxy-check.yml']
+  push:
+    branches: [main, master]
+    paths: ['proxy/**', 'package*.json', '.github/workflows/proxy-check.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: proxy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: 'true'
+      ASTRO_TELEMETRY_DISABLED: '1'
+      STORYBOOK_DISABLE_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm test
+      - run: npm run proxy:storybook:test
+      - run: npm run proxy:build
+      - run: npm run proxy:bundle
+      - run: npm run proxy:deploy:test
+      - run: npm run proxy:storybook:build
+      - run: npm run proxy:e2e
+      - name: Upload browser and bundle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy-test-evidence
+          path: |
+            proxy/test-results
+            proxy/playwright-report
+          retention-days: 14
+      - name: Upload verified static release
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy-static-${{ github.sha }}
+          path: proxy/dist
+          retention-days: 30
