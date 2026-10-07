@@ -22,6 +22,8 @@ npm run proxy:deploy:test
 
 Browser checks require `npx playwright install --with-deps chromium firefox webkit`; the OpenResty deployment smoke check requires Docker. Component stories cover the shipped interface and failure states. Browser evidence is written to `proxy/test-results` and `proxy/playwright-report`. Emulation does not establish real-device performance.
 
+Headless Linux audio checks also need a working audio output. CI starts PulseAudio with a null sink so Firefox can decode and advance native media without a physical sound card; the tests still exercise real playback and user-gesture permission.
+
 ## Content and audio
 
 Edit `src/content/site.json`, `scene-music.json` and `scenes.json`; Zod validates content during builds. Registration identifiers and destinations remain authored content. Scene music is Clair de Lune and Sanctuary, using the selected NetEase outer links. Remote availability and browser autoplay permission are outside the site's control. User input retries blocked playback; unavailable analysis uses an ambient response while playback is active. Paused music and reduced motion stop that response. Cross-origin audio is not attached to Web Audio.

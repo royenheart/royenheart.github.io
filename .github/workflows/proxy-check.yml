@@ -31,6 +31,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Provide an audio output for native browser playback
+        run: |
+          sudo apt-get install --yes pulseaudio
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=browser-tests
+          pactl set-default-sink browser-tests
+          pactl list short sinks
       - run: npm test
       - run: npm run proxy:storybook:test
       - run: npm run proxy:build

@@ -1,9 +1,9 @@
 # Native MP3 fixture
 
 `steady-tone.mp3` is an original, generated 220 Hz sine wave, not an artist
-recording. It exercises MP3 preloading, first playback, native Web Audio output
-and pause/resume. Unlike the existing data-URL WAV fixtures, it is loaded over
-HTTP as a bundled asset.
+recording. It exercises MP3 preloading, first playback and pause/resume through
+the native player. Browser tests serve it over HTTP with byte-range support;
+cross-origin playback remains detached from Web Audio.
 
 Regenerate from the repository root with FFmpeg:
 
@@ -13,5 +13,5 @@ ffmpeg -v error -f lavfi -i 'sine=frequency=220:duration=12' \
   proxy/tests/fixtures/audio/steady-tone.mp3
 ```
 
-The fixture is only imported by a test story. It is never substituted for the
-selected soundtrack.
+The fixture is only served by the browser test helper. It is never bundled with
+the website or substituted for the selected soundtrack outside tests.
