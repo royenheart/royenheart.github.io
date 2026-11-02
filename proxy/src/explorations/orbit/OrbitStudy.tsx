@@ -360,6 +360,7 @@ export function OrbitStudy({
   const next = useRef<() => void>(() => {});
   const targetCoverReady =
     targetScene === null || artworkReady[targetScene] === true;
+  const currentCoverReady = artworkReady[scene] === true;
   const audio = useOrbitSoundtrack(
     tracks,
     resolve,
@@ -369,6 +370,7 @@ export function OrbitStudy({
     visible,
     () => next.current(),
     targetCoverReady,
+    currentCoverReady,
   );
   const { pause, play } = audio;
   const navigate = useCallback(

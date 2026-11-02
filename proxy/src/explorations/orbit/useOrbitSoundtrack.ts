@@ -20,6 +20,7 @@ export function useOrbitSoundtrack(
   visible: boolean,
   onEnded: () => void,
   targetCoverReady: boolean,
+  currentCoverReady: boolean,
 ) {
   const [wanted, setWanted] = useState(false);
   const intent = useRef(0);
@@ -124,7 +125,7 @@ export function useOrbitSoundtrack(
         gestureScene.current = null;
         return;
       }
-      if (ready[scene]) {
+      if (ready[scene] && currentCoverReady) {
         let disposed = false;
         void source.play().then((started) => {
           if (!disposed && !started) setWanted(false);
@@ -168,6 +169,7 @@ export function useOrbitSoundtrack(
     cubes.ready,
     horizon.ready,
     targetCoverReady,
+    currentCoverReady,
   ]);
   return {
     ...(scene === 'cubes' ? cubes : horizon),
