@@ -314,3 +314,26 @@ test('sustained healthy frames do not latch performance stasis', async ({
   await expect(main).toHaveAttribute('data-performance-stasis', 'false');
   await expect(main).not.toHaveAttribute('data-render-mode', 'stasis');
 });
+
+test('meniscus transition does not inherit hidden cover opacity from the previous effect', async ({
+  page,
+}) => {
+  test.setTimeout(30000);
+  await page.goto('/?scene=cubes&skipIntro=1&graphics=poster');
+  await page.waitForTimeout(1000);
+  // The dock starts with ripple and picks a random effect on navigation.
+  // 0.99 forces meniscus, whose mode-swapped clipPath must not leave the
+  // previous ripple opacity at 0 on the incoming horizon layer.
+  await page.evaluate(() => {
+    Math.random = () => 0.99;
+  });
+  await page.locator('.rotary-deck').press('End');
+  await page.getByRole('button', { name: 'Next scene', exact: true }).click();
+  const main = page.locator('main');
+  await expect(main).toHaveAttribute('data-scene', 'horizon', {
+    timeout: 20000,
+  });
+  const horizonLayer = page.locator('.cover-layer[data-cover="horizon"]');
+  await expect(horizonLayer).toHaveCSS('opacity', '1');
+  await expect(horizonLayer).toHaveCSS('clip-path', /ellipse/);
+});

@@ -1,5 +1,10 @@
-import { useId, useState } from 'react';
-import { motion, useTransform, type MotionValue } from 'motion/react';
+import { useId, useLayoutEffect, useState } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  type MotionValue,
+} from 'motion/react';
 import type { SceneTracks } from '../../lib/music/scene-tracks';
 import type { SceneId } from '../../lib/content/schema';
 import { smoothRange, type CoverStudy } from './presentation';
@@ -61,10 +66,24 @@ export function CoverTransition({
     veil,
     (value) => value * (effect === 'frost' ? 0.55 : 0.24),
   );
-  const clip = useTransform(
-    weight,
-    (value) => `ellipse(130% ${value * 230}% at 50% 120%)`,
-  );
+  // Keep both animated style keys mounted for the life of this layer. If the
+  // effect swaps between `opacity` and `clip-path`, Motion removes the old key
+  // internally but can leave its last inline DOM value behind; a 0 opacity from
+  // the previous ripple/frost state would then survive into meniscus and hide
+  // the cover permanently.
+  const clipMode = effect === 'meniscus' && !reduced;
+  const clipModeValue = useMotionValue(clipMode ? 1 : 0);
+  useLayoutEffect(() => {
+    clipModeValue.set(clipMode ? 1 : 0);
+  }, [clipMode, clipModeValue]);
+  const layerOpacity = useTransform([weight, clipModeValue], (latest) => {
+    const [value, clipped] = latest as [number, number];
+    return clipped ? 1 : value;
+  });
+  const layerClip = useTransform([weight, clipModeValue], (latest) => {
+    const [value, clipped] = latest as [number, number];
+    return clipped ? `ellipse(130% ${value * 230}% at 50% 120%)` : 'none';
+  });
   const rim = useTransform(weight, (value) => `${(1 - value) * 220 - 40}%`);
   return (
     <span
@@ -115,11 +134,7 @@ export function CoverTransition({
         <motion.span
           className="cover-layer"
           data-cover="horizon"
-          style={
-            effect === 'meniscus' && !reduced
-              ? { clipPath: clip }
-              : { opacity: weight }
-          }
+          style={{ opacity: layerOpacity, clipPath: layerClip }}
         >
           <CoverImage
             artwork={tracks.horizon.artwork}
