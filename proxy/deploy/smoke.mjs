@@ -72,7 +72,7 @@ try {
   assert(response, 'OpenResty did not start');
   assert.equal(response.status, 200);
   assert.match(response.headers.get('content-type'), /text\/html/);
-  assert.equal(response.headers.get('cache-control'), 'no-cache');
+  assert.equal(response.headers.get('cache-control'), 'no-cache, no-transform');
   const firstHtml = await response.text();
   const script = /\/_astro\/[^" ]+\.js/.exec(firstHtml)?.[0];
   assert(script, 'The build must contain a JavaScript entry point');
