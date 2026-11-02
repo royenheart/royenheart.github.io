@@ -178,7 +178,7 @@ rim and black shadow stay fixed; the raised mantle is filled with light. The
 user's corrected sketches and excludes the building-associated streak in the
 sixth reference. The existing limb capture command includes the current material.
 
-The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. These are separate from the original homepage's matrix and do not establish real-device GPU performance.
+The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. They do not establish real-device GPU performance.
 
 ## Release
 
