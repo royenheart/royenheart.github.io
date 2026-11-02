@@ -9,12 +9,12 @@ read-only.
 
 **Safe to deploy the reviewed `proxy/dist` artifact. No blocking P0 finding.**
 
-The reviewed artifact contained 84 files. A final fingerprint was computed by
+The reviewed artifact contained 69 files after the retired routes and test-build cleanup. A final fingerprint was computed by
 sorting relative paths, hashing each file with SHA-256, joining
 `<hash>  <relative-path>\n` lines, and hashing that manifest:
 
 ```text
-2883acd2e60fadd52c7f0f357a7118bc7defa2d2d84eb77c39c3aa8d795ea42a
+1e3884e4934bf557fb9ad48b067e254cbd6e8323684462e31bf9be52d06fa4ef
 ```
 
 The fingerprint must be recomputed after any rebuild; a changed artifact needs a
@@ -62,5 +62,9 @@ fresh review.
   Rocket Loader's script rewriting, which had delayed the client-only Astro
   entry by roughly 15 seconds in the tested public path. See
   [external performance directions](./proxy-external-performance.md).
-- The selected `/` route was checked after switching to the final artifact;
-  the previous release remains available for rollback.
+- Release `20261102ac` was published and checked after switching; `/` returns 200
+  while the retired `/original/` and `/preview/` routes return 404. The previous
+  release remains available for rollback.
+- The render fallback now uses the deterministic frame-budget controller in
+  `proxy/src/explorations/orbit/render-health.ts`; no device, GPU, UA or refresh
+  enumeration participates in degradation decisions.
