@@ -57,14 +57,18 @@ export async function publish({ artifact, root, release }) {
   if (
     files.some(
       (file) =>
-        !/^(?:_astro\/[^/]+|favicon\.ico|index\.html|404\.html)$/.test(file),
+        !/^(?:_astro\/[A-Za-z0-9_-][A-Za-z0-9._-]*\.(?:js|css|woff2?|webp|avif|png|jpe?g|svg|mp3|m4a|ogg|wasm|json)|favicon\.ico|index\.html|404\.html|optics\/(?:deflection|inverse-radius)\.dat(?:\.gz|\.br)?|optics\/LICENSE|licenses\/(?:[A-Za-z0-9_-][A-Za-z0-9._-]*\/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\.txt)$/.test(
+          file,
+        ),
     )
   )
     throw new Error('Artifact contains unexpected files');
-  const index = await readFile(join(artifact, 'index.html'), 'utf8');
-  for (const match of index.matchAll(/\/_astro\/([a-zA-Z0-9_.-]+)/g)) {
-    if (!files.includes(`_astro/${match[1]}`))
-      throw new Error(`Missing referenced asset: ${match[1]}`);
+  for (const page of files.filter((file) => file.endsWith('.html'))) {
+    const index = await readFile(join(artifact, page), 'utf8');
+    for (const match of index.matchAll(/\/_astro\/([a-zA-Z0-9_.-]+)/g)) {
+      if (!files.includes(`_astro/${match[1]}`))
+        throw new Error(`Missing referenced asset: ${match[1]}`);
+    }
   }
   let previous;
   try {

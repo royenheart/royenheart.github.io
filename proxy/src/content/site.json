@@ -2,8 +2,24 @@
   "title": "RoyenHeart's Space",
   "name": "RoyenHeart",
   "links": [
-    { "label": "Blog", "href": "https://royenheart.github.io" },
-    { "label": "GitHub", "href": "https://github.com/royenheart" }
+    {
+      "label": "Blog",
+      "href": "https://royenheart.github.io",
+      "preview": {
+        "identity": "RoyenHeart · Space Ranger",
+        "description": "Notes on AI, systems and creative experiments.",
+        "topics": ["AI", "Systems", "Stories"]
+      }
+    },
+    {
+      "label": "GitHub",
+      "href": "https://github.com/royenheart",
+      "preview": {
+        "identity": "@royenheart",
+        "description": "Fly Me To The Moon",
+        "topics": ["Code", "Projects", "Open source"]
+      }
+    }
   ],
   "registrations": [
     {

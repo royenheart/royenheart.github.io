@@ -21,6 +21,8 @@
     "perf:headed": "npm run proxy:perf -- --headed",
     "perf:install": "playwright install chromium firefox webkit",
     "proxy:bundle": "npm run bundle-report -w @royenheart/home --",
+    "proxy:audio:install": "node proxy/scripts/scene-audio.mjs install",
+    "proxy:audio:check": "node proxy/scripts/scene-audio.mjs check --require-all",
     "skills:check": "node .agents/skills/check-sources.mjs",
     "proxy:deploy:test": "npm run test-deploy -w @royenheart/home --"
   },

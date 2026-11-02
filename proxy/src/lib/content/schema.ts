@@ -11,7 +11,20 @@ export const siteSchema = z
   .object({
     title: z.string().min(1),
     name: z.string().min(1),
-    links: z.array(link).min(1),
+    links: z
+      .array(
+        link.extend({
+          preview: z
+            .object({
+              identity: z.string().min(1),
+              description: z.string().min(1),
+              topics: z.array(z.string().min(1)).max(3),
+            })
+            .strict()
+            .optional(),
+        }),
+      )
+      .min(1),
     registrations: z.array(link),
   })
   .strict();

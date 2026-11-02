@@ -19,13 +19,15 @@ export function EventHorizon({
   settings,
   time,
   presence,
-}: SceneProps & { presence?: SceneSignal }) {
+  onReady,
+}: SceneProps & { presence?: SceneSignal; onReady?(): void }) {
   const { width, height } = useThree((state) => state.size);
   const aspect = width / height;
   const wide = Math.max(1, aspect / 1.5);
   const tall = Math.max(1, 1.5 / aspect);
   const scale = (aspect < 0.75 ? 0.94 : 1) * (aspect > 1.8 ? 0.96 : 1);
   const group = useRef<Group>(null);
+  const announced = useRef(false);
   const stars = useRef<Points>(null);
   const starMaterial = useRef<PointsMaterial>(null);
   const materials = useMemo(
@@ -56,6 +58,10 @@ export function EventHorizon({
     return Float32Array.from({ length: 600 }, () => range(-30, 30));
   }, [settings.seed]);
   useFrame(() => {
+    if (!announced.current) {
+      announced.current = true;
+      onReady?.();
+    }
     const reveal = presence?.get() ?? 1;
     Object.values(materials).forEach((material) => {
       material.uniforms.uTime!.value = time.current;

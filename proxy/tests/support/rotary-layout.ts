@@ -7,6 +7,9 @@ export function inspectRotaryLayout() {
   if (!deck || !card) return ['Missing rotary deck'];
   const c = card.getBoundingClientRect();
   const cover = root.querySelector('.orbit-artwork')!.getBoundingClientRect();
+  const wheel = root.querySelector('.orbit-wheel')!.getBoundingClientRect();
+  // Bars can reach radius 106 in a 200-unit SVG; include the stroke and gap.
+  const responseLimit = wheel.left - wheel.width * 0.035 - 8;
   const cx = cover.x + cover.width / 2,
     cy = cover.y + cover.height / 2;
   if (
@@ -47,11 +50,31 @@ export function inspectRotaryLayout() {
       issues.push('Card content collides with its outline or artwork');
     if (element.matches('a,button') && r.height < 43)
       issues.push('Card control has an undersized touch target');
+    if (root.dataset.interface === 'continuous' && r.right > responseLimit + 1)
+      issues.push('Card content enters the audio response clearance');
   }
   const surface = card.querySelector('svg')!;
   const outline = surface.querySelector<SVGGeometryElement>(
     '.rotary-surface-base',
   )!;
+  const progress = card.querySelector('progress');
+  if (progress) {
+    const box = progress.getBoundingClientRect();
+    // Check a 2px breathing space, not just the rectangular card bounds.
+    for (const x of [box.left - 2, box.right + 2]) {
+      for (const y of [box.top - 2, box.bottom + 2]) {
+        if (
+          !outline.isPointInFill(
+            new DOMPoint(
+              ((x - c.left) / c.width) * 600,
+              ((y - c.top) / c.height) * 100,
+            ),
+          )
+        )
+          issues.push('Song progress escapes the painted contour clearance');
+      }
+    }
+  }
   for (const line of card.querySelectorAll<HTMLElement>(
     '.orbit-ribbon-copy:not(.orbit-profile) > p, .orbit-ribbon-copy:not(.orbit-profile) > h2, .orbit-profile',
   )) {

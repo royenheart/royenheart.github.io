@@ -123,7 +123,7 @@ test('invalid optical data falls back without losing the compact deck', async ({
   ).toBeVisible();
 });
 
-test('late optical requests cannot replace a fallback after the loading deadline', async ({
+test('late optical requests keep the live canvas instead of forcing the damaged fallback', async ({
   page,
 }) => {
   let release!: () => void;
@@ -140,16 +140,18 @@ test('late optical requests cannot replace a fallback after the loading deadline
     'data-renderer',
     'loading',
   );
-  await page.clock.fastForward(10500);
+  await page.clock.fastForward(46000);
   await expect(page.locator('main')).toHaveAttribute(
     'data-renderer',
-    'fallback',
+    'loading',
   );
+  await expect(page.locator('main')).toHaveAttribute(
+    'data-graphics-slow',
+    'true',
+  );
+  await expect(page.locator('canvas')).toHaveCount(1);
   release();
   await page.clock.fastForward(1000);
-  await expect(page.locator('main')).toHaveAttribute(
-    'data-renderer',
-    'fallback',
-  );
-  await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('main')).toHaveAttribute('data-renderer', 'webgl');
+  await expect(page.locator('canvas')).toHaveCount(1);
 });

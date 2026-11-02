@@ -1,5 +1,7 @@
 import { useId } from 'react';
 import type { RotaryDesign } from './rotary-designs';
+import type { CardFinish } from './card-finishes';
+import { CardFinishLayer } from './CardFinishLayer';
 
 const contours: Record<RotaryDesign, string> = {
   tangent:
@@ -9,7 +11,13 @@ const contours: Record<RotaryDesign, string> = {
     'M30 2H578Q598 2 598 22V78Q598 98 578 98H114C76 98 72 75 44 53C26 39-12 2 30 2Z',
 };
 
-export function CardSurface({ design }: { design: RotaryDesign }) {
+export function CardSurface({
+  design,
+  finish = 'original',
+}: {
+  design: RotaryDesign;
+  finish?: CardFinish;
+}) {
   const id = useId().replaceAll(':', '');
   const path = contours[design];
   return (
@@ -91,6 +99,7 @@ export function CardSurface({ design }: { design: RotaryDesign }) {
           ))}
         </g>
         <path className="rotary-surface-sheen" d="M10 7H590M92 94H582" />
+        <CardFinishLayer finish={finish} contour={path} id={id} />
       </g>
       <path
         d={path}

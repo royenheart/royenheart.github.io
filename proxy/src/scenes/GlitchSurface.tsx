@@ -18,13 +18,11 @@ export function GlitchSurface({
   source,
   diagnostic,
   onReady,
-  onFailure,
 }: {
   geometry: BufferGeometry;
   source: ShaderMaterial;
   diagnostic: GlitchDiagnostic;
   onReady(): void;
-  onFailure(): void;
 }) {
   const { gl, camera, size, viewport, invalidate } = useThree();
   const ratio = Math.min(viewport.dpr, 1);
@@ -65,6 +63,8 @@ export function GlitchSurface({
   }, [geometry, source]);
   const mesh = useRef<Mesh>(null);
   const compiled = useRef(false);
+  const announced = useRef(false);
+  const available = useRef(true);
   const clearColor = useMemo(() => new Color(), []);
   useEffect(() => {
     let alive = true;
@@ -88,14 +88,21 @@ export function GlitchSurface({
         compiled.current = true;
         invalidate();
       })
-      .catch(() => {
-        if (alive) onFailure();
+      .catch((error) => {
+        if (!alive) return;
+        available.current = false;
+        // F7 is an optional reverse treatment. A driver-specific compile
+        // failure must not discard the working horizon foreground.
+        console.warn(
+          '[orbit] F7 material unavailable; keeping live horizon',
+          error,
+        );
       });
     return () => {
       alive = false;
       preparation.clear();
     };
-  }, [gl, camera, geometry, material, target, invalidate, onFailure]);
+  }, [gl, camera, geometry, material, target, invalidate]);
   useEffect(() => () => material.dispose(), [material]);
   useEffect(
     () => () => {
@@ -105,8 +112,11 @@ export function GlitchSurface({
   );
   useFrame(() => {
     if (!mesh.current) return;
+    mesh.current.visible =
+      Number(source.uniforms.uPresence!.value) >= 0.001 || !announced.current;
     const q = 1 - Number(source.uniforms.uTransition!.value);
     const active =
+      available.current &&
       Boolean(source.uniforms.uExpressive!.value) &&
       Number(source.uniforms.uDirection!.value) < 0 &&
       q > 0 &&
@@ -144,7 +154,13 @@ export function GlitchSurface({
       frustumCulled={false}
       renderOrder={-100}
       onAfterRender={() => {
-        if (compiled.current) onReady();
+        // The source is drawable as soon as its first frame is submitted.
+        // F7's alternate material may still be compiling; that must not block
+        // the initial horizon arrival or turn a live canvas into a fallback.
+        if (!announced.current) {
+          announced.current = true;
+          onReady();
+        }
       }}
       dispose={null}
     />

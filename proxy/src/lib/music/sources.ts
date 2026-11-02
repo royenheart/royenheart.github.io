@@ -13,10 +13,16 @@ export interface MusicTrack {
   artwork?: string;
   duration?: number;
   source: MusicSource;
+  playbackUrl?: string;
 }
 
 export type Playback =
-  { kind: 'audio'; url: string } | { kind: 'external'; message: string };
+  | {
+      kind: 'audio';
+      url: string;
+      analysis?: 'web-audio' | 'unavailable';
+    }
+  | { kind: 'external'; message: string };
 
 export interface ResolvedTrack {
   title?: string;
@@ -108,6 +114,23 @@ export function musicSourceUrl(source: MusicSource): string {
 
 // Provider metadata is separate from a usable playback capability.
 export const resolvePublicAudio: TrackResolver = async (track) => {
+  if (track.playbackUrl) {
+    // Relative-base builds resolve imported assets against the current host.
+    if (typeof location !== 'undefined') {
+      const asset = new URL(track.playbackUrl, location.href);
+      if (
+        asset.origin === location.origin &&
+        ['http:', 'https:'].includes(asset.protocol) &&
+        !asset.username &&
+        !asset.password
+      )
+        return { playback: { kind: 'audio', url: asset.href } };
+    }
+    const audio = parseMusicSource(track.playbackUrl);
+    if (audio.provider !== 'local' && audio.provider !== 'direct')
+      throw new Error('Playback requires an audio file, not a platform page');
+    return { playback: { kind: 'audio', url: audio.url } };
+  }
   switch (track.source.provider) {
     case 'local':
     case 'direct':
@@ -117,6 +140,8 @@ export const resolvePublicAudio: TrackResolver = async (track) => {
         playback: {
           kind: 'audio',
           url: `https://music.163.com/song/media/outer/url?id=${encodeURIComponent(track.source.id)}.mp3`,
+          // The public redirect supports media playback, but not CORS analysis.
+          analysis: 'unavailable',
         },
       };
     case 'spotify':

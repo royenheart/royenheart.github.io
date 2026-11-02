@@ -145,5 +145,36 @@ export function inspectOrbitLayout() {
     document.documentElement.scrollHeight > innerHeight + 2
   )
     issues.push('Document overflows');
+  const registrations = root.querySelector('.orbit-dock-registrations');
+  if (registrations) {
+    const footer = rect(registrations);
+    const deck = rect(root.querySelector('.rotary-deck')!);
+    const artwork = rect(root.querySelector('.orbit-artwork')!);
+    if (footer.top < Math.max(deck.bottom, artwork.bottom) + 4)
+      issues.push('Registrations collide with the cards or artwork');
+    if (Math.abs(footer.left - deck.left) > 2)
+      issues.push('Registrations are not aligned beneath the deck');
+    if (Math.abs(footer.right - artwork.right) > 2)
+      issues.push('Registration rule does not align with the visible cover');
+    const links = Array.from(registrations.querySelectorAll('a'));
+    if (links.length && Math.abs(rect(links.at(-1)!).right - footer.right) > 2)
+      issues.push('Registration text is not right aligned');
+    if (
+      links.length > 1 &&
+      Math.abs(rect(links[0]!).top - rect(links[1]!).top) > 1
+    )
+      issues.push('Registrations wrap into multiple rows');
+    if (footer.height > 46)
+      issues.push('Registration row exceeds its compact height');
+    contains(root, registrations);
+    for (const link of registrations.querySelectorAll('a')) {
+      contains(registrations, link);
+      if (rect(link).height < 44)
+        issues.push('Registration target is too short');
+      const label = link.querySelector('span')!;
+      if (label.scrollWidth > label.clientWidth + 1)
+        issues.push('Registration text is clipped');
+    }
+  }
   return issues;
 }

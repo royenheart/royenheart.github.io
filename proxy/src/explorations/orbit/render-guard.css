@@ -1,0 +1,183 @@
+.orbit-render-guard {
+  position: absolute;
+  top: var(--orbit-wheel);
+  right: var(--dock-footer-inset);
+  width: min(
+    calc(
+      var(--rotary-width) + var(--orbit-wheel) / 2 - var(--dock-footer-inset)
+    ),
+    calc(
+      100vw - var(--dock-right) - var(--dock-left) - var(--dock-footer-inset)
+    )
+  );
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-inline: 2px;
+  color: #e9e4d2;
+  font:
+    500 8px/1 'IBM Plex Sans',
+    'Noto Sans SC',
+    sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  --guard-a: #94dfff;
+  --guard-b: #f5cc84;
+  --guard-ink: #04131b;
+  /* Guard Cant: one fixed 4-degree upward shear for every visible part. */
+  --guard-cant: -4deg;
+}
+
+.orbit-render-guard[data-mode='reduced'] {
+  --guard-a: #f5cc84;
+  --guard-b: #e5a74b;
+  --guard-ink: #1d1404;
+}
+.orbit-render-guard[data-mode='critical'] {
+  --guard-a: #e5a74b;
+  --guard-b: #d47d70;
+  --guard-ink: #1f0c0a;
+}
+.orbit-render-guard[data-mode='stasis'] {
+  --guard-a: #d47d70;
+  --guard-b: #9d8aa6;
+  --guard-ink: #130c16;
+}
+.orbit-render-guard[data-mode='still'] {
+  --guard-a: #aab6c0;
+  --guard-b: #667582;
+  --guard-ink: #071019;
+}
+
+.orbit-guard-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 16px;
+  padding: 0 4px;
+  border: 1px solid #b6a782;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(0deg, #fff9 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #faf6e9 0%, #e4dfd2 44%, #f0eadc 100%);
+  color: #17140d;
+  font-weight: 700;
+  font-size: 7px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 #fffdf4,
+    inset 0 -1px 0 #bdb39c,
+    0 1px 2px #0007;
+  transform: skewX(var(--guard-cant));
+  transform-origin: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.orbit-guard-name {
+  display: inline-block;
+  color: #dce3e9;
+  letter-spacing: 0.14em;
+  transform: skewX(var(--guard-cant));
+  transform-origin: left center;
+}
+
+.orbit-guard-marks {
+  display: flex;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.orbit-guard-marks i {
+  display: block;
+  width: 9px;
+  height: 6px;
+  border: 1px solid color-mix(in srgb, var(--guard-a) 58%, transparent);
+  background: #0b151d;
+  transform: skewX(var(--guard-cant));
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.orbit-guard-marks i.on {
+  border-color: var(--guard-a);
+  background: linear-gradient(100deg, var(--guard-a), var(--guard-b));
+  box-shadow: 0 0 7px color-mix(in srgb, var(--guard-a) 55%, transparent);
+}
+
+.orbit-guard-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 42px;
+  min-width: 42px;
+  height: 16px;
+  padding: 0 3px;
+  border: 1px solid color-mix(in srgb, var(--guard-a) 42%, #8c7854);
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(0deg, #fff6 0 1px, transparent 1px 3px),
+    linear-gradient(105deg, var(--guard-a), var(--guard-b));
+  color: var(--guard-ink);
+  font-weight: 700;
+  font-size: 7px;
+  letter-spacing: 0.05em;
+  box-shadow:
+    inset 0 1px 0 #fff8,
+    inset 0 -1px 0 #0004,
+    0 1px 2px #0007;
+  transform: skewX(var(--guard-cant));
+  transform-origin: center;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.orbit-guard-state:not([data-state='full']) {
+  width: auto;
+  min-width: 36px;
+  padding: 0 5px;
+}
+
+@media (max-width: 720px) {
+  .orbit-guard-name {
+    display: none;
+  }
+  .orbit-render-guard {
+    gap: 5px;
+    font-size: 6.5px;
+  }
+  .orbit-guard-marks {
+    margin-left: 0;
+  }
+  .orbit-guard-state {
+    margin-left: auto;
+    width: 42px;
+    min-width: 42px;
+    height: 16px;
+    padding: 0 3px;
+  }
+  .orbit-guard-state:not([data-state='full']) {
+    width: auto;
+    min-width: 36px;
+    padding: 0 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-render-guard *,
+  .orbit-render-guard *::before,
+  .orbit-render-guard *::after {
+    transition: none !important;
+  }
+}

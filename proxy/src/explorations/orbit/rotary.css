@@ -65,6 +65,7 @@
   position: relative;
 }
 .rotary-card .orbit-ribbon-progress {
+  bottom: 6px;
   left: var(--contour-progress-start, 40px);
   width: calc(
     100% - var(--contour-progress-start, 40px) - var(--card-pad-right)

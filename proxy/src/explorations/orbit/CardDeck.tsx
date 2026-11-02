@@ -6,6 +6,8 @@ export interface OrbitCard {
   id: string;
   label: string;
   content: ReactNode;
+  /** IDs of cards bound to interactive components inside this slot. */
+  boundCards?: readonly string[];
 }
 function FrontCard({
   card,

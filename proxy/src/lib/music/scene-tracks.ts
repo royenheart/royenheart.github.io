@@ -1,28 +1,20 @@
-import { z } from 'zod';
 import data from '../../content/scene-music.json';
 import type { SceneId } from '../content/schema';
-import { parseMusicSource, type MusicTrack } from './sources';
+import type { MusicTrack } from './sources';
+import { loadSceneTracks } from './scene-track-schema';
 
-const httpsUrl = z.url().refine((url) => url.startsWith('https://'));
-const entry = z
-  .object({
-    id: z.string().min(1),
-    title: z.string().min(1),
-    artist: z.string().min(1),
-    duration: z.number().positive(),
-    artwork: httpsUrl,
-    sourceUrl: z.string().min(1),
-    links: z.array(z.object({ label: z.string().min(1), href: httpsUrl })),
-  })
-  .transform(({ sourceUrl, ...track }) => ({
-    ...track,
-    source: parseMusicSource(sourceUrl),
-  }));
+// Vite emits content-addressed audio assets alongside the existing static chunks.
+const files = import.meta.glob<string>('../../assets/audio/*.mp3', {
+  eager: true,
+  query: '?url&no-inline',
+  import: 'default',
+});
+const audioAssets = Object.fromEntries(
+  Object.entries(files).map(([path, url]) => [path.split('/').at(-1)!, url]),
+);
 
 export type SceneMusicTrack = MusicTrack & {
   links?: { label: string; href: string }[];
 };
 export type SceneTracks = Record<SceneId, SceneMusicTrack>;
-export const sceneTracks: SceneTracks = z
-  .object({ cubes: entry, horizon: entry })
-  .parse(data);
+export const sceneTracks: SceneTracks = loadSceneTracks(data, audioAssets);

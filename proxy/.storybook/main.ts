@@ -17,6 +17,7 @@ const config: StorybookConfig = {
       ...config.optimizeDeps,
       include: [
         ...(config.optimizeDeps?.include ?? []),
+        'react-dom',
         '@react-three/drei/core/Fbo',
         '@react-three/drei/core/Line',
         '@react-three/drei/core/OrbitControls',

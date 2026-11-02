@@ -5,6 +5,8 @@ import {
   Vector3,
   type ShaderMaterial,
   type PerspectiveCamera,
+  type Group,
+  type Mesh,
 } from 'three';
 import {
   HORIZON_CENTER,
@@ -74,6 +76,8 @@ export function CubeCloud({
   const size = useThree((state) => state.size);
   const camera = useThree((state) => state.camera);
   const centerView = useMemo(() => new Vector3(), []);
+  const group = useRef<Group>(null);
+  const background = useRef<Mesh>(null);
   // Keep particle identities stable while adaptive DPR changes during a morph.
   const count = Math.round(settings.cubeCount * (choreography ? 1 : quality));
   const geometry = useMemo(
@@ -122,6 +126,7 @@ export function CubeCloud({
   useFrame(() => {
     const blend = collapse?.get() ?? 0;
     const entry = presence?.get() ?? 1;
+    if (group.current) group.current.visible = blend < 1;
     if (cubes.current) {
       cubes.current.uniforms.uTime!.value = time.current;
       cubes.current.uniforms.uAccretionStyle!.value =
@@ -176,11 +181,14 @@ export function CubeCloud({
                 ? 0.7
                 : 0.62,
           ));
+      if (background.current)
+        background.current.visible =
+          backdrop.current.uniforms.uPresence!.value > 0;
     }
   });
   return (
-    <group>
-      <mesh position={[0, 0, -94]}>
+    <group ref={group}>
+      <mesh ref={background} position={[0, 0, -94]}>
         <planeGeometry args={[320, 190]} />
         <shaderMaterial
           ref={backdrop}

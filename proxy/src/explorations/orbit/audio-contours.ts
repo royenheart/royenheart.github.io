@@ -12,6 +12,15 @@ export const quietLevels = (): AudioContourLevels => ({
   high: 0,
 });
 
+// A gentle decorative cycle for playback without readable samples. This is
+// deliberately separate from measured energy, including a genuinely silent track.
+export const ambientLevels = (time: number): AudioContourLevels => ({
+  energy: 0.34 + 0.07 * Math.sin(time * 0.7),
+  low: 0.3 + 0.1 * Math.sin(time * 0.53),
+  mid: 0.25 + 0.1 * Math.cos(time * 0.71),
+  high: 0.12 + 0.06 * Math.sin(time * 0.91),
+});
+
 // Frequency magnitudes shape the lobes; measured waveform energy gates motion,
 // so a silent playing source cannot produce a simulated beat.
 export function measureContourAudio(

@@ -5,6 +5,7 @@ import { previewTracks, resolvePreviewTrack } from '../music-fixtures';
 import { sceneTracks } from '../../lib/music/scene-tracks';
 import { resolvePublicAudio } from '../../lib/music/sources';
 import type { TrackResolver } from '../../lib/music/sources';
+import nativeTone from '../audio-fixtures/steady-tone.mp3?url&no-inline';
 
 const failedAudio: TrackResolver = async () => {
   throw new Error('Preview audio unavailable');
@@ -58,6 +59,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const SelectedCubes: Story = {
   args: {
+    interfaceMode: 'continuous',
     study: 'collapse',
     tracks: sceneTracks,
     resolve: resolvePublicAudio,
@@ -67,6 +69,7 @@ export const SelectedCubes: Story = {
 };
 export const SelectedHorizon: Story = {
   args: {
+    interfaceMode: 'continuous',
     study: 'collapse',
     dockDesign: 'drum',
     horizonTreatment: 'limb',
@@ -80,6 +83,30 @@ export const SelectedSoundCheck: Story = {
     study: 'collapse',
     dockDesign: 'drum',
     horizonTreatment: 'limb',
+  },
+};
+export const BundledSoundCheck: Story = {
+  args: {
+    ...SelectedSoundCheck.args,
+    graphics: 'poster',
+    skipEntrance: true,
+    resolve: resolvePublicAudio,
+    tracks: {
+      cubes: { ...previewTracks[1]!, playbackUrl: nativeTone },
+      horizon: { ...previewTracks[2]!, playbackUrl: nativeTone },
+    },
+  },
+};
+export const ExternalSoundCheck: Story = {
+  args: {
+    ...BundledSoundCheck.args,
+    resolve: async () => ({
+      playback: {
+        kind: 'audio',
+        url: nativeTone,
+        analysis: 'unavailable',
+      },
+    }),
   },
 };
 export const UnavailableNextTrack: Story = {

@@ -11,6 +11,7 @@ import { CardSurface } from './CardSurface';
 import { cardIndex } from './sequence';
 import { rotaryDesigns, type RotaryDesign } from './rotary-designs';
 import { useContourLayout } from './useContourLayout';
+import type { CardFinish } from './card-finishes';
 
 function RotaryCard({
   card,
@@ -19,6 +20,7 @@ function RotaryCard({
   progress,
   design,
   reduced,
+  finish,
 }: {
   card: OrbitCard;
   position: number;
@@ -26,9 +28,10 @@ function RotaryCard({
   progress: MotionValue<number>;
   design: RotaryDesign;
   reduced: boolean;
+  finish: CardFinish;
 }) {
   const cardRef = useRef<HTMLElement>(null);
-  useContourLayout(cardRef, `${design}:${card.id}`);
+  useContourLayout(cardRef, `${design}:${card.id}:${finish}`);
   const transform = useTransform(progress, (value) => {
     if (reduced) return 'none';
     const distance = position - value;
@@ -59,9 +62,11 @@ function RotaryCard({
       aria-hidden={!active}
       inert={!active}
       data-position={position}
+      data-card-id={card.id}
+      data-bound-cards={card.boundCards?.length || undefined}
       style={{ transform, opacity }}
     >
-      <CardSurface design={design} />
+      <CardSurface design={design} finish={finish} />
       {card.content}
     </motion.article>
   );
@@ -75,6 +80,8 @@ export function RotaryDeck({
   onClose,
   design,
   duration,
+  persistent = false,
+  finish = 'original',
 }: {
   cards: OrbitCard[];
   index: number;
@@ -83,6 +90,8 @@ export function RotaryDeck({
   onClose(): void;
   design: RotaryDesign;
   duration: number;
+  persistent?: boolean;
+  finish?: CardFinish;
 }) {
   const progress = useMotionValue(index);
   const host = useRef<HTMLElement>(null);
@@ -114,7 +123,7 @@ export function RotaryDeck({
       className="rotary-deck"
       role="region"
       aria-roledescription="carousel"
-      aria-label="Information cards"
+      aria-label={persistent ? 'Information slots' : 'Information cards'}
       aria-describedby="rotary-help"
       tabIndex={0}
       data-card-count={cards.length}
@@ -123,10 +132,13 @@ export function RotaryDeck({
       onKeyDown={(event) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
           event.preventDefault();
+          // Keep keyboard navigation alive when the focused card becomes inert.
+          host.current?.focus();
           step(event.key === 'ArrowDown' ? 1 : -1);
         }
         if (event.key === 'Home' || event.key === 'End') {
           event.preventDefault();
+          host.current?.focus();
           onIndex(event.key === 'Home' ? 0 : cards.length - 1);
         }
         if (event.key === 'Escape') {
@@ -136,9 +148,12 @@ export function RotaryDeck({
       }}
     >
       <p id="rotary-help" className="sr-only">
-        Scroll over a card or swipe vertically to browse. Use the up and down
-        arrow keys while focused. Home and End jump to the first and last cards.
-        Escape closes the cards.
+        Scroll over a {persistent ? 'slot' : 'card'} or swipe vertically to
+        browse. Use the up and down arrow keys while focused. Home and End jump
+        to the first and last {persistent ? 'slots' : 'cards'}.
+        {persistent
+          ? 'Escape returns focus to the artwork.'
+          : 'Escape closes the cards.'}
       </p>
       <div
         className="rotary-stage"
@@ -175,11 +190,13 @@ export function RotaryDeck({
             progress={progress}
             design={design}
             reduced={reduced}
+            finish={finish}
           />
         ))}
       </div>
       <p className="sr-only" aria-live="polite" aria-atomic="true">
-        {cards[index]?.label}. Card {index + 1} of {cards.length}.
+        {cards[index]?.label}. {persistent ? 'Slot' : 'Card'} {index + 1} of{' '}
+        {cards.length}.
       </p>
     </section>
   );

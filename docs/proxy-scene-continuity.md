@@ -48,6 +48,12 @@ fallback. Browser autoplay rejection still requires a user gesture. External
 platform availability and cross-origin analysis are not established by local
 synthetic tone tests.
 
+The historical [selected soundtrack audit](proxy-audio-playback-audit.md)
+found that CORS analysis blocked the configured outer URLs. The later
+[external soundtrack update](proxy-external-soundtrack.md) switches cubes to
+Clair de Lune and plays both NetEase links as ordinary native media, with an
+ambient ring when samples are inaccessible. Readable sources retain real analysis.
+
 ## Review
 
 `Explorations/Continuous journey/Selected B` drives one Canvas through 28 seconds:
@@ -63,7 +69,7 @@ The review clock is `12 + timeline seconds`, including running sections. Seeking
 is deterministic; pausing this review pauses all material time. It is separate
 from the ordinary interactive runtime, whose ambient clock advances automatically.
 
-The LAN gallery is `http://192.168.31.143:6008/journey/`. Frame exports, video,
+The LAN gallery is `http://192.0.2.10:6008/journey/`. Frame exports, video,
 viewport evidence and the status wrapper live under `/tmp/proxy-continuity/`;
 none of those generated artifacts are committed. The gallery links the original
 track scene separately from an explicitly labelled synthetic sound check.

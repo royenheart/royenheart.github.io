@@ -31,12 +31,18 @@ async function fixture() {
   );
   await writeFile(join(artifact, '404.html'), 'Not found');
   await writeFile(join(artifact, '_astro/first.123.js'), 'first');
+  await writeFile(join(artifact, '_astro/recording.123.mp3'), 'audio fixture');
+  await mkdir(join(artifact, 'optics'), { recursive: true });
+  await writeFile(join(artifact, 'optics/deflection.dat'), 'table');
+  await mkdir(join(artifact, 'licenses/fonts'), { recursive: true });
+  await writeFile(join(artifact, 'licenses/fonts/plex.txt'), 'license');
   return { artifact, root };
 }
 it('publishes atomically and preserves old lazy assets and a rollback target', async () => {
   const paths = await fixture();
   await publish({ ...paths, release: 'abcdef1' });
   await rm(join(paths.artifact, '_astro/first.123.js'));
+  await rm(join(paths.artifact, '_astro/recording.123.mp3'));
   await writeFile(join(paths.artifact, '_astro/second.456.js'), 'second');
   await writeFile(
     join(paths.artifact, 'index.html'),
@@ -48,6 +54,9 @@ it('publishes atomically and preserves old lazy assets and a rollback target', a
   expect(
     await readFile(join(paths.root, 'shared/_astro/first.123.js'), 'utf8'),
   ).toBe('first');
+  expect(
+    await readFile(join(paths.root, 'shared/_astro/recording.123.mp3'), 'utf8'),
+  ).toBe('audio fixture');
 });
 it('rejects broken artifacts without changing the active release', async () => {
   const paths = await fixture();
@@ -70,5 +79,23 @@ it('refuses to overwrite immutable assets and existing releases', async () => {
   await writeFile(join(paths.artifact, '_astro/first.123.js'), 'changed');
   await expect(publish({ ...paths, release: 'abcdef2' })).rejects.toThrow(
     'Immutable asset collision',
+  );
+});
+
+it('rejects sensitive-looking files even inside allowed directories', async () => {
+  const paths = await fixture();
+  await writeFile(join(paths.artifact, '_astro/.env.production'), 'secret');
+  await expect(publish({ ...paths, release: 'abcdef3' })).rejects.toThrow(
+    'unexpected files',
+  );
+  await rm(join(paths.artifact, '_astro/.env.production'));
+  await writeFile(join(paths.artifact, 'optics/debug.log'), 'log');
+  await expect(publish({ ...paths, release: 'abcdef4' })).rejects.toThrow(
+    'unexpected files',
+  );
+  await rm(join(paths.artifact, 'optics/debug.log'));
+  await writeFile(join(paths.artifact, 'licenses/private.pem'), 'key');
+  await expect(publish({ ...paths, release: 'abcdef5' })).rejects.toThrow(
+    'unexpected files',
   );
 });

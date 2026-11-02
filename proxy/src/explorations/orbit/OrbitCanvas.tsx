@@ -1,4 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Suspense,
+  lazy,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { PerformanceMonitor } from '@react-three/drei/core/PerformanceMonitor';
 import {
@@ -13,6 +23,7 @@ import type { MotionValue } from 'motion/react';
 import {
   Bloom,
   EffectComposer,
+  EffectGroup,
   ToneMapping,
 } from '@react-three/postprocessing';
 import {
@@ -20,11 +31,11 @@ import {
   ToneMappingMode,
   type BloomEffect,
   type ToneMappingEffect,
+  type EffectPass,
 } from 'postprocessing';
 import { SceneImpulse } from '../../scenes/SceneImpulse';
 import { RadiationField } from '../../scenes/RadiationField';
 import { CubeCloud } from '../../scenes/CubeCloud';
-import { EventHorizon } from '../../scenes/EventHorizon';
 import {
   RelativisticHorizon,
   type DiskStyle,
@@ -34,6 +45,15 @@ import {
 import { scenes } from '../../lib/content/load';
 import { motionStudies, type MotionStudy } from './sequence';
 import type { HorizonTreatment } from '../../scenes/relativity/framing';
+import { orbitPixelRatio } from '../../scenes/render-budget';
+
+// The baseline horizon is a historical comparison, not part of the selected
+// relativistic path. Keep its material and shader payload out of the initial
+// preview download until that branch is actually mounted.
+const EventHorizon = lazy(async () => {
+  const module = await import('../../scenes/EventHorizon');
+  return { default: module.EventHorizon };
+});
 
 declare global {
   interface Window {
@@ -51,6 +71,8 @@ declare global {
       quality: number;
       pixelRatio: number;
       time: number;
+      bufferWidth: number;
+      bufferHeight: number;
     };
   }
 }
@@ -62,7 +84,13 @@ export interface OrbitCanvasProps {
   paused: boolean;
   capture: boolean;
   onReady(): void;
-  onFailure(): void;
+  onPrepared?(): void;
+  onQuality?(quality: number): void;
+  initialQuality?: number;
+  onPerformanceFallback?(): void;
+  prepareHorizon?: boolean;
+  onSoftware?(): void;
+  onFailure(reason?: string): void;
   horizonRenderer: 'baseline' | 'relativistic';
   diskStyle: DiskStyle;
   inclination: number;
@@ -87,30 +115,63 @@ function OpticalPostprocessing({
 }) {
   const effect = useRef<BloomEffect>(null);
   const toneMapping = useRef<ToneMappingEffect>(null);
+  const pass = useRef<EffectPass>(null);
+  const warmed = useRef(false);
   useFrame(() => {
     if (effect.current) effect.current.intensity = amount * presence.get();
     if (toneMapping.current)
       toneMapping.current.blendMode.opacity.value = presence.get();
+    if (pass.current) {
+      // Prepare this pass once, then skip its blur pyramid when it contributes
+      // nothing. Keeping the pass mounted avoids first-transition compilation.
+      pass.current.enabled = !warmed.current || presence.get() > 0;
+      warmed.current = true;
+    }
   }, -1);
   return (
     <EffectComposer multisampling={0} enableNormalPass={false}>
-      <Bloom
-        ref={effect}
-        intensity={amount}
-        luminanceThreshold={1.2}
-        luminanceSmoothing={0.2}
-        mipmapBlur
-        levels={4}
-        radius={0.5}
-        resolutionScale={0.5}
-      />
-      <ToneMapping
-        ref={toneMapping}
-        mode={ToneMappingMode.ACES_FILMIC}
-        blendFunction={BlendFunction.NORMAL}
-      />
+      <EffectGroup ref={pass}>
+        <Bloom
+          ref={effect}
+          intensity={amount}
+          luminanceThreshold={1.2}
+          luminanceSmoothing={0.2}
+          mipmapBlur
+          levels={4}
+          radius={0.5}
+          resolutionScale={0.5}
+        />
+        <ToneMapping
+          ref={toneMapping}
+          mode={ToneMappingMode.ACES_FILMIC}
+          blendFunction={BlendFunction.NORMAL}
+        />
+      </EffectGroup>
     </EffectComposer>
   );
+}
+function RenderBudget({
+  quality,
+  capture,
+}: {
+  quality: number;
+  capture: boolean;
+}) {
+  const { size, setDpr, viewport } = useThree();
+  useLayoutEffect(() => {
+    const ratio = capture
+      ? 1.2
+      : orbitPixelRatio(
+          size.width,
+          size.height,
+          window.devicePixelRatio,
+          quality,
+        );
+    // Canvas configuration can reset DPR after initialization or a parent update.
+    // Observe the actual renderer value as well as the requested quality.
+    if (viewport.dpr !== ratio) setDpr(ratio);
+  }, [size.width, size.height, viewport.dpr, quality, capture, setDpr]);
+  return null;
 }
 function World(props: OrbitCanvasProps & { quality: number }) {
   const { camera, invalidate, gl } = useThree();
@@ -126,9 +187,16 @@ function World(props: OrbitCanvasProps & { quality: number }) {
   });
   const time = useRef(initialTime);
   const frames = useRef(0);
+  const metrics = useRef<NonNullable<Window['__orbitScene']> | null>(null);
   const [opticsReady, setOpticsReady] = useState(false);
+  const [baselineReady, setBaselineReady] = useState(false);
   const announced = useRef(false);
   const onOpticsReady = useCallback(() => setOpticsReady(true), []);
+  const onBaselineReady = useCallback(() => setBaselineReady(true), []);
+  const onPrepared = props.onPrepared;
+  useEffect(() => {
+    if (opticsReady || baselineReady) onPrepared?.();
+  }, [opticsReady, baselineReady, onPrepared]);
   const choreography =
     props.horizonRenderer === 'relativistic' &&
     props.horizonTreatment === 'limb';
@@ -193,7 +261,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     const d = props.sceneTime?.on('change', () => invalidate());
     const lost = (event: Event) => {
       event.preventDefault();
-      onFailure();
+      onFailure('context-lost');
     };
     gl.domElement.addEventListener('webglcontextlost', lost);
     return () => {
@@ -219,34 +287,69 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     camera.lookAt(0, pose * 1.4, -25 - pose * 13);
     camera.updateMatrixWorld();
     frames.current++;
-    if (
-      !announced.current &&
-      (props.horizonRenderer === 'baseline' || opticsReady)
-    ) {
+    // A cube-first visit can present its own scene before the horizon's
+    // optical tables and reverse-transition material finish preparing. The
+    // destination remains gated by onPrepared in the parent until it is safe
+    // to start a horizon transition.
+    const initialCubes = props.blend.get() < 0.5;
+    const ready =
+      props.horizonRenderer === 'baseline'
+        ? baselineReady
+        : initialCubes || opticsReady;
+    if (!announced.current && ready) {
       announced.current = true;
       props.onReady();
     }
-    window.__orbitScene = {
-      blend: mix,
-      entrance: entrance.get(),
-      formation: formation.get(),
-      direction: direction?.get() ?? 1,
-      frames: frames.current,
-      calls: gl.info.render.calls,
-      geometries: gl.info.memory.geometries,
-      study: props.study,
-      horizonRenderer: props.horizonRenderer,
-      textures: gl.info.memory.textures,
-      quality: props.quality,
-      pixelRatio: gl.getPixelRatio(),
-      time: time.current,
-    };
+    // Keep the diagnostics object stable. Replacing it on every submitted frame
+    // creates avoidable garbage without changing the observable values.
+    const current =
+      metrics.current ??
+      (metrics.current = {
+        blend: 0,
+        entrance: 0,
+        formation: 0,
+        direction: 1,
+        frames: 0,
+        calls: 0,
+        geometries: 0,
+        study: props.study,
+        horizonRenderer: props.horizonRenderer,
+        textures: 0,
+        quality: props.quality,
+        pixelRatio: 1,
+        time: 0,
+        bufferWidth: 0,
+        bufferHeight: 0,
+      });
+    current.blend = mix;
+    current.entrance = entrance.get();
+    current.formation = formation.get();
+    current.direction = direction?.get() ?? 1;
+    current.frames = frames.current;
+    current.calls = gl.info.render.calls;
+    current.geometries = gl.info.memory.geometries;
+    current.study = props.study;
+    current.horizonRenderer = props.horizonRenderer;
+    current.textures = gl.info.memory.textures;
+    current.quality = props.quality;
+    current.pixelRatio = gl.getPixelRatio();
+    current.time = time.current;
+    current.bufferWidth = gl.domElement.width;
+    current.bufferHeight = gl.domElement.height;
+    window.__orbitScene = current;
     gl.info.reset();
   }, -3);
   return (
     <>
       {props.horizonRenderer === 'baseline' ? (
-        <EventHorizon settings={scenes} time={time} presence={reveal} />
+        <Suspense fallback={null}>
+          <EventHorizon
+            settings={scenes}
+            time={time}
+            presence={reveal}
+            onReady={onBaselineReady}
+          />
+        </Suspense>
       ) : (
         <RelativisticHorizon
           settings={scenes}
@@ -267,6 +370,7 @@ function World(props: OrbitCanvasProps & { quality: number }) {
           diagnostic={props.horizonDiagnostic}
           onReady={onOpticsReady}
           onFailure={onFailure}
+          prepare={props.prepareHorizon !== false}
         />
       )}
       {(!props.transitionDiagnostic ||
@@ -320,35 +424,62 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     </>
   );
 }
-export default function OrbitCanvas(props: OrbitCanvasProps) {
-  const [quality, setQuality] = useState(1);
+function OrbitCanvas(props: OrbitCanvasProps) {
+  const [quality, setQuality] = useState(props.initialQuality ?? 1);
+  const onQuality = props.onQuality;
+  useEffect(() => {
+    onQuality?.(quality);
+  }, [onQuality, quality]);
   const lowerQuality = useCallback(
     () => setQuality((current) => Math.max(0.45, current - 0.25)),
     [],
   );
-  const minimumQuality = useCallback(() => setQuality(0.45), []);
+  const raiseQuality = useCallback(
+    () => setQuality((current) => Math.min(1, current + 0.15)),
+    [],
+  );
   return (
     <Canvas
       camera={{ fov: 62, near: 0.1, far: 160, position: [0, 1.2, 18] }}
-      dpr={quality === 1 ? 1.2 : quality > 0.5 ? 0.9 : 0.7}
+      dpr={props.capture ? 1.2 : 1}
       frameloop={props.paused || props.capture ? 'demand' : 'always'}
-      gl={{ antialias: true, alpha: false }}
+      gl={{
+        // Keep the default framebuffer antialiased: disabling it leaves the
+        // first demand frame blank in the tested Linux WebKit compositor.
+        // Postprocessing targets still use multisampling={0}.
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance',
+      }}
       onCreated={({ gl }) => {
         gl.info.autoReset = false;
         if (
           props.horizonRenderer === 'relativistic' &&
           !gl.extensions.has('EXT_color_buffer_float')
         ) {
-          props.onFailure();
+          props.onFailure('float-buffer');
           return;
         }
+        const context = gl.getContext();
+        const debug = context.getExtension('WEBGL_debug_renderer_info');
+        const rendererName = String(
+          debug
+            ? context.getParameter(debug.UNMASKED_RENDERER_WEBGL)
+            : context.getParameter(context.RENDERER),
+        );
+        if (
+          /swiftshader|llvmpipe|software|warp|basic render driver|microsoft basic/i.test(
+            rendererName,
+          )
+        )
+          props.onSoftware?.();
         gl.debug.onShaderError = (context, _program, vertex, fragment) => {
           console.error(
             'Orbit shader failed',
             context.getShaderInfoLog(vertex),
             context.getShaderInfoLog(fragment),
           );
-          props.onFailure();
+          props.onFailure('shader');
         };
         gl.outputColorSpace = SRGBColorSpace;
         gl.toneMapping = ACESFilmicToneMapping;
@@ -357,14 +488,22 @@ export default function OrbitCanvas(props: OrbitCanvasProps) {
       }}
       fallback={<span>Still view</span>}
     >
+      <RenderBudget quality={quality} capture={props.capture} />
       {!props.capture && !props.paused && (
         <PerformanceMonitor
-          flipflops={2}
+          bounds={() => [45, 58]}
+          ms={200}
+          iterations={6}
+          flipflops={4}
           onDecline={lowerQuality}
-          onFallback={minimumQuality}
+          onIncline={raiseQuality}
+          onFallback={() => props.onPerformanceFallback?.()}
         />
       )}
       <World {...props} quality={quality} />
     </Canvas>
   );
 }
+
+// Song progress updates must not invalidate an otherwise idle scene canvas.
+export default memo(OrbitCanvas);

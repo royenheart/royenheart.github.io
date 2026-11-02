@@ -19,13 +19,12 @@ test('selected recordings enter the drum deck and retain adjacent-scene navigati
     );
     const root = page.locator('main');
     await expect(root).toHaveAttribute('data-dock-design', 'drum');
-    await page.getByRole('button', { name: 'Enter quietly' }).click();
-    await page.locator('.orbit-disc').click({ position: { x: 12, y: 50 } });
+    await expect(page.locator('.orbit-arrival')).toHaveCount(0);
     await expect(page.locator('.rotary-card-active')).toBeVisible();
     await expect.poll(() => page.evaluate(inspectRotaryLayout)).toEqual([]);
-    await expect(page.locator('.orbit-artwork img')).toHaveAttribute(
-      'alt',
-      scene === 'cubes' ? 'Axolotl artwork' : 'Sanctuary artwork',
+    await expect(page.locator('.orbit-artwork')).toHaveAttribute(
+      'aria-label',
+      scene === 'cubes' ? 'Clair de Lune artwork' : 'Sanctuary artwork',
     );
     const count = Number(
       await page.locator('.rotary-deck').getAttribute('data-card-count'),
@@ -34,7 +33,7 @@ test('selected recordings enter the drum deck and retain adjacent-scene navigati
       await page.locator('.rotary-deck').press('ArrowDown');
     await page
       .getByRole('button', {
-        name: scene === 'cubes' ? 'Next scene' : 'Previous scene',
+        name: 'Next scene',
         exact: true,
       })
       .click();

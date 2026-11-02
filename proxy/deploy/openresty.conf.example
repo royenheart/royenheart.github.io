@@ -2,6 +2,16 @@
 # Keep existing certificates, upstream routes, MIME types, and compression.
 root /srv/royenheart-home/current;
 index index.html;
+# Prevent edge HTML transforms such as Rocket Loader from deferring the
+# client-only Astro entry. Cloudflare honors no-transform on this response.
+add_header Cache-Control "no-cache, no-transform" always;
+
+location ^~ /optics/ {
+    root /srv/royenheart-home/current;
+    try_files $uri =404;
+    # URLs include the table SHA-256 as ?v=..., so the bytes are immutable.
+    add_header Cache-Control "public, max-age=31536000, immutable";
+}
 
 location ^~ /_astro/ {
     root /srv/royenheart-home/shared;
@@ -11,7 +21,7 @@ location ^~ /_astro/ {
 
 location / {
     try_files $uri $uri/ =404;
-    add_header Cache-Control "no-cache";
+    add_header Cache-Control "no-cache, no-transform";
 }
 
 error_page 404 /404.html;

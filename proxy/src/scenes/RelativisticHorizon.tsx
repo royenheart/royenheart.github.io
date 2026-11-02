@@ -62,6 +62,7 @@ export function RelativisticHorizon({
   diagnostic,
   onReady,
   onFailure,
+  prepare = true,
 }: SceneProps & {
   presence: SceneSignal;
   formation?: SceneSignal;
@@ -78,7 +79,8 @@ export function RelativisticHorizon({
   treatment: HorizonTreatment;
   diagnostic: HorizonDiagnostic;
   onReady(): void;
-  onFailure(): void;
+  onFailure(reason?: string): void;
+  prepare?: boolean;
 }) {
   const { size, camera, invalidate, gl } = useThree();
   const [textures, setTextures] = useState<OpticalTextures | null>(null);
@@ -130,10 +132,15 @@ export function RelativisticHorizon({
         depthWrite: false,
         depthTest: false,
         side: DoubleSide,
+        forceSinglePass: true,
       }),
     [settings.seed],
   );
   useEffect(() => {
+    // Cube-first visits defer the 2.1 MB optical tables and the reverse-material
+    // compilation until the cube arrival has finished, so preparation cannot
+    // stall the authored opening.
+    if (!prepare) return;
     const controller = new AbortController();
     let resource: OpticalTextures | null = null;
     loadOpticalTextures(controller.signal)
@@ -149,13 +156,13 @@ export function RelativisticHorizon({
         invalidate();
       })
       .catch(() => {
-        if (!controller.signal.aborted) onFailure();
+        if (!controller.signal.aborted) onFailure('optics');
       });
     return () => {
       controller.abort();
       resource?.dispose();
     };
-  }, [material, onFailure, invalidate]);
+  }, [material, onFailure, invalidate, prepare]);
   useEffect(() => () => material.dispose(), [material]);
   useFrame(() => {
     material.uniforms.uTime!.value = time.current;
@@ -172,11 +179,13 @@ export function RelativisticHorizon({
     material.uniforms.uSpatialWaves!.value = spatialWaves;
     material.uniforms.uRadiationMap!.value = radiationMap?.current ?? null;
     gl.getDrawingBufferSize(material.uniforms.uResolution!.value);
-    if (mesh.current)
+    if (mesh.current) {
+      mesh.current.visible = presence.get() >= 0.001 || !ready.current;
       mesh.current.renderOrder =
         transition && ruptureStyle === 'mirror' && direction?.get() === -1
           ? 10
           : -100;
+    }
     material.uniforms.uAspect!.value = size.width / size.height;
     material.uniforms.uViewHeight!.value = horizonViewHeight(
       size.width,
@@ -207,7 +216,6 @@ export function RelativisticHorizon({
         source={material}
         diagnostic={glitchDiagnostic}
         onReady={announceReady}
-        onFailure={onFailure}
       />
     );
   return (

@@ -107,7 +107,7 @@ cover navigation races, resize, context loss and reduced motion. Browser executi
 and viewport captures are emulation, not physical-device GPU performance evidence.
 
 The review gallery and frame/video recipes live at `/tmp/proxy-accretion/final`,
-served locally at `http://192.168.31.143:6008/accretion/`. Videos and screenshots are not
+served locally at `http://192.0.2.10:6008/accretion/`. Videos and screenshots are not
 committed. Exported animation playback is separate from native browser frame rate.
 
 ### Executed checks

@@ -6,6 +6,47 @@ The latest Orbit refinement is documented in [quiet cards and layered audio
 contours](../docs/proxy-audio-contours.md), including card order, contour-aware
 identity layout, actual audio analysis and visual-review evidence.
 
+The selected Orbit soundtrack is **Clair de Lune** for cubes and **Sanctuary**
+for horizon, both using public NetEase outer links in the unified native player.
+When samples cannot be read, the artwork ring uses a gentle default animation;
+readable sources still drive it with actual audio. See the
+[external soundtrack notes](../docs/proxy-external-soundtrack.md).
+Optional [same-origin recording delivery](../docs/proxy-local-soundtrack.md)
+remains available for local files. No artist recording is bundled.
+
+The selected full-screen website is available at `/` in the static production
+build, including arrivals, music, the drum deck, live B and F7. It does not
+load Storybook. For LAN review, run
+`REVIEW_HOST=<your LAN address> npm exec -w @royenheart/home -- astro preview --host "$REVIEW_HOST" --port 4321` and open
+`http://$REVIEW_HOST:4321/`. Set `REVIEW_HOST` locally; do not commit a machine address.
+The page enters a randomly chosen scene automatically and keeps its four-card
+deck visible. The cube scene is named `axolotl`; its music remains Clair de Lune.
+Browser-blocked sound can be enabled from the final information card without
+blocking entry. Its previous / play-pause / next controls keep music pause
+independent of background motion. Registration links sit below the dock.
+The user selected IBM Plex Sans and a random cover treatment on each scene
+change. `cover` and `identity` query parameters allow isolated review. Optional
+`?details=etch`, `?details=flow` and `?details=orbit` compare restrained icon
+feedback using the same material and typography. These detail studies await
+selection. See the [continuous presentation notes](../docs/proxy-continuous-presentation.md)
+and [dock refinement measurements](../docs/proxy-dock-refinement.md).
+
+Use `?scene=cubes` or `?scene=horizon` to choose the initial scene;
+`?diagnostics=1` opens the runtime HUD. `Shift+D` toggles the same local HUD at
+any time: renderer, frame cadence, drawing buffer, scene/optics/audio services,
+network and a live frame chart. On coarse-pointer phones and tablets, a 44px
+`>_` control at the top-right opens the same HUD; it hides while the HUD is open,
+and the panel's × control closes it. Degraded or unavailable rendering uses a
+continuously moving, scene-specific damage layer rather than a blur or a static
+poster; the visible fallback sentence lives only in the HUD. The Render Guard
+footer uses five discrete modes with a state-specific gradient, above the
+registration hairline. `?graphics=poster` selects the lightweight still view.
+See the
+[performance audit](../docs/proxy-preview-performance.md) for measured results
+and the distinction between hardware rendering, software rendering and transfer
+cost. The current tree's startup readiness, audio intent and concurrency review
+is in [the performance and concurrency review](../docs/proxy-performance-concurrency-review.md).
+
 ## Development
 
 Use Node 24 LTS and run commands from the repository root:
@@ -144,3 +185,9 @@ The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometr
 The independent `Proxy checks and static artifact` workflow uploads `proxy-static-<commit>` after verification. Deploy only its contents (`proxy/dist`), using the [atomic publication helper and OpenResty examples](deploy/README.md). Node is a build/deployment-helper dependency; the public server needs no Node, Python, Lua template engine, playlist API, or database.
 
 The legacy TOML/template/Python preview path and source-regex tests have been removed. Previous Git revisions and deployed release directories remain the rollback source. No production deployment is performed by the verification workflow.
+
+The selected nameplate now defaults to drifting inlay and graphic Elsewhere marks. Bound-card extraction studies are available via `cardMotion=slide|lift|fan` and `cardSurface=drift|light|layers` on `/?card=elsewhere&skipIntro=1`. See [the slot/card refinement](../docs/proxy-slot-cards.md) for semantics, motion references, lifecycle checks and review artifacts.
+
+The user-selected card behavior is now single-card straight rise/return with drifting inlay; other cards remain stored. `cardArt=engraving|foil|relief` compares scene-specific lower-right SVG prints. See [the single-card/artwork refinement](../docs/proxy-card-art.md) for pending artwork choices, reproduction and validation.
+
+The selected scene printing is relief for horizon and foil for cubes. Elsewhere defaults to horizontal printing (`editorial`); `marks=emblem|intaglio|editorial` retains the comparisons. See [semantic marks and recessed storage](../docs/proxy-slot-mark-refinement.md) for the current defaults, license attribution and visual measurements.
