@@ -14,7 +14,7 @@ sorting relative paths, hashing each file with SHA-256, joining
 `<hash>  <relative-path>\n` lines, and hashing that manifest:
 
 ```text
-ea83dbfabaf1092bafa0e5468d152ac855de449f8ea0d61353a672bda7798653
+a1d981d5d9314ade72216814da957643a68833c41396eedf2470ca9bfd6e5d06
 ```
 
 The fingerprint must be recomputed after any rebuild; a changed artifact needs a
@@ -62,7 +62,7 @@ fresh review.
   Rocket Loader's script rewriting, which had delayed the client-only Astro
   entry by roughly 15 seconds in the tested public path. See
   [external performance directions](./proxy-external-performance.md).
-- Release `20261102ad` was published and checked after switching; `/` returns 200
+- Release `20261102ae` was published and checked after switching; `/` returns 200
   while the retired `/original/` and `/preview/` routes return 404. The previous
   release remains available for rollback.
 - The render fallback now uses the deterministic frame-budget controller in
