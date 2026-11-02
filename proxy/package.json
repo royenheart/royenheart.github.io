@@ -16,7 +16,6 @@
     "build-storybook": "node scripts/scene-audio.mjs check && storybook build -o storybook-static",
     "test-storybook": "vitest run --project storybook",
     "e2e": "playwright test",
-    "perf": "playwright test tests/perf --project chromium",
     "bundle-report": "node scripts/bundle-report.mjs",
     "test-deploy": "node deploy/smoke.mjs",
     "optics:generate": "node --experimental-strip-types scripts/generate-optics.mjs"

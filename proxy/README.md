@@ -178,7 +178,7 @@ rim and black shadow stay fixed; the raised mantle is filled with light. The
 user's corrected sketches and excludes the building-associated streak in the
 sixth reference. The existing limb capture command includes the current material.
 
-The optical browser tests run in Chromium, Firefox and WebKit. The Orbit geometry matrix checks 17 viewport sizes, including short screens. They do not establish real-device GPU performance.
+Historical optical, transition and scene studies are documented as experiment reports and retained in Storybook; their long Playwright matrices are no longer CI gates. CI runs the selected-page Chromium smoke path only. The complete local matrix and its rationale are documented in [historical visual verification](../docs/proxy-historical-verification.md).
 
 ## Release
 

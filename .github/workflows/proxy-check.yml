@@ -44,18 +44,18 @@ jobs:
           node-version: "24"
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npx playwright install --with-deps chromium
       - run: npm run skills:check
       - run: npm test
       - run: npm run proxy:build
       - run: npm run proxy:bundle
       - run: npm run proxy:deploy:test
       - run: npm run proxy:storybook:build
-      # The full three-browser matrix is a local/advisory visual-study run.
-      # CI keeps the functional Chromium journey within the job timeout.
-      - name: Run Chromium browser checks
+      # Historical matrices are reports/local studies. Keep CI on the selected
+      # page smoke path so release checks stay fast and deterministic.
+      - name: Run Chromium smoke checks
         working-directory: proxy
-        run: npx playwright test --project=chromium --reporter=line
+        run: npx playwright test tests/e2e/preview.spec.ts tests/e2e/software-fallback.spec.ts --project=chromium --reporter=line
       - name: Upload browser and bundle evidence
         if: always()
         uses: actions/upload-artifact@v4

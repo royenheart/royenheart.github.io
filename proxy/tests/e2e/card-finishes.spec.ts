@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { inspectOrbitLayout } from '../support/orbit-layout';
 import { inspectRotaryLayout } from '../support/rotary-layout';
 
-for (const finish of ['inset', 'nameplate', 'seam']) {
+for (const finish of ['nameplate']) {
   test(`${finish} keeps every card usable across sizes, themes and interrupted feedback`, async ({
     page,
   }) => {

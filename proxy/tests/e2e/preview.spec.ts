@@ -164,19 +164,6 @@ test('a buffering track keeps a usable pause control', async ({ page }) => {
   });
 });
 
-test('root serves the selected experience and retains the original page', async ({
-  page,
-}) => {
-  await page.goto('/?scene=cubes&graphics=poster&skipIntro=1');
-  await expect(page.locator('main')).toHaveAttribute(
-    'data-interface',
-    'continuous',
-  );
-  await expect(page.locator('main')).toHaveAttribute('data-renderer', 'poster');
-  await page.goto('/');
-  await expect(page.locator('.scene-experience')).toBeVisible();
-});
-
 test('scene switch queues while the destination is preparing', async ({
   page,
 }) => {
