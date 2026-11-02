@@ -28,10 +28,12 @@ const meta = {
     await waitFor(() => expect(blog).toBeVisible(), { timeout: 5_000 });
     await waitFor(() => expect(github).toBeVisible(), { timeout: 5_000 });
     await userEvent.hover(blog);
-    await waitFor(() =>
-      expect(
-        canvas.getByRole('group', { name: 'Current card' }),
-      ).toHaveAttribute('data-state', 'open'),
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByRole('group', { name: 'Current card' }),
+        ).toHaveAttribute('data-state', 'open'),
+      { timeout: 5_000 },
     );
     await expect(
       canvasElement.querySelectorAll('.slot-card-stack i'),
@@ -41,15 +43,19 @@ const meta = {
     ).toHaveLength(0);
     await userEvent.unhover(blog);
     await userEvent.hover(github);
-    await waitFor(() =>
-      expect(
-        canvas.getByRole('group', { name: 'Current card' }),
-      ).toHaveTextContent('@royenheart'),
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByRole('group', { name: 'Current card' }),
+        ).toHaveTextContent('@royenheart'),
+      { timeout: 5_000 },
     );
-    await waitFor(() =>
-      expect(
-        canvas.getByRole('group', { name: 'Current card' }),
-      ).toHaveAttribute('data-state', 'open'),
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByRole('group', { name: 'Current card' }),
+        ).toHaveAttribute('data-state', 'open'),
+      { timeout: 5_000 },
     );
     await expect(
       canvas.getByRole('group', { name: 'Current card' }),

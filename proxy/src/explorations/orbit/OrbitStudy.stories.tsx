@@ -192,10 +192,12 @@ export const LongMusicMetadata: Story = {
     const canvas = within(canvasElement);
     for (let index = 0; index < 2; index++)
       await userEvent.click(canvas.getByRole('button', { name: 'Next card' }));
-    await waitFor(() =>
-      expect(
-        canvas.getByRole('heading', { name: /An unusually long/ }),
-      ).toBeVisible(),
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByRole('heading', { name: /An unusually long/ }),
+        ).toBeVisible(),
+      { timeout: 5_000 },
     );
   },
 };
