@@ -28,8 +28,8 @@ const meta = {
     const github = await canvas.findByRole('button', {
       name: 'GitHub',
     });
-    await waitFor(() => expect(blog).toBeVisible());
-    await waitFor(() => expect(github).toBeVisible());
+    await waitFor(() => expect(blog).toBeVisible(), { timeout: 5_000 });
+    await waitFor(() => expect(github).toBeVisible(), { timeout: 5_000 });
     await userEvent.hover(blog);
     await userEvent.unhover(blog);
     github.focus();

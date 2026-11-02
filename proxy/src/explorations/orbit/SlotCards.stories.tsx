@@ -25,6 +25,8 @@ const meta = {
     const canvas = within(canvasElement);
     const blog = await canvas.findByRole('button', { name: 'Blog' });
     const github = canvas.getByRole('button', { name: 'GitHub' });
+    await waitFor(() => expect(blog).toBeVisible(), { timeout: 5_000 });
+    await waitFor(() => expect(github).toBeVisible(), { timeout: 5_000 });
     await userEvent.hover(blog);
     await waitFor(() =>
       expect(
