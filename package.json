@@ -24,9 +24,14 @@
     "proxy:audio:install": "node proxy/scripts/scene-audio.mjs install",
     "proxy:audio:check": "node proxy/scripts/scene-audio.mjs check --require-all",
     "skills:check": "node .agents/skills/check-sources.mjs",
-    "proxy:deploy:test": "npm run test-deploy -w @royenheart/home --"
+    "proxy:deploy:test": "npm run test-deploy -w @royenheart/home --",
+    "prepare": "husky",
+    "commitlint": "commitlint"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.0"
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@playwright/test": "1.61.0",
+    "husky": "^9.1.7"
   }
 }
