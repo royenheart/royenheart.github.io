@@ -45,11 +45,12 @@ Three avoidable costs were found:
    native DPR and a 1.2 maximum. Low sustained frame cadence reduces that budget
    further. The canvas observer also reapplies the cap when R3F reconfiguration
    resets DPR. DOM text and controls retain their normal CSS resolution.
-3. Drei's monitor counts both upward and downward threshold events toward its
-   `flipflops` limit. The previous fallback callback could therefore force
-   minimum quality after repeated *fast* samples. The one-way degradation policy
-   now uses only `onDecline`, with a bounded minimum and no finite flip limit.
-   Hardware samples retained quality 1 throughout the final steady runs.
+3. The previous Drei `PerformanceMonitor` counted every upward threshold event
+   toward its fallback limit, so stable fast samples could force STASIS. The
+   selected path now uses a small deterministic frame-budget controller
+   (`render-health.ts`): sustained over-budget frames lower quality, only
+   sustained severe frames at the floor latch STASIS, and healthy frames release
+   it. Stable 60/90/120/144 Hz unit cases remain FULL.
 
 The existing single canvas, shared material clock, prepared alternate material,
 on-demand paused rendering and WebGL failure poster remain in place. No new
@@ -75,12 +76,12 @@ disjoint samples are excluded. No synchronous `finish()` or pixel readback is
 used during sampling. These are short local measurements, not a device fleet
 benchmark or thermal soak.
 
-| Viewport and scene | Before GPU p95 | After GPU p95 | After buffer | After draw calls |
-| --- | ---: | ---: | --- | ---: |
-| 1440 × 900, horizon | 16.27 ms | 11.48 ms | 1440 × 900 | 11 |
-| 1920 × 1080, horizon | 25.98 ms | 11.62 ms | 1520 × 855 | 11 |
-| 1920 × 1080, cubes | Not a stable quality comparison | 1.00 ms | 1520 × 855 | 3 |
-| 390 × 844, horizon | 4.90 ms | 3.20 ms | 390 × 844 | 11 |
+| Viewport and scene   |                  Before GPU p95 | After GPU p95 | After buffer | After draw calls |
+| -------------------- | ------------------------------: | ------------: | ------------ | ---------------: |
+| 1440 × 900, horizon  |                        16.27 ms |      11.48 ms | 1440 × 900   |               11 |
+| 1920 × 1080, horizon |                        25.98 ms |      11.62 ms | 1520 × 855   |               11 |
+| 1920 × 1080, cubes   | Not a stable quality comparison |       1.00 ms | 1520 × 855   |                3 |
+| 390 × 844, horizon   |                         4.90 ms |       3.20 ms | 390 × 844    |               11 |
 
 The old 1080p sample included its automatic DPR reduction from 1.2 to 0.9;
 the new sample starts with the pixel cap. This comparison measures the whole

@@ -290,18 +290,6 @@ export function OrbitStudy({
   const [failureReason, setFailureReason] = useState('unknown');
   const [quality, setQuality] = useState(1);
   const [stasis, setStasis] = useState(false);
-  const onPerformanceFallback = useCallback(() => setStasis(true), []);
-  const [initialQuality] = useState(() => {
-    if (typeof window === 'undefined') return 1;
-    if (softwareRenderer || graphics === 'poster') return 1;
-    const cores = navigator.hardwareConcurrency ?? 8;
-    const memory = (navigator as unknown as { deviceMemory?: number })
-      .deviceMemory;
-    const coarse = window.matchMedia?.('(pointer: coarse)').matches ?? false;
-    return coarse || cores <= 4 || (memory !== undefined && memory <= 4)
-      ? 0.75
-      : 1;
-  });
   const onReady = useCallback(() => setGraphicsReady(true), []);
   const onQuality = useCallback((value: number) => setQuality(value), []);
   const onPrepared = useCallback(() => setPrepared(true), []);
@@ -822,13 +810,12 @@ export function OrbitStudy({
                     ruptureStyle={ruptureStyle}
                     study={study}
                     capture={capture}
-                    paused={paused || reduced || !visible || quality <= 0.5}
+                    paused={paused || reduced || !visible}
                     onReady={onReady}
                     onPrepared={onPrepared}
                     onSoftware={onSoftware}
                     onQuality={onQuality}
-                    initialQuality={initialQuality}
-                    onPerformanceFallback={onPerformanceFallback}
+                    onStasisChange={setStasis}
                     prepareHorizon={prepareHorizon}
                     onFailure={onFailure}
                     horizonRenderer={horizonRenderer}

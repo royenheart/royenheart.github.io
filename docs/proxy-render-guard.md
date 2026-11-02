@@ -18,13 +18,13 @@ the cant identical across all five modes and at every viewport width.
 
 ## Modes
 
-| Mode       | Meaning                                                         |
-| ---------- | --------------------------------------------------------------- |
-| `FULL`     | Normal protection path; no higher-priority fallback is active.  |
-| `REDUCED`  | The render budget has been lowered.                             |
-| `CRITICAL` | The minimum quality budget is active.                           |
-| `STASIS`   | A sustained-performance fallback has paused continuous drawing. |
-| `STILL`    | The live canvas has been replaced by the static poster path.    |
+| Mode       | Meaning                                                                              |
+| ---------- | ------------------------------------------------------------------------------------ |
+| `FULL`     | Normal protection path; no higher-priority fallback is active.                       |
+| `REDUCED`  | The render budget has been lowered.                                                  |
+| `CRITICAL` | The minimum quality budget is active.                                                |
+| `STASIS`   | Sustained severe frame overruns have latched the lowest budget; recovery is sampled. |
+| `STILL`    | The live canvas has been replaced by the static poster path.                         |
 
 `STASIS` is not a user pause, and `STILL` does not mean that the animated damage
 layer has stopped. The mode is a discrete category, not a progress meter.
@@ -52,3 +52,27 @@ layer has stopped. The mode is a discrete category, not a progress meter.
 See `proxy/src/explorations/orbit/RenderGuard.tsx`,
 `proxy/src/explorations/orbit/render-guard.css`, and
 `proxy/src/explorations/orbit/OrbitStudy.tsx`.
+
+## Render-health sampling
+
+Frame health is sampled only while the page is visible, the scene is prepared
+and continuous drawing is active. The controller uses delivered frame intervals
+and has no device, GPU, user-agent or refresh-rate branches.
+
+- A 2-second visible-frame warm-up absorbs fonts, material uploads and the
+  entrance.
+- Debt grows by `frameTime - 1000/30 ms` and is repaid every frame, so one long
+  frame cannot latch a degraded state.
+- Reaching 1000 ms of debt lowers quality one step (`1.00 → 0.70 → 0.45`).
+- At the lowest step, debt above a 20fps budget can latch STASIS after 1500 ms;
+  sustained healthy frames (under 22 ms) release it after 10 seconds.
+- Hidden tabs, user pauses and reduced motion discard the current sampling
+  window instead of treating the gap as a slow frame.
+- Context loss, shader failure and missing required capabilities remain explicit
+  STILL paths; they are not inferred from timing or device names.
+
+Quality changes only alter the render budget and DPR. STASIS is recoverable and
+the Render Guard remains a discrete status display.
+
+See `proxy/src/explorations/orbit/render-health.ts` and
+`proxy/tests/unit/render-health.test.ts`.

@@ -302,3 +302,15 @@ test('render guard occupies one footer line above registration', async ({
     ),
   ).toBe(true);
 });
+
+test('sustained healthy frames do not latch performance stasis', async ({
+  page,
+}) => {
+  test.setTimeout(30000);
+  await page.goto('/?scene=cubes&skipIntro=1&forceGpu=1');
+  const main = page.locator('main');
+  await expect(main).toHaveAttribute('data-render-mode', 'full');
+  await page.waitForTimeout(9000);
+  await expect(main).toHaveAttribute('data-performance-stasis', 'false');
+  await expect(main).not.toHaveAttribute('data-render-mode', 'stasis');
+});

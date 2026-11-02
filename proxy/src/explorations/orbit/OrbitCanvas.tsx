@@ -10,7 +10,6 @@ import {
   useState,
 } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { PerformanceMonitor } from '@react-three/drei/core/PerformanceMonitor';
 import {
   ACESFilmicToneMapping,
   SRGBColorSpace,
@@ -45,6 +44,12 @@ import {
 import { scenes } from '../../lib/content/load';
 import { motionStudies, type MotionStudy } from './sequence';
 import type { HorizonTreatment } from '../../scenes/relativity/framing';
+import {
+  createRenderHealthState,
+  resetRenderHealthSampling,
+  stepRenderHealth,
+  type RenderHealthState,
+} from './render-health';
 import { orbitPixelRatio } from '../../scenes/render-budget';
 
 // The baseline horizon is a historical comparison, not part of the selected
@@ -86,8 +91,7 @@ export interface OrbitCanvasProps {
   onReady(): void;
   onPrepared?(): void;
   onQuality?(quality: number): void;
-  initialQuality?: number;
-  onPerformanceFallback?(): void;
+  onStasisChange?(stasis: boolean): void;
   prepareHorizon?: boolean;
   onSoftware?(): void;
   onFailure(reason?: string): void;
@@ -424,20 +428,46 @@ function World(props: OrbitCanvasProps & { quality: number }) {
     </>
   );
 }
+function RenderHealthMonitor({
+  active,
+  onQuality,
+  onStasis,
+}: {
+  active: boolean;
+  onQuality(quality: number): void;
+  onStasis(stasis: boolean): void;
+}) {
+  const health = useRef<RenderHealthState>(createRenderHealthState());
+  const last = useRef<number | null>(null);
+
+  useEffect(() => {
+    // A pause/hidden tab must not contribute a giant frame interval on resume.
+    last.current = null;
+    health.current = resetRenderHealthSampling(health.current);
+  }, [active]);
+
+  useFrame(() => {
+    if (!active) return;
+    const now = performance.now();
+    if (last.current === null) {
+      last.current = now;
+      return;
+    }
+    const next = stepRenderHealth(health.current, now - last.current, true);
+    last.current = now;
+    if (next.quality !== health.current.quality) onQuality(next.quality);
+    if (next.stasis !== health.current.stasis) onStasis(next.stasis);
+    health.current = next;
+  });
+  return null;
+}
+
 function OrbitCanvas(props: OrbitCanvasProps) {
-  const [quality, setQuality] = useState(props.initialQuality ?? 1);
+  const [quality, setQuality] = useState(1);
   const onQuality = props.onQuality;
   useEffect(() => {
     onQuality?.(quality);
   }, [onQuality, quality]);
-  const lowerQuality = useCallback(
-    () => setQuality((current) => Math.max(0.45, current - 0.25)),
-    [],
-  );
-  const raiseQuality = useCallback(
-    () => setQuality((current) => Math.min(1, current + 0.15)),
-    [],
-  );
   return (
     <Canvas
       camera={{ fov: 62, near: 0.1, far: 160, position: [0, 1.2, 18] }}
@@ -489,17 +519,11 @@ function OrbitCanvas(props: OrbitCanvasProps) {
       fallback={<span>Still view</span>}
     >
       <RenderBudget quality={quality} capture={props.capture} />
-      {!props.capture && !props.paused && (
-        <PerformanceMonitor
-          bounds={() => [45, 58]}
-          ms={200}
-          iterations={6}
-          flipflops={4}
-          onDecline={lowerQuality}
-          onIncline={raiseQuality}
-          onFallback={() => props.onPerformanceFallback?.()}
-        />
-      )}
+      <RenderHealthMonitor
+        active={!props.capture && !props.paused}
+        onQuality={setQuality}
+        onStasis={(stasis) => props.onStasisChange?.(stasis)}
+      />
       <World {...props} quality={quality} />
     </Canvas>
   );
