@@ -361,8 +361,8 @@
   display: none;
 }
 
-/* Elsewhere: no baked-in bars; both composite marks reveal a short 7° rule
-   only on hover or keyboard focus. */
+/* Elsewhere: no baked-in bars. The composite mark reveals a short horizontal
+   highlight only while a fine pointer hovers it or keyboard focus is visible. */
 .orbit-study[data-card-finish='nameplate']
   .orbit-segments
   nav
@@ -372,33 +372,37 @@
   position: absolute;
   left: 50%;
   bottom: 6px;
-  width: 17px;
-  height: 1px;
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
   background: var(--orbit-accent);
   opacity: 0;
-  transform: translateX(-50%) rotate(-7deg);
-  transform-origin: center;
+  transform: translateX(-50%);
   transition:
     width 140ms ease,
     opacity 140ms ease;
 }
+@media (hover: hover) and (pointer: fine) {
+  .orbit-study[data-card-finish='nameplate']
+    .orbit-segments
+    nav
+    .orbit-segment-link:hover::after {
+    width: 26px;
+    opacity: 1;
+  }
+}
 .orbit-study[data-card-finish='nameplate']
   .orbit-segments
   nav
-  .orbit-segment-link:is(
-    :hover,
-    :focus-visible,
-    [data-preview-open='true']
-  )::after {
-  width: 25px;
+  .orbit-segment-link:focus-visible::after {
+  width: 26px;
   opacity: 1;
 }
 .orbit-study[data-card-finish='nameplate']
   .orbit-segments
   nav
   .orbit-segment-link:active::after {
-  width: 13px;
-  height: 2px;
+  width: 14px;
   opacity: 1;
 }
 @media (prefers-reduced-motion: reduce) {

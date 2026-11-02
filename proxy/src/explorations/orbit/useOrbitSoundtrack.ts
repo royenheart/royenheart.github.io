@@ -19,6 +19,7 @@ export function useOrbitSoundtrack(
   blend: MotionValue<number>,
   visible: boolean,
   onEnded: () => void,
+  targetCoverReady: boolean,
 ) {
   const [wanted, setWanted] = useState(false);
   const intent = useRef(0);
@@ -145,7 +146,7 @@ export function useOrbitSoundtrack(
       source.setGain(started ? Math.cos((weight * Math.PI) / 2) : 1);
       destination.setGain(started ? Math.sin((weight * Math.PI) / 2) : 0);
     };
-    if (ready[target])
+    if (ready[target] && targetCoverReady)
       void destination.play().then((playing) => {
         if (disposed) return;
         started = playing;
@@ -166,6 +167,7 @@ export function useOrbitSoundtrack(
     controls,
     cubes.ready,
     horizon.ready,
+    targetCoverReady,
   ]);
   return {
     ...(scene === 'cubes' ? cubes : horizon),

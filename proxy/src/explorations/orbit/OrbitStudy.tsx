@@ -234,6 +234,40 @@ export function OrbitStudy({
   const [scene, setScene] = useState<SceneId>(
     () => initialScene ?? randomScene(),
   );
+  // Both covers are remote images. Warm the cache at mount and expose readiness
+  // so the audio crossfade cannot start before the incoming artwork is ready.
+  const [artworkReady, setArtworkReady] = useState<
+    Partial<Record<SceneId, boolean>>
+  >({});
+  useEffect(() => {
+    const images: HTMLImageElement[] = [];
+    const markReady = (id: SceneId) =>
+      setArtworkReady((current) =>
+        current[id] ? current : { ...current, [id]: true },
+      );
+    for (const id of Object.keys(tracks) as SceneId[]) {
+      const src = tracks[id].artwork;
+      if (!src) {
+        markReady(id);
+        continue;
+      }
+      const image = new Image();
+      image.decoding = 'async';
+      const ready = () => markReady(id);
+      image.onload = ready;
+      image.onerror = ready;
+      image.src = src;
+      images.push(image);
+      if (image.complete) ready();
+    }
+    return () => {
+      for (const image of images) {
+        image.onload = null;
+        image.onerror = null;
+        image.src = '';
+      }
+    };
+  }, [tracks]);
   const [entered, setEntered] = useState(skipEntrance || continuous);
   const [expanded, setExpanded] = useState(
     continuous || (startOpen && skipEntrance),
@@ -324,6 +358,8 @@ export function OrbitStudy({
     if (!forceGpu) setSoftwareRenderer(true);
   }, [forceGpu]);
   const next = useRef<() => void>(() => {});
+  const targetCoverReady =
+    targetScene === null || artworkReady[targetScene] === true;
   const audio = useOrbitSoundtrack(
     tracks,
     resolve,
@@ -332,6 +368,7 @@ export function OrbitStudy({
     blend,
     visible,
     () => next.current(),
+    targetCoverReady,
   );
   const { pause, play } = audio;
   const navigate = useCallback(
