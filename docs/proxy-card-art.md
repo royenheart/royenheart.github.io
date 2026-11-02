@@ -42,11 +42,11 @@ These are original editable SVG paths in `SceneCardArt.tsx`; no external artwork
 or additional rendering library is used. The alternatives compare print/material
 expression while holding card outline, copy, position and animation constant.
 
-| ID | Cubes / Axolotl | Event horizon | Intended difference |
-| --- | --- | --- | --- |
-| `engraving` | Folded wire contours and cube lattice | Nested, bent ring contours | Fine printed watermark, minimal mass |
-| `foil` | Irregular connected crystal facets | Twisted crescent and crossing ribbon | Broad reflective field with pearl/copper or blue accents |
-| `relief` | Isometric cluster with light and dark faces | Stacked curved ridges | More explicit object depth and a stronger silhouette |
+| ID          | Cubes / Axolotl                             | Event horizon                        | Intended difference                                      |
+| ----------- | ------------------------------------------- | ------------------------------------ | -------------------------------------------------------- |
+| `engraving` | Folded wire contours and cube lattice       | Nested, bent ring contours           | Fine printed watermark, minimal mass                     |
+| `foil`      | Irregular connected crystal facets          | Twisted crescent and crossing ribbon | Broad reflective field with pearl/copper or blue accents |
+| `relief`    | Isometric cluster with light and dark faces | Stacked curved ridges                | More explicit object depth and a stronger silhouette     |
 
 Each motif extends across an irregular lower-right area rather than sitting in a
 circle or badge. A directional mask reduces ink behind the copy. The material
@@ -59,7 +59,7 @@ The chosen extraction and material are applied across all alternatives.
 
 ## Reproduction and review
 
-- LAN app: `http://192.0.2.10:4321/preview/?card=elsewhere&skipIntro=1`
+- LAN app: `http://192.0.2.10:4321/?card=elsewhere&skipIntro=1`
 - Comparison: `http://192.0.2.10:6008/card-art/`
 - `cardArt=engraving|foil|relief` selects the artwork study.
 - `scene=cubes|horizon` selects the scene; omit to preserve random arrival.

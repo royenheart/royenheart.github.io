@@ -12,11 +12,11 @@ Bound card content uses a 12px group gap, 4px body gap, 12/20px header line heig
 
 ## Motion studies
 
-| Query | Source path | Timing | Tradeoff |
-| --- | --- | --- | --- |
-| `cardMotion=slide` | Straight extraction and reverse return | 280ms in / 180ms out | Quietest; quiet first opening; browsing uses the shared group exchange |
-| `cardMotion=lift` | Four-degree initial tilt, lift, settle to zero | 340ms in / 180ms out | Stronger physical handling metaphor; slightly slower |
-| `cardMotion=fan` | Opposed small lateral offsets and three-degree tilt | 280ms in / 180ms out; new entry delayed 90ms | More explicit layered exchange; source text remains with its card |
+| Query              | Source path                                         | Timing                                       | Tradeoff                                                               |
+| ------------------ | --------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
+| `cardMotion=slide` | Straight extraction and reverse return              | 280ms in / 180ms out                         | Quietest; quiet first opening; browsing uses the shared group exchange |
+| `cardMotion=lift`  | Four-degree initial tilt, lift, settle to zero      | 340ms in / 180ms out                         | Stronger physical handling metaphor; slightly slower                   |
+| `cardMotion=fan`   | Opposed small lateral offsets and three-degree tilt | 280ms in / 180ms out; new entry delayed 90ms | More explicit layered exchange; source text remains with its card      |
 
 The user rejected the intermediate detached window, even though it animated from the slot. All three now remain inserted 8px below the source lip at rest. A fixed aperture clips the concealed lower edge. Card width follows the source slot; lower tags reserve the wheel overlap on narrow screens. The portal shares stacking order with the deck: above rear slots, below the wheel. There is no settled gap. The aperture is fixed in screen coordinates and ends at the source slot's upper lip. Each keyed card is clipped behind that lip during movement, rather than fading a static popup. Side padding protects tilted corners and shadows. Motion's presence lifecycle retains old content until it returns. Returning cards are inert, hidden from accessibility and unable to intercept pointers. An explicit requested/shown/leaving coordinator keeps the physical window at at most three cards, including exchanges. It changes the physical key only after exit completes, coalescing rapid repeated requests into the latest selection. This prevents an exiting key from being resurrected during a fast wrap-around. First opening uses the chosen extraction. Browsing within the open group moves the old card toward the upper-right rear and advances the next toward the lower-left front (120ms exit, 220ms entrance); only dismissing the group returns the card fully into the slot. Rapid changes retain the latest desired binding.
 
@@ -24,10 +24,10 @@ A cyclic three-entry window selects actual bound hrefs for the front card and up
 
 ## Material studies
 
-| Query | Treatment | Full cycle |
-| --- | --- | --- |
-| `cardSurface=drift` | Broad enamel and soft inlay translate together | 24 seconds |
-| `cardSurface=light` | Wide low-opacity illumination crosses quiet material | 20 seconds |
+| Query                | Treatment                                             | Full cycle      |
+| -------------------- | ----------------------------------------------------- | --------------- |
+| `cardSurface=drift`  | Broad enamel and soft inlay translate together        | 24 seconds      |
+| `cardSurface=light`  | Wide low-opacity illumination crosses quiet material  | 20 seconds      |
 | `cardSurface=layers` | Enamel and inlay travel at different rates/directions | 28 / 18 seconds |
 
 Only clipped decorative layers animate. Text, title icons and layout do not drift. No new backdrop blur, shader pass, renderer or dependency was introduced. Reduced motion removes spatial movement and material animation, retaining a brief opacity response. Hidden-page state closes cards and stops background material work. On short screens, the body scrolls first; at its content boundary, further wheel input advances the inner card group. It never advances the outer slot deck. Left/right keys and horizontal touch swipes browse the inner group; outer slot navigation retains its existing controls.
@@ -52,7 +52,7 @@ The physical treatments above are original proposals for the user's sketch, not 
 ## Review and evidence
 
 - LAN review: `http://192.0.2.10:6008/slot-cards/`.
-- Live page: `/preview/?card=elsewhere&cardMotion=slide&cardSurface=drift&skipIntro=1`.
+- Live page: `/?card=elsewhere&cardMotion=slide&cardSurface=drift&skipIntro=1`.
 - Seven Storybook studies under `Explorations/Slot cards`, preserving older finish and detail studies.
 - Artifact directory: `/tmp/proxy-slot-cards` (captures, recordings, recipe, logs and gallery).
 - Tests: bound-only stack edges, stationary controls, old-content return, rapid A/B/A intent, Escape/reopen, resize/navigation cleanup, touch activation, short-screen scroll isolation, material-only motion, reduced motion and overflow negative control.

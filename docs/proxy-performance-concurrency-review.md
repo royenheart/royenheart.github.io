@@ -1,14 +1,14 @@
 # Proxy performance and concurrency review
 
 Date: 2026-11-01. Tree: `95f60df` plus the working-tree changes that made
-`/preview/` the selected continuous presentation. This record covers the review
+`/` the selected continuous presentation. This record covers the review
 and the fixes that followed it; it does not replace the earlier
 [standalone preview audit](./proxy-preview-performance.md), whose hardware
 figures were measured against an older tree.
 
 ## Scope and method
 
-The selected `/preview/` journey was inspected from the static artifact:
+The selected `/` journey was inspected from the static artifact:
 
 - Astro entry, content validation, React islands, Motion, Web Audio, R3F/Three.js,
   postprocessing, optical tables, cards, and the two scene transitions.
@@ -42,13 +42,13 @@ candidate announces the cube scene after its first submitted frame, starts the
 authored arrival, and defers horizon preparation until that arrival completes.
 Navigation to the horizon remains gated until preparation finishes.
 
-| Observation (1440 × 900) | Before | After |
-| --- | ---: | ---: |
-| Canvas ready (`data-renderer="webgl"`) | 6.24 s | 1.20 s |
-| Arrival complete (`data-intro-done="true"`) | 11.20 s | 6.15 s |
-| Horizon prepared / horizon navigation enabled | 11.20 s (implicit) | 8.75 s |
-| Initial JavaScript transferred (gzip) | 467,625 B | 466,173 B |
-| Optical tables transferred | 2,163,134 B | 2,163,134 B |
+| Observation (1440 × 900)                      |             Before |       After |
+| --------------------------------------------- | -----------------: | ----------: |
+| Canvas ready (`data-renderer="webgl"`)        |             6.24 s |      1.20 s |
+| Arrival complete (`data-intro-done="true"`)   |            11.20 s |      6.15 s |
+| Horizon prepared / horizon navigation enabled | 11.20 s (implicit) |      8.75 s |
+| Initial JavaScript transferred (gzip)         |          467,625 B |   466,173 B |
+| Optical tables transferred                    |        2,163,134 B | 2,163,134 B |
 
 The gain is dependency ordering, not a smaller scene. The optical download and
 shader preparation still happen; they no longer hold the cube arrival behind
@@ -77,14 +77,14 @@ an unconditional win.
 The RTX 2060 run used the same baseline and candidate artifacts. Both reached
 60 Hz with quality 1 and DPR 1 at 1440 × 900.
 
-| Observation (hardware, 1440 × 900) | Before | After |
-| --- | ---: | ---: |
-| Canvas ready | 3.07 s | 0.63 s |
-| Arrival complete | 7.95 s | 5.52 s |
-| Horizon prepared / navigation enabled | 7.95 s (implicit) | 5.76 s |
-| Cubes steady cadence | 60.0 fps, p95 16.7 ms | 60.0 fps, p95 16.7 ms |
-| Cubes draw calls / DPR / quality | 3 / 1 / 1 | 3 / 1 / 1 |
-| Horizon steady cadence | (not sampled before) | 60.1 fps, 11 draw calls |
+| Observation (hardware, 1440 × 900)    |                Before |                   After |
+| ------------------------------------- | --------------------: | ----------------------: |
+| Canvas ready                          |                3.07 s |                  0.63 s |
+| Arrival complete                      |                7.95 s |                  5.52 s |
+| Horizon prepared / navigation enabled |     7.95 s (implicit) |                  5.76 s |
+| Cubes steady cadence                  | 60.0 fps, p95 16.7 ms |   60.0 fps, p95 16.7 ms |
+| Cubes draw calls / DPR / quality      |             3 / 1 / 1 |               3 / 1 / 1 |
+| Horizon steady cadence                |  (not sampled before) | 60.1 fps, 11 draw calls |
 
 The startup improvement is therefore not a SwiftShader artifact: the ordering
 gain survives on real GPU rasterization. The post-arrival preparation task is
@@ -97,11 +97,11 @@ Poster mode isolates the DOM/audio cost from WebGL. `timeupdate` drives React
 state in `OrbitStudy`, and the audio ring writes SVG attributes from Motion's
 frame loop.
 
-| Poster condition | React commits/s | SVG attribute writes/s | Script time/s |
-| --- | ---: | ---: | ---: |
-| Playing, normal motion | 3.8 | ~1,320 | 25–29 ms |
-| Playing, reduced motion (ring at rest) | 3.8 | 28 | 19–20 ms |
-| Paused | 0 | 28 | 4–5 ms |
+| Poster condition                       | React commits/s | SVG attribute writes/s | Script time/s |
+| -------------------------------------- | --------------: | ---------------------: | ------------: |
+| Playing, normal motion                 |             3.8 |                 ~1,320 |      25–29 ms |
+| Playing, reduced motion (ring at rest) |             3.8 |                     28 |      19–20 ms |
+| Paused                                 |               0 |                     28 |        4–5 ms |
 
 Thus the progress-driven parent re-render plus audio events cost roughly
 14 ms/s, and the animated ring adds roughly 8 ms/s in this environment. The

@@ -51,7 +51,7 @@ CI runs Chromium only, and only the selected-page smoke path:
 
 ```sh
 npx playwright test \
-  tests/e2e/preview.spec.ts \
+  tests/e2e/selected.spec.ts \
   tests/e2e/software-fallback.spec.ts \
   --project=chromium
 ```

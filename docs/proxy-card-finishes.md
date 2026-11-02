@@ -8,13 +8,13 @@ The shared rules are B/drum geometry and cylindrical travel, contour-derived tex
 
 ## Candidates and implementation
 
-| Query | Material / structure | Feedback |
-| --- | --- | --- |
-| `finish=inset` | A shared recessed bed, sparse SVG mesh, inner channel and 1.05px outer edge | Labels advance 3px over 240ms; bounded material reflection |
-| `finish=nameplate` | Enamel inlays, oblique internal plates, doubled lining and 1.3px edge | Labels advance 3px and plates lift 2px over 300ms |
-| `finish=seam` | Smoked body, broad curved low-contrast texture and 0.65px edge | Labels remain fixed; reflective seam responds over 220ms |
+| Query              | Material / structure                                                        | Feedback                                                   |
+| ------------------ | --------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `finish=inset`     | A shared recessed bed, sparse SVG mesh, inner channel and 1.05px outer edge | Labels advance 3px over 240ms; bounded material reflection |
+| `finish=nameplate` | Enamel inlays, oblique internal plates, doubled lining and 1.3px edge       | Labels advance 3px and plates lift 2px over 300ms          |
+| `finish=seam`      | Smoked body, broad curved low-contrast texture and 0.65px edge              | Labels remain fixed; reflective seam responds over 220ms   |
 
-Each accepts `scene=cubes` or `scene=horizon` on `/preview/`. Invalid material values fall back to the selected `nameplate` finish. The card silhouette is the same existing SVG path in every variant. Internal gradient, mesh and reflection elements are clipped to it. Material differences also affect the avatar bezel, transport surfaces and platform controls; the Elsewhere links keep stable horizontal labels and fixed 44px hit areas.
+Each accepts `scene=cubes` or `scene=horizon` on `/`. Invalid material values fall back to the selected `nameplate` finish. The card silhouette is the same existing SVG path in every variant. Internal gradient, mesh and reflection elements are clipped to it. Material differences also affect the avatar bezel, transport surfaces and platform controls; the Elsewhere links keep stable horizontal labels and fixed 44px hit areas.
 
 Owners:
 
@@ -31,7 +31,7 @@ The reference method is documented in `proxy-elsewhere-reference-analysis.md`. T
 ## Review artifacts
 
 - LAN comparison: `http://192.0.2.10:6008/card-finishes/`
-- Full live candidate: `http://192.0.2.10:4321/preview/?finish=inset&scene=horizon`
+- Full live candidate: `http://192.0.2.10:4321/?finish=inset&scene=horizon`
 - Outside-repository source and evidence: `/tmp/proxy-card-finishes/`
 
 The comparison page switches scene and card consistently across all three candidates, links to the live app, shows phone captures and plays one cropped motion recording at a time. It does not mount three simultaneous WebGL scenes. `recipe.json` records parameters and source ownership. The stills use 1440x900, scene time 12, stable scene seeds and simulated denied audio playback to keep the artwork rotation fixed. Motion recordings use the actual running scenes and a looping muted audio fixture; they are not external audio-availability tests.

@@ -8,12 +8,12 @@ The default continuous view now uses `nameplate`, static material (`surface=stil
 
 ## Layout and reflection corrections
 
-| Before | After | Reason |
-| --- | --- | --- |
-| Content avoided only the cover | Inset includes half the wheel, 3.5% response overhang and an 8px gap | Cube response bars can extend beyond the wheel box; the same conservative envelope protects both scenes |
-| Rule ended at the wheel box | Rule ends at the visible artwork, 12% of wheel width inward | Matches the user's marked edge, excluding the outer audio response |
-| Each control had a separate reflection and hover fill brightening | Per-control reflection is hidden and transport fill stays at 8% theme accent | Prevents repeated flashes while moving across or clicking three controls |
-| Only the card box triggered contour remeasurement | Observe the content lines as well | A hidden title can reappear/reflow on a phone-to-desktop resize without another card-size change |
+| Before                                                            | After                                                                        | Reason                                                                                                  |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Content avoided only the cover                                    | Inset includes half the wheel, 3.5% response overhang and an 8px gap         | Cube response bars can extend beyond the wheel box; the same conservative envelope protects both scenes |
+| Rule ended at the wheel box                                       | Rule ends at the visible artwork, 12% of wheel width inward                  | Matches the user's marked edge, excluding the outer audio response                                      |
+| Each control had a separate reflection and hover fill brightening | Per-control reflection is hidden and transport fill stays at 8% theme accent | Prevents repeated flashes while moving across or clicking three controls                                |
+| Only the card box triggered contour remeasurement                 | Observe the content lines as well                                            | A hidden title can reappear/reflow on a phone-to-desktop resize without another card-size change        |
 
 At 1440x900 the rendered card begins at x=975.84px. The rule runs from x=975.86px to x=1401.61px, matching the artwork's right edge at x=1401.61px. Its width falls from 444px to 425.75px. Content padding grows from 69.76px to 89.32px. Full control rectangles remain outside the response envelope, not just their painted icons. The footer retains one line and 44px link targets on narrow screens.
 
@@ -23,11 +23,11 @@ The card-wide reflection remains a 680ms sweep, with a 240ms opacity transition.
 
 All variants animate clipped SVG material groups; labels, hit areas, silhouette and lining remain fixed. There are no added canvas instances, blur filters or JavaScript animation loops.
 
-| Query | Moving layer | Full cycle | Excursion at a 368px card |
-| --- | --- | --- | --- |
-| `surface=drift` | Enamel and inset stripes together | 24s | About ±14.7px |
-| `surface=layers` | Enamel and inset stripes at different rates/directions | 28s / 18s | About ±18.4px / ±14.7px |
-| `surface=light` | Broad illumination, with stationary texture | 20s | 320 SVG units of travel, peak alpha 0.14 |
+| Query            | Moving layer                                           | Full cycle | Excursion at a 368px card                |
+| ---------------- | ------------------------------------------------------ | ---------- | ---------------------------------------- |
+| `surface=drift`  | Enamel and inset stripes together                      | 24s        | About ±14.7px                            |
+| `surface=layers` | Enamel and inset stripes at different rates/directions | 28s / 18s  | About ±18.4px / ±14.7px                  |
+| `surface=light`  | Broad illumination, with stationary texture            | 20s        | 320 SVG units of travel, peak alpha 0.14 |
 
 Only the active, settled card advances. Hidden cards, card travel and backgrounded documents pause the material clock; reduced motion removes it. The fast pointer sweep and slow background use independent elements, so hover does not reset the slow cycle.
 
@@ -55,9 +55,9 @@ Optional preview content is validated in `siteSchema` and stored in `site.json`.
 ## Review artifacts
 
 - LAN comparison: `http://192.0.2.10:6008/nameplate-motion/`
-- Selected baseline: `http://192.0.2.10:4321/preview/`
-- Direct Elsewhere candidate: `/preview/?scene=horizon&elsewhere=index&card=elsewhere&skipIntro=1`
-- Direct motion candidate: `/preview/?scene=cubes&surface=layers&card=next&skipIntro=1`
+- Selected baseline: `http://192.0.2.10:4321/`
+- Direct Elsewhere candidate: `/?scene=horizon&elsewhere=index&card=elsewhere&skipIntro=1`
+- Direct motion candidate: `/?scene=cubes&surface=layers&card=next&skipIntro=1`
 - Scripts, recipe, screenshots, recordings and logs: `/tmp/proxy-nameplate-motion/`
 
 The comparison page switches both scene palettes and both link destinations. It contains actual browser captures and twelve playable recordings rather than several simultaneous WebGL scenes. Surface motion recordings use a muted looping audio fixture to show the cover response; they are not NetEase availability tests. Fixed-time stills and normal running motion are captured separately. Headed Chrome reports AMD Radeon hardware WebGL. Mobile sizes are browser emulations, not physical-device benchmarks.

@@ -18,15 +18,15 @@ and restores the upright mark; target geometry and keyboard focus remain fixed.
 The following values are this round's proposed refinement, not independent
 proof of aesthetic approval.
 
-| Aspect | Previous | Current | Intended visual relationship |
-| --- | --- | --- | --- |
-| Left inset from the slot bounds | 20px | 32px | Clear the capsule's curved end |
-| Maximum tile-card width | 280px | 268px | Trim the left edge while keeping the former right boundary |
-| First exposed edge | 8px | 4px | Suggest stored stock instead of a partly extracted face |
-| Vertical step | 7px | 3px | Two cards expose 7px total; three expose 10px instead of 22px |
-| Horizontal step | 12px | 10px | Retain the upper-right diagonal without overstating depth |
-| Stored-group opacity | 1 | 0.20 | Slightly fainter than the adjacent slot's 0.24 group opacity |
-| Extraction direction | Temporary tilt | Vertical, zero rotation | Keep a coherent insertion track |
+| Aspect                          | Previous       | Current                 | Intended visual relationship                                  |
+| ------------------------------- | -------------- | ----------------------- | ------------------------------------------------------------- |
+| Left inset from the slot bounds | 20px           | 32px                    | Clear the capsule's curved end                                |
+| Maximum tile-card width         | 280px          | 268px                   | Trim the left edge while keeping the former right boundary    |
+| First exposed edge              | 8px            | 4px                     | Suggest stored stock instead of a partly extracted face       |
+| Vertical step                   | 7px            | 3px                     | Two cards expose 7px total; three expose 10px instead of 22px |
+| Horizontal step                 | 12px           | 10px                    | Retain the upper-right diagonal without overstating depth     |
+| Stored-group opacity            | 1              | 0.20                    | Slightly fainter than the adjacent slot's 0.24 group opacity  |
+| Extraction direction            | Temporary tilt | Vertical, zero rotation | Keep a coherent insertion track                               |
 
 The resting stack supplies the raised card's measured left edge and width.
 The same geometry is used in both states; shortening is shared with the raised
@@ -48,11 +48,11 @@ These candidates keep the identifying subject larger than their decorative
 lines. Labels remain in accessible names and the bound card; no button words or
 native title tooltips have been added.
 
-| ID | Blog subject | GitHub subject | Print vocabulary |
-| --- | --- | --- | --- |
-| `emblem` | Open pages and a central spine | Full GitHub mark | Large, restrained foil silhouettes |
-| `intaglio` | Bound notebook with a bookmark | GitHub seal in a quiet enclosure | Engraved lines and subordinate registration strokes |
-| `editorial` | Book thumbnail with article lines | GitHub mark with code brackets | Wider printed composition |
+| ID          | Blog subject                      | GitHub subject                   | Print vocabulary                                    |
+| ----------- | --------------------------------- | -------------------------------- | --------------------------------------------------- |
+| `emblem`    | Open pages and a central spine    | Full GitHub mark                 | Large, restrained foil silhouettes                  |
+| `intaglio`  | Bound notebook with a bookmark    | GitHub seal in a quiet enclosure | Engraved lines and subordinate registration strokes |
+| `editorial` | Book thumbnail with article lines | GitHub mark with code brackets   | Wider printed composition                           |
 
 The user selected `editorial` (horizontal printing) as the default Elsewhere
 mark style. `emblem` and `intaglio` remain explicit comparisons. The previously
@@ -68,7 +68,7 @@ consistent recognition. Historic repository line icons remain in old studies.
 
 ## Reproduction
 
-- App: `http://192.0.2.10:4321/preview/?card=elsewhere&skipIntro=1`
+- App: `http://192.0.2.10:4321/?card=elsewhere&skipIntro=1`
 - Gallery: `http://192.0.2.10:6008/slot-marks/`
 - Mark comparison: `marks=emblem|intaglio|editorial`.
 - Art defaults: horizon → relief; cubes → foil.

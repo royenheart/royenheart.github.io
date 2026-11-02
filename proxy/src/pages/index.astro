@@ -1,5 +1,5 @@
 ---
-import { OrbitPreview } from '../components/OrbitPreview';
+import { SelectedExperience } from '../components/SelectedExperience';
 import { site } from '../lib/content/load';
 ---
 
@@ -20,7 +20,7 @@ import { site } from '../lib/content/load';
     <title>{site.title}</title>
   </head>
   <body>
-    <OrbitPreview client:only="react" />
+    <SelectedExperience client:only="react" />
     <noscript>This interactive experience requires JavaScript.</noscript>
   </body>
 </html>

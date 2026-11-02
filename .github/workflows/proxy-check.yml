@@ -55,7 +55,7 @@ jobs:
       # page smoke path so release checks stay fast and deterministic.
       - name: Run Chromium smoke checks
         working-directory: proxy
-        run: npx playwright test tests/e2e/preview.spec.ts tests/e2e/software-fallback.spec.ts --project=chromium --reporter=line
+        run: npx playwright test tests/e2e/selected.spec.ts tests/e2e/software-fallback.spec.ts --project=chromium --reporter=line
       - name: Upload browser and bundle evidence
         if: always()
         uses: actions/upload-artifact@v4

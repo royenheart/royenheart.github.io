@@ -17,7 +17,7 @@ import type {
   DetailStudy,
 } from '../explorations/orbit/presentation';
 
-export function OrbitPreview() {
+export function SelectedExperience() {
   const [options] = useState(() => new URLSearchParams(window.location.search));
   const scene = options.get('scene');
   const cover = options.get('cover');

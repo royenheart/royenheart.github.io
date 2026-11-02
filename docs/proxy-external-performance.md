@@ -3,9 +3,8 @@
 Date: 2026-11-02. This record combines WAN-emulated browser measurements with
 five module-specific Codex CLI audits (network/edge, bundle/entry, GPU/render,
 DOM/React/audio, and perceived reliability). The public release was subsequently
-updated from the old `cb28e15` artifact to `20261102ab`, with the selected
-experience at `/`, the previous compact page at `/original/`, and `/preview/`
-retained as a review alias. The post-deploy public checks below are a real
+updated from the old `cb28e15` artifact to the selected experience at `/`.
+The former `/original/` and `/preview/` routes were subsequently retired. The post-deploy public checks below are a real
 Cloudflare-fronted client path, not only a local simulation.
 
 ## What was actually tested
@@ -32,15 +31,15 @@ limits or provider availability.
 
 ## WAN-emulated results
 
-| Case | Canvas ready | Arrival done | Horizon prepared | Outcome |
-| --- | ---: | ---: | ---: | --- |
-| 4G, fixture audio, before | 3.68 s | 8.69 s | 8.69 s (implicit) | live |
-| 4G, fixture audio, after | 1.64 s | 6.69 s | 8.93 s | live |
-| 3G, fixture audio, before | — | 12.40 s | — | **poster fallback** at the 10 s watchdog |
-| 3G, fixture audio, after | 4.26 s | 9.27 s | 20.62 s | live cubes |
-| 4G, real NetEase audio, before | 3.53 s | 8.51 s | 8.51 s (implicit) | live |
-| 4G, real NetEase audio, after | 1.77 s | 6.75 s | 10.51 s | live |
-| 3G, real NetEase audio, after fallback fix | 5.34 s | 10.34 s | 30.19 s | live cubes, preparation completes late |
+| Case                                       | Canvas ready | Arrival done |  Horizon prepared | Outcome                                  |
+| ------------------------------------------ | -----------: | -----------: | ----------------: | ---------------------------------------- |
+| 4G, fixture audio, before                  |       3.68 s |       8.69 s | 8.69 s (implicit) | live                                     |
+| 4G, fixture audio, after                   |       1.64 s |       6.69 s |            8.93 s | live                                     |
+| 3G, fixture audio, before                  |            — |      12.40 s |                 — | **poster fallback** at the 10 s watchdog |
+| 3G, fixture audio, after                   |       4.26 s |       9.27 s |           20.62 s | live cubes                               |
+| 4G, real NetEase audio, before             |       3.53 s |       8.51 s | 8.51 s (implicit) | live                                     |
+| 4G, real NetEase audio, after              |       1.77 s |       6.75 s |           10.51 s | live                                     |
+| 3G, real NetEase audio, after fallback fix |       5.34 s |      10.34 s |           30.19 s | live cubes, preparation completes late   |
 
 The 3G real-audio case was the critical external finding. In the earlier build,
 the cube scene was interactive for about 15 seconds, then the 15-second
@@ -81,15 +80,15 @@ deferring the client entry. The production config was updated and reloaded.
 
 Public checks after the release:
 
-| Check | Result |
-| --- | --- |
-| `/` (selected) | 200; `/preview/` remains a 200 alias |
-| `/preview/` | 200, HTML Brotli ~2.4 KB, `cf-cache-status: DYNAMIC` |
-| `/preview-covers/` | 200 |
-| `/_astro/*.js` | 200, gzip, immutable, `cf-cache-status: HIT` |
-| `/optics/deflection.dat` | 200, 2,097,160 B, identity, `no-cache` |
+| Check                                           | Result                                                    |
+| ----------------------------------------------- | --------------------------------------------------------- |
+| `/` (selected)                                  | 200                                                       |
+| `/original/`                                    | 404 (retired)                                             |
+| `/preview/`                                     | 404 (retired)                                             |
+| `/_astro/*.js`                                  | 200, gzip, immutable, `cf-cache-status: HIT`              |
+| `/optics/deflection.dat`                        | 200, 2,097,160 B, identity, `no-cache`                    |
 | Public first contentful paint (one desktop run) | **2.16 s** with normal QUIC/h2; 4.11 s with QUIC disabled |
-| Public DOMContentLoaded / TTFB | 1.31 s / 0.65 s |
+| Public DOMContentLoaded / TTFB                  | 1.31 s / 0.65 s                                           |
 
 Before `no-transform`, the same public route in one run had FCP 49.9 s, DOM
 15.3 s and first Astro script start at 30.8 s; the HTML showed Cloudflare
@@ -152,7 +151,7 @@ validation round trip, and the old-tab/version mismatch is a correctness risk.
 
 ### 4. Emit a static first-paint shell
 
-`preview.astro` is `client:only`; even the poster is React-created. The entry
+The selected page is `client:only`; even the poster is React-created. The entry
 closure is about 266 KB gzip before Canvas, and the page has no useful content
 until it evaluates. A build-time static shell with the selected background,
 identity/registration text and native Blog/GitHub links, replaced by the island

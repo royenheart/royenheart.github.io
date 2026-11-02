@@ -4,12 +4,12 @@ Date: 2026-10-06. Branch: `refactor/proxy-modernization`.
 
 ## Preview
 
-The static Astro route `/preview/` mounts the selected `OrbitStudy` directly.
+The static Astro route `/` mounts the selected `OrbitStudy` directly.
 It includes the current native player, rounded drum cards, arrivals, live B
 forward capture and F7 reverse fracture. There is no Storybook manager or iframe.
 The original homepage and comparison studies remain available.
 
-Review address: `http://192.0.2.10:4321/preview/`.
+Review address: `http://192.0.2.10:4321/`.
 Supported query parameters:
 
 - `scene=cubes` or `scene=horizon`: choose an initial scene; omission retains

@@ -22,17 +22,17 @@ We use separate observable constraints rather than an invented weighted score.
 
 Initial browser measurements at 390 × 844 and 1440 × 900:
 
-| Observable | Before | Revised constraint and reason |
-| --- | --- | --- |
-| Painted link height / card height | 44 / 56 = 79% on phone; 44 / 62 = 71% on desktop | 24 / 56 = 43%; retain the 44px hit area. The action no longer resembles a second full-height card. |
-| Registration panel area / card area | 94 / 56 = 1.68 on phone; 52 / 62 = 0.84 on desktop at equal widths | Remove the filled enclosing panel. Retain a faint top rule, readable text, and separate touch areas. |
-| New control outline / existing card outline | 1px / 0.65px = 1.54 | Use the same 0.65px line scale. A small secondary control should not have the heavier boundary. |
-| Resting link border accent opacity | 24% | 14%; fill 5%, interactive fill 14%. Main text retains its reading contrast. |
-| Palette distance | Two scenes already provide their accent token | All new ornament derives from that token; introduce no independent accent hue. Gold alone is insufficient if shape, texture or motion still disagrees. |
-| Icon travel / icon size | Draft exploration used 4px on a 17px icon, about 24% | At most 1px, about 6%, with at most 3° tilt and 6% press compression. |
-| Text stability | Draft candidates revealed, blurred or tilted labels | No independent text transform, blur or reveal. Typography travels only with the accepted cylinder. |
-| Detail phase relative to card rotation | Uncoordinated entry can look like two consecutive animations | Entry starts 180ms into the 680ms turn and finishes by 580ms. It is settled when the card arrives. |
-| Decorative runtime | Repeated shimmer can compete with scene motion | One-shot entry/focus feedback; zero running detail animations at idle. |
+| Observable                                  | Before                                                             | Revised constraint and reason                                                                                                                          |
+| ------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Painted link height / card height           | 44 / 56 = 79% on phone; 44 / 62 = 71% on desktop                   | 24 / 56 = 43%; retain the 44px hit area. The action no longer resembles a second full-height card.                                                     |
+| Registration panel area / card area         | 94 / 56 = 1.68 on phone; 52 / 62 = 0.84 on desktop at equal widths | Remove the filled enclosing panel. Retain a faint top rule, readable text, and separate touch areas.                                                   |
+| New control outline / existing card outline | 1px / 0.65px = 1.54                                                | Use the same 0.65px line scale. A small secondary control should not have the heavier boundary.                                                        |
+| Resting link border accent opacity          | 24%                                                                | 14%; fill 5%, interactive fill 14%. Main text retains its reading contrast.                                                                            |
+| Palette distance                            | Two scenes already provide their accent token                      | All new ornament derives from that token; introduce no independent accent hue. Gold alone is insufficient if shape, texture or motion still disagrees. |
+| Icon travel / icon size                     | Draft exploration used 4px on a 17px icon, about 24%               | At most 1px, about 6%, with at most 3° tilt and 6% press compression.                                                                                  |
+| Text stability                              | Draft candidates revealed, blurred or tilted labels                | No independent text transform, blur or reveal. Typography travels only with the accepted cylinder.                                                     |
+| Detail phase relative to card rotation      | Uncoordinated entry can look like two consecutive animations       | Entry starts 180ms into the 680ms turn and finishes by 580ms. It is settled when the card arrives.                                                     |
+| Decorative runtime                          | Repeated shimmer can compete with scene motion                     | One-shot entry/focus feedback; zero running detail animations at idle.                                                                                 |
 
 The first three rows were measured from the actual rendered UI. The numerical
 limits in later rows are project-specific art direction, not perceptual laws.
@@ -50,11 +50,11 @@ All three studies use the same font, content, dimensions, colors and card
 material. They are optional through `details=`; the regular preview remains
 `none` until feedback selects a direction.
 
-| ID | Mechanism | Timing | Intended relationship |
-| --- | --- | --- | --- |
-| A / etch | A small icon stroke is inscribed; a quiet stationary text underline | 260ms after 180ms delay | Echoes fine engraved marks and the cube scene's precise construction. |
-| B / flow | A bounded, low-opacity reflection crosses the existing action surface | 400ms after 180ms delay; also on focus/hover | Echoes moving light in the horizon material without another luminous object. |
-| C / orbit | The icon settles through a very small curved tilt | 360ms after 180ms delay | Echoes the drum's cylindrical travel without introducing a new orbit ring. |
+| ID        | Mechanism                                                             | Timing                                       | Intended relationship                                                        |
+| --------- | --------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
+| A / etch  | A small icon stroke is inscribed; a quiet stationary text underline   | 260ms after 180ms delay                      | Echoes fine engraved marks and the cube scene's precise construction.        |
+| B / flow  | A bounded, low-opacity reflection crosses the existing action surface | 400ms after 180ms delay; also on focus/hover | Echoes moving light in the horizon material without another luminous object. |
+| C / orbit | The icon settles through a very small curved tilt                     | 360ms after 180ms delay                      | Echoes the drum's cylindrical travel without introducing a new orbit ring.   |
 
 Hover motion is gated to a fine pointer. Keyboard focus retains the native
 visible focus indicator. Press feedback affects the glyph inside its stable
@@ -78,9 +78,9 @@ normal motion. This separates music state from background state explicitly.
 
 ## Review surfaces
 
-- Current website: `http://192.0.2.10:4321/preview/`.
+- Current website: `http://192.0.2.10:4321/`.
 - Controlled comparison: `http://192.0.2.10:6008/dock-refinement/`.
-- Actual scene studies: `/preview/?scene=horizon&details=etch`, `flow`, `orbit`;
+- Actual scene studies: `/?scene=horizon&details=etch`, `flow`, `orbit`;
   replace `horizon` with `cubes` to inspect the blue material.
 - Storybook: `Explorations / Continuous presentation / Etched Details`,
   `Flow Details`, and `Arc Details`.
