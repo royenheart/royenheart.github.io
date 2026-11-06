@@ -40,8 +40,8 @@
     "updated_at": "2026-08-01T08:01:56Z"
   },
   "2026-07-11-Video4xAmdCoInference.md": {
-    "text": "视频插帧与超分技术可分别提升视频时间分辨率与空间分辨率，文章阐述其数学定义、典型模型原理（如RIFE、Real ESRGAN）及工程流水线设计。针对AMD平台，分析了ROCm、Vitis AI等软件栈与GPU、NPU异构协同的部署路径。最后以video4x为例，介绍在Windows环境下利用DirectML与VitisAI实现GPU+NPU协同推理的实践，并总结了导出、量化、流水线拆分等关键技术点。",
-    "hash": "e0eb27509c5f2ac3439c4e65250accad1a7ae1e230c6e67acb3413d89118e44e",
-    "updated_at": "2026-08-01T08:02:00Z"
+    "text": "围绕视频插帧与超分的原理、流水线编排及系统负载特征，文章分析了先插帧后超分与先超分后插帧的权衡，并讨论运动估计、空间重采样等模块在 GPU 与 NPU 间的异构映射。结合 AMD Ryzen 7 8845H、Radeon 780M 与 Ryzen AI NPU 的 Windows 环境，作者尝试构建协同推理框架，总结拆分与调优经验，同时指出当前生态下端到端加速仍有限，但具备工程参考价值。",
+    "hash": "1a708dcf03a42f1a9cb399374a60d1b1e349d2d375cedde1c03a2b7597bf01bb",
+    "updated_at": "2026-11-06T17:31:52Z"
   }
 }
