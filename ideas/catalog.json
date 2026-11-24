@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "plate": "PLATE 01",
+      "slug": "surreal-megastructures",
+      "date": "2026-10-06",
+      "title": "草原背身人物与异常巨构（三联图）",
+      "subtitle": "一个普通人站在仍然熟悉的世界里，面对无法解释的巨大结构：以现实草原参照、悬殊尺度差与定向局部异化构建敬畏与静默。",
+      "medium": "叙事概念插画",
+      "mediumKey": "illustration",
+      "principalStyle": "超现实科幻 · 工业巨构",
+      "extent": "3 × 1648×2944 px",
+      "mergedNote": "三联同系列对比 · 15 处原图标注",
+      "sourceSummary": "收集自小红书（原帖作者/链接暂未记录 · 版权归原作者所有）",
+      "plateCount": 1,
+      "cover": "assets/surreal-megastructures-annotated.jpg",
+      "reportUrl": "reports/surreal-megastructures.html",
+      "palette": [
+        {
+          "hex": "#1F436B",
+          "role": "图一天空底色 · 实测"
+        },
+        {
+          "hex": "#315682",
+          "role": "图二天空底色 · 实测"
+        },
+        {
+          "hex": "#6E98C5",
+          "role": "图三暮色天空 · 实测"
+        },
+        {
+          "hex": "#6D6938",
+          "role": "图一草原前景 · 实测"
+        },
+        {
+          "hex": "#2B2922",
+          "role": "图三暗草前景 · 实测"
+        }
+      ],
+      "keywords": {
+        "style": [
+          "超现实科幻",
+          "科幻概念艺术",
+          "巨型结构 Megastructure",
+          "赛博朋克元素"
+        ],
+        "technique": [
+          "数字故障 Glitch",
+          "虹彩材质",
+          "悬殊尺度对比",
+          "摄影质感参照",
+          "疏密留白反差"
+        ],
+        "mood": [
+          "敬畏感",
+          "静默凝视",
+          "陌生疏离"
+        ]
+      },
+      "learningFocus": "最值得借用的是现实参照、悬殊尺度，以及有方向和层次的局部异化。"
+    },
+    {
+      "plate": "PLATE 02",
+      "slug": "white-sea-twin-moons",
+      "date": "2026-10-31",
+      "title": "白海与双月幻想海洋",
+      "subtitle": "围绕 2940×1260 宽幅概念图展开的全景、双月天体与幻想天空三重视角拆解：聚焦低饱和乳白涌浪、岩尘月面与软边晕染大气。",
+      "medium": "3D 环境概念",
+      "mediumKey": "environment-3d",
+      "principalStyle": "克制超现实 · 电影环境概念",
+      "extent": "2940 × 1260 px (2.33:1)",
+      "mergedNote": "全景海面 · 双月地貌 · 晕染天空（3 视图）",
+      "sourceSummary": "原创生成图 · Updream Seedance 模型（2940×1260 px）",
+      "plateCount": 3,
+      "cover": "assets/white-sea-annotated.jpg",
+      "reportUrl": "reports/white-sea-twin-moons.html",
+      "palette": [
+        {
+          "hex": "#D9CBDE",
+          "role": "左侧暖粉灰天光 · 实测"
+        },
+        {
+          "hex": "#8A7EA9",
+          "role": "右上紫蓝冷天区 · 实测"
+        },
+        {
+          "hex": "#D1CBD2",
+          "role": "白海暖灰白亮面 · 实测"
+        },
+        {
+          "hex": "#8A8799",
+          "role": "中景灰紫暗浪背 · 实测"
+        },
+        {
+          "hex": "#C7C0C5",
+          "role": "下半海面主基调 · 实测"
+        }
+      ],
+      "keywords": {
+        "style": [
+          "超现实科幻",
+          "电影环境概念",
+          "异星海洋场景"
+        ],
+        "technique": [
+          "空气透视",
+          "明亮低饱和",
+          "乳白多尺度涌浪",
+          "湿画软边晕染",
+          "天体大明暗分层"
+        ],
+        "mood": [
+          "寂静辽阔",
+          "异世界空灵",
+          "克制柔和"
+        ]
+      },
+      "learningFocus": "优先锁定大构图、大明暗与“局部集中细节、大片保持安静”的疏密分布，避免满铺均匀噪声。"
+    },
+    {
+      "plate": "PLATE 03",
+      "slug": "horizon-accretion-nebula",
+      "date": "2026-10-05",
+      "title": "黑洞引力透镜吸积盘与星云日冕",
+      "subtitle": "拆解黑洞吸积盘弯曲细丝的连续材质衔接，以及深空星云的多尺度云团、暗尘消光与边缘辉光层次。",
+      "medium": "WebGL 天文视觉",
+      "mediumKey": "webgl-space",
+      "principalStyle": "电影级天文视觉 · 深空暗场",
+      "extent": "236×419 + 6 Refs",
+      "mergedNote": "吸积盘连续性（1–6）· 星云日冕（1–11）",
+      "sourceSummary": "ESO/VISTA (eso1205a) · JWST (weic2518a) · 《绝区零》零号空洞等",
+      "plateCount": 2,
+      "cover": "assets/horizon-nebula-annotated.jpg",
+      "reportUrl": "reports/horizon-accretion-nebula.html",
+      "palette": [
+        {
+          "hex": "#060702",
+          "role": "视界暗核 · 实测"
+        },
+        {
+          "hex": "#18181A",
+          "role": "外围衰减深空 · 实测"
+        },
+        {
+          "hex": "#866A5F",
+          "role": "暖棕前景盘面 · 实测"
+        },
+        {
+          "hex": "#9099A5",
+          "role": "冷蓝灰弯曲带 · 实测"
+        },
+        {
+          "hex": "#DCDBD9",
+          "role": "交汇高光峰 · 实测"
+        }
+      ],
+      "keywords": {
+        "style": [
+          "电影级天文视觉",
+          "深空暗场",
+          "引力透镜吸积盘",
+          "多层星云"
+        ],
+        "technique": [
+          "各向异性细丝发光",
+          "共享纹理坐标衔接",
+          "暗尘消光",
+          "边缘辉光与彩色肩部",
+          "多尺度空间分离"
+        ],
+        "mood": [
+          "深邃宏大",
+          "定向流动",
+          "克制炽热"
+        ]
+      },
+      "learningFocus": "先保证盘/环共享一套材质与相位坐标，再叠加遮挡与辉光；严格分离大云团、细丝与暗尘尺度。"
+    },
+    {
+      "plate": "PLATE 04",
+      "slug": "zzz-device-ui",
+      "date": "2026-11-02",
+      "title": "《绝区零》器械拟物 UI 与设备维护签",
+      "subtitle": "拆解《绝区零》代理人、设置与主菜单实机界面，提炼适合网页微组件的“共同圆角外壳 + 内部斜切分区 + 水平文字基线 + 微倾角维护签”组织法。",
+      "medium": "游戏 UI / 交互",
+      "mediumKey": "game-ui",
+      "principalStyle": "器械拟物 UI · 都市复古未来",
+      "extent": "6 Real Captures",
+      "mergedNote": "实机界面六区拆解（1–6）· 网页组件转译",
+      "sourceSummary": "《绝区零》(HoYoverse) 2024 实机截图 · 米游社 / note.com / GameLeap",
+      "plateCount": 1,
+      "cover": "assets/zzz-ui-annotated.jpg",
+      "reportUrl": "reports/zzz-device-ui.html",
+      "palette": [
+        {
+          "hex": "#111316",
+          "role": "器械深黑灰底座 · 目测"
+        },
+        {
+          "hex": "#23262B",
+          "role": "内槽与次级面板 · 目测"
+        },
+        {
+          "hex": "#E8E6DF",
+          "role": "高可读主文字 · 目测"
+        },
+        {
+          "hex": "#E8E12A",
+          "role": "实机荧光黄状态块 · 目测"
+        },
+        {
+          "hex": "#D1342F",
+          "role": "警示标定红 · 建议"
+        }
+      ],
+      "keywords": {
+        "style": [
+          "器械拟物 UI",
+          "都市复古未来",
+          "工业设备界面",
+          "游戏实机 HUD"
+        ],
+        "technique": [
+          "斜切分段导航",
+          "容器共属",
+          "水平文字基线",
+          "微倾角设备维护签",
+          "材质扫光反馈"
+        ],
+        "mood": [
+          "机械装配感",
+          "紧凑利落",
+          "高辨识操作感"
+        ]
+      },
+      "learningFocus": "让斜切承担分区而非纯装饰，让微倾维护签（4° Guard Cant）保持水平文字基线，让交互热区始终稳定。"
+    }
+  ]
+}

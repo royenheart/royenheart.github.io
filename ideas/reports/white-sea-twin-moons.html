@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>白海与双月幻想海洋 — Ideas</title>
+<style>
+:root {
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --ink: #0f1b2d;
+  --ink-2: #415167;
+  --ink-3: #5c6f88;
+  --line: #cfd9e6;
+  --blue: #1d428a;
+  --blue-soft: #e8effa;
+  --mark: #d1342f;
+  --font-sans: "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, monospace;
+  --surface-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.114 0 0 0 0 0.259 0 0 0 0 0.541 0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  --surface-matrix: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' fill='none'%3E%3Cg fill='%231d428a' fill-opacity='0.14'%3E%3Ccircle cx='12' cy='12' r='0.9'/%3E%3Ccircle cx='36' cy='12' r='0.9'/%3E%3Ccircle cx='60' cy='12' r='0.9'/%3E%3Ccircle cx='84' cy='12' r='0.9'/%3E%3Ccircle cx='12' cy='36' r='0.9'/%3E%3Ccircle cx='36' cy='36' r='0.9'/%3E%3Ccircle cx='60' cy='36' r='0.9'/%3E%3Ccircle cx='84' cy='36' r='0.9'/%3E%3Ccircle cx='12' cy='60' r='0.9'/%3E%3Ccircle cx='36' cy='60' r='0.9'/%3E%3Ccircle cx='60' cy='60' r='0.9'/%3E%3Ccircle cx='84' cy='60' r='0.9'/%3E%3Ccircle cx='12' cy='84' r='0.9'/%3E%3Ccircle cx='36' cy='84' r='0.9'/%3E%3Ccircle cx='60' cy='84' r='0.9'/%3E%3Ccircle cx='84' cy='84' r='0.9'/%3E%3C/g%3E%3Cpath d='M44 48h8M48 44v8' stroke='%231d428a' stroke-opacity='0.14' stroke-width='0.9'/%3E%3C/svg%3E");
+}
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  background-image: var(--surface-grain), var(--surface-matrix);
+  background-size: 160px 160px, 96px 96px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+body { margin: 0; padding: 24px 28px 80px; }
+::selection { background: var(--blue-soft); color: var(--blue); }
+a { color: var(--blue); text-underline-offset: 3px; }
+code { font-family: var(--font-mono); font-size: 0.86em; padding: 1px 5px; background: var(--blue-soft); color: var(--blue); }
+p { margin: 0 0 11px; color: var(--ink-2); }
+strong { color: var(--ink); font-weight: 600; }
+
+/* Top Archive Navigation Rail */
+.archive-nav {
+  max-width: 1220px;
+  margin: 0 auto 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.archive-nav a { text-decoration: none; color: var(--blue); font-weight: 600; padding: 4px 10px; border: 1px solid transparent; transition: all 0.14s; }
+.archive-nav a:hover { background: var(--blue-soft); border-color: var(--line); }
+.archive-nav .nav-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.archive-nav .nav-status { color: var(--ink-3); }
+
+.sheet {
+  max-width: 1220px;
+  margin: 0 auto;
+  background: var(--panel);
+  border: 1px solid var(--blue);
+  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--line);
+}
+.calibration-strip {
+  padding: 5px 24px 0;
+  background-color: var(--bg);
+  background-image: var(--surface-grain);
+  border-bottom: 1px solid var(--line);
+}
+.calibration-ruler { display: block; width: 100%; height: 48px; color: var(--blue); }
+.calibration-ruler path { fill: none; stroke: currentColor; stroke-width: 0.75; }
+.calibration-ruler .vernier-baseline { opacity: 0.4; }
+.calibration-ruler .datum { fill: var(--mark); stroke: none; }
+.scale-labels { fill: var(--ink-2); font: 8px var(--font-mono); text-anchor: middle; letter-spacing: 0.06em; }
+
+.frame-corner { position: absolute; width: 24px; height: 24px; pointer-events: none; fill: none; stroke: var(--blue); stroke-width: 1; z-index: 1; }
+.corner-tl { top: 5px; left: 5px; }
+.corner-tr { top: 5px; right: 5px; transform: rotate(90deg); }
+.corner-br { bottom: 5px; right: 5px; transform: rotate(180deg); }
+.corner-bl { bottom: 5px; left: 5px; transform: rotate(270deg); }
+
+.title-block { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 310px; border-bottom: 1.5px solid var(--blue); }
+.title-block > .frame-corner { opacity: 0.65; }
+.tb-main { padding: 28px 34px 32px; border-right: 1px solid var(--line); background-image: var(--surface-grain); }
+.instrument-register { width: 300px; max-width: 100%; height: 38px; display: block; margin: 0 0 18px; }
+.instrument-register .barcode { stroke: var(--blue); }
+.registration-lines { fill: none; stroke: var(--ink-3); stroke-width: 0.6; }
+.instrument-register text { fill: var(--blue); font: 9px var(--font-mono); letter-spacing: 0.6px; }
+.registration-reticle { fill: none; stroke: var(--mark); stroke-width: 0.8; }
+.tb-code { font-family: var(--font-mono); font-size: 10px; color: var(--blue); letter-spacing: 0.09em; margin-bottom: 10px; }
+.tb-main h1 { margin: 0 0 12px; font-size: clamp(22px, 2.1vw, 30px); font-weight: 700; line-height: 1.35; letter-spacing: -0.025em; }
+.tb-main p { margin: 0; font-size: 13px; line-height: 1.85; max-width: 68ch; }
+.merge-badge { display: inline-block; margin-top: 12px; font-family: var(--font-mono); font-size: 10px; padding: 3px 9px; background: var(--blue-soft); border: 1px solid #c3d5f0; color: var(--blue); letter-spacing: 0.04em; }
+
+.tb-grid { display: grid; grid-template-columns: 1fr 1fr; font-family: var(--font-mono); font-size: 11px; background-color: var(--bg); background-image: var(--surface-grain), var(--surface-matrix); }
+.tb-cell { padding: 18px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
+.tb-cell:nth-child(2n) { border-right: 0; }
+.tb-cell:nth-last-child(-n+2) { border-bottom: 0; }
+.tb-cell span { display: block; color: var(--ink-3); font-size: 9px; letter-spacing: 0.14em; margin-bottom: 6px; }
+.tb-cell b { color: var(--ink); font-family: var(--font-sans); font-size: 12px; font-weight: 600; }
+
+.toc-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 34px; background: var(--bg); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; }
+.toc-strip .toc-label { color: var(--ink-3); font-size: 9.5px; letter-spacing: 0.12em; margin-right: 4px; }
+.toc-strip a { text-decoration: none; color: var(--ink-2); padding: 3px 8px; border: 1px solid var(--line); background: var(--panel); transition: all 0.12s; }
+.toc-strip a:hover { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+
+.band-head { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 34px 14px 46px; background: var(--blue); color: #fff; border-bottom: 3px double var(--blue-soft); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; }
+.band-head h2 { margin: 0; font-family: var(--font-sans); font-size: 14.5px; font-weight: 600; letter-spacing: 0.03em; }
+.band-head::before { content: ""; position: absolute; left: 26px; top: 14px; bottom: 14px; width: 7px; background: repeating-linear-gradient(135deg, var(--mark) 0 1px, transparent 1px 4px); opacity: 0.35; }
+
+.bp-grid { list-style: none; margin: 0; padding: 12px 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1.5px solid var(--blue); background-image: var(--surface-grain); }
+.bp-cell { padding: 17px 17px 19px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+.bp-cell:nth-child(4n) { border-right: 0; }
+.bp-cell:nth-last-child(-n+4) { border-bottom: 0; }
+.bp-cell::after { content: ""; position: absolute; bottom: -3px; right: -3px; width: 5px; height: 5px; border: 1px solid var(--line); background: var(--panel); z-index: 1; }
+.bp-cell:nth-child(4n)::after, .bp-cell:nth-last-child(-n+4)::after { display: none; }
+.bp-code { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; font-weight: 700; }
+.bp-code span:first-child { border: 1px solid var(--line); padding: 1px 6px; color: var(--blue); background: var(--bg); }
+.bp-code span:last-child { font-size: 8px; color: var(--ink-3); letter-spacing: 0.12em; }
+.bp-cell h3 { margin: 0 0 6px; font-size: 13.5px; color: var(--ink); font-weight: 700; }
+.bp-cell p { margin: 0; font-size: 12px; line-height: 1.78; color: var(--ink-2); }
+
+.mod-wrap { padding: 0 36px 24px 46px; background-image: linear-gradient(to right, transparent 19px, var(--line) 19px, var(--line) 20px, transparent 20px); }
+.mod { padding: 28px 0 30px; border-bottom: 1px solid var(--line); position: relative; }
+.mod:last-child { border-bottom: 0; }
+.mod::before { content: ""; position: absolute; left: -30px; top: 34px; width: 8px; height: 8px; background: var(--panel); border: 1px solid var(--blue); }
+.mod-bar { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+.mod-bar h3 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.mod-tag { flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; color: var(--blue); background: var(--blue-soft); border: 1px solid var(--line); border-left: 3px solid var(--blue); padding: 3px 9px; letter-spacing: 0.04em; }
+.mod-coord { font-family: var(--font-mono); font-size: 9.5px; color: var(--ink-3); letter-spacing: 0.09em; text-align: right; }
+.mod > p { font-size: 13px; line-height: 1.9; }
+.evidence-note { margin-top: 10px; padding: 10px 14px; background: var(--bg); border-left: 3px solid var(--blue); font-size: 12.5px; color: var(--ink-2); }
+
+/* Multi-plate switcher for merged analyses */
+.plate-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.plate-tab { font-family: var(--font-mono); font-size: 11px; padding: 6px 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink-2); cursor: pointer; letter-spacing: 0.03em; }
+.plate-tab[aria-selected="true"] { background: var(--blue); color: #fff; border-color: var(--blue); }
+.plate-view { display: none; }
+.plate-view.active { display: block; }
+
+.anatomy-split { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.anatomy-stack { display: grid; gap: 16px; }
+.draft-frame { position: relative; margin: 0; padding: 24px; background-color: var(--bg); background-image: var(--surface-grain), var(--surface-matrix); border: 1px solid var(--line); }
+.draft-inner { position: relative; outline: 1px solid var(--line); background: #0e131a; }
+.draft-inner img { display: block; width: 100%; height: auto; }
+.draft-caption { margin-top: 10px; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.draft-source { margin-top: 8px; padding: 8px 11px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--blue); font-size: 11.5px; line-height: 1.65; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.draft-source b { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--blue); flex-shrink: 0; }
+.draft-source a { color: var(--blue); text-underline-offset: 2px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.04em; color: var(--blue); background: var(--blue-soft); padding: 9px 10px; border: 1px solid var(--line); }
+td { padding: 9px 10px; border: 1px solid var(--line); color: var(--ink-2); vertical-align: top; line-height: 1.7; }
+tbody tr:nth-child(even) { background: var(--bg); }
+.id-box { font-family: var(--font-mono); font-weight: 700; color: var(--mark); width: 40px; }
+
+.kw-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; margin-bottom: 14px; }
+.kw-card { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; }
+.kw-card h4 { margin: 0 0 8px; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+.kw-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.kw-tag { padding: 2px 8px; font-size: 11.5px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.kw-tag:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+.kw-card p { margin: 0; font-size: 12px; line-height: 1.7; }
+
+.chip-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+.chip-item { border: 1px solid var(--line); border-top: 2px solid var(--line); display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--panel); }
+.chip-sq { width: 26px; height: 26px; outline: 1px solid var(--line); outline-offset: 2px; flex-shrink: 0; }
+.chip-item b { font-family: var(--font-mono); font-size: 11px; display: block; line-height: 1.45; color: var(--ink); }
+.chip-item span { font-size: 10px; color: var(--ink-3); }
+
+.flow-row { display: grid; grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr); align-items: stretch; gap: 8px; margin-bottom: 10px; }
+.flow-node { border: 1px solid var(--line); border-top: 2px solid var(--blue); background-color: var(--bg); background-image: var(--surface-grain); padding: 14px 15px; font-size: 12px; line-height: 1.8; color: var(--ink-2); }
+.flow-node small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; color: var(--blue); margin-bottom: 6px; }
+.flow-arr { display: flex; align-items: center; justify-content: center; position: relative; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.double-leader { display: block; width: 36px; height: 24px; fill: none; stroke: var(--blue); stroke-width: 1; }
+.double-leader circle { fill: var(--panel); }
+
+.rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.rw-card { border: 1px solid var(--line); border-left: 3px solid var(--blue); padding: 15px 17px; font-size: 12px; line-height: 1.85; background: var(--panel); }
+.rw-card .v { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); text-decoration: line-through; display: block; margin-bottom: 7px; }
+.rw-card .s { color: var(--ink); }
+
+.guard-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; font-size: 12px; line-height: 1.8; }
+.guard-3 div { border: 1px solid var(--line); padding: 0 15px 15px; background: var(--panel); color: var(--ink-2); }
+.guard-3 b { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--blue); padding: 10px 0; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+.guard-3 div.danger { border-color: rgba(209, 52, 47, 0.45); }
+.guard-3 div.danger b { color: var(--mark); background: repeating-linear-gradient(135deg, rgba(209, 52, 47, 0.05) 0 1px, transparent 1px 5px); border-bottom-color: rgba(209, 52, 47, 0.25); }
+
+.prompt-bp { position: relative; padding: 58px 26px 26px; background: var(--ink); color: var(--blue-soft); border: 1px solid var(--blue); font-family: var(--font-mono); font-size: 12px; line-height: 1.95; overflow-wrap: anywhere; }
+.prompt-bp::before { content: ""; position: absolute; top: 24px; left: 26px; right: 108px; height: 7px; border-top: 1px solid var(--ink-2); border-bottom: 1px solid var(--ink-2); }
+.prompt-bp > .frame-corner { stroke: var(--ink-3); }
+.prompt-content { margin: 0; font: inherit; color: inherit; white-space: pre-wrap; }
+.copy-btn { position: absolute; top: 16px; right: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; padding: 5px 12px; background: var(--blue); color: var(--panel); border: 1px solid var(--ink-3); cursor: pointer; }
+.copy-btn:hover { background: var(--blue-soft); color: var(--ink); }
+
+.sheet-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 34px; border-top: 1px solid var(--line); background: var(--bg); font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.06em; }
+
+@media (max-width: 1100px) { .title-block { grid-template-columns: minmax(0, 1fr) 260px; } .anatomy-split { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  body { padding: 16px 12px 44px; }
+  .archive-nav { flex-direction: column; align-items: flex-start; }
+  .calibration-strip { padding: 4px 12px 0; overflow: hidden; }
+  .calibration-ruler { width: 1056px; max-width: none; }
+  .title-block, .kw-grid, .guard-3 { grid-template-columns: 1fr; }
+  .tb-main { padding: 22px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .bp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px 10px; }
+  .bp-cell:nth-child(n) { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .bp-cell:nth-child(2n) { border-right: 0; }
+  .bp-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .bp-cell::after { display: none; }
+  .mod-wrap { padding: 0 18px 16px 32px; background-position: -6px 0; }
+  .mod::before { left: -23px; }
+  .mod-bar { flex-direction: column; gap: 6px; }
+  .draft-frame { padding: 16px; }
+  .chip-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow-row { grid-template-columns: 1fr; gap: 5px; margin-bottom: 18px; }
+  .flow-arr { height: 28px; }
+  .double-leader { transform: rotate(90deg); }
+  .sheet-footer { flex-direction: column; gap: 4px; padding: 12px 18px; }
+}
+@media print {
+  body { padding: 0; }
+  .archive-nav, .copy-btn, .plate-tabs, .toc-strip { display: none; }
+  .plate-view { display: block !important; margin-bottom: 18px; }
+  html, .tb-main, .bp-grid, .draft-frame, .tb-grid, .flow-node { background-image: none; }
+  .sheet { box-shadow: none; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<nav class="archive-nav" aria-label="展台导航">
+  <div class="nav-group">
+    <a href="../">← 返回 Ideas</a>
+    <span class="nav-status">PLATE 02 / 04 · 2026-10-31</span>
+  </div>
+  <div class="nav-group">
+    <a href="surreal-megastructures.html">← PLATE 01</a>
+    <a href="horizon-accretion-nebula.html">PLATE 03 →</a>
+  </div>
+</nav>
+
+<article class="sheet">
+  <div class="calibration-strip"><svg class="calibration-ruler" viewBox="0 0 1056 48" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M28 5v13 M33 5v4 M38 5v4 M43 5v4 M48 5v4 M53 5v8 M58 5v4 M63 5v4 M68 5v4 M73 5v4 M78 5v13 M83 5v4 M88 5v4 M93 5v4 M98 5v4 M103 5v8 M108 5v4 M113 5v4 M118 5v4 M123 5v4 M128 5v13 M133 5v4 M138 5v4 M143 5v4 M148 5v4 M153 5v8 M158 5v4 M163 5v4 M168 5v4 M173 5v4 M178 5v13 M183 5v4 M188 5v4 M193 5v4 M198 5v4 M203 5v8 M208 5v4 M213 5v4 M218 5v4 M223 5v4 M228 5v13 M233 5v4 M238 5v4 M243 5v4 M248 5v4 M253 5v8 M258 5v4 M263 5v4 M268 5v4 M273 5v4 M278 5v13 M283 5v4 M288 5v4 M293 5v4 M298 5v4 M303 5v8 M308 5v4 M313 5v4 M318 5v4 M323 5v4 M328 5v13 M333 5v4 M338 5v4 M343 5v4 M348 5v4 M353 5v8 M358 5v4 M363 5v4 M368 5v4 M373 5v4 M378 5v13 M383 5v4 M388 5v4 M393 5v4 M398 5v4 M403 5v8 M408 5v4 M413 5v4 M418 5v4 M423 5v4 M428 5v13 M433 5v4 M438 5v4 M443 5v4 M448 5v4 M453 5v8 M458 5v4 M463 5v4 M468 5v4 M473 5v4 M478 5v13 M483 5v4 M488 5v4 M493 5v4 M498 5v4 M503 5v8 M508 5v4 M513 5v4 M518 5v4 M523 5v4 M528 5v13 M533 5v4 M538 5v4 M543 5v4 M548 5v4 M553 5v8 M558 5v4 M563 5v4 M568 5v4 M573 5v4 M578 5v13 M583 5v4 M588 5v4 M593 5v4 M598 5v4 M603 5v8 M608 5v4 M613 5v4 M618 5v4 M623 5v4 M628 5v13 M633 5v4 M638 5v4 M643 5v4 M648 5v4 M653 5v8 M658 5v4 M663 5v4 M668 5v4 M673 5v4 M678 5v13 M683 5v4 M688 5v4 M693 5v4 M698 5v4 M703 5v8 M708 5v4 M713 5v4 M718 5v4 M723 5v4 M728 5v13 M733 5v4 M738 5v4 M743 5v4 M748 5v4 M753 5v8 M758 5v4 M763 5v4 M768 5v4 M773 5v4 M778 5v13 M783 5v4 M788 5v4 M793 5v4 M798 5v4 M803 5v8 M808 5v4 M813 5v4 M818 5v4 M823 5v4 M828 5v13 M833 5v4 M838 5v4 M843 5v4 M848 5v4 M853 5v8 M858 5v4 M863 5v4 M868 5v4 M873 5v4 M878 5v13 M883 5v4 M888 5v4 M893 5v4 M898 5v4 M903 5v8 M908 5v4 M913 5v4 M918 5v4 M923 5v4 M928 5v13 M933 5v4 M938 5v4 M943 5v4 M948 5v4 M953 5v8 M958 5v4 M963 5v4 M968 5v4 M973 5v4 M978 5v13 M983 5v4 M988 5v4 M993 5v4 M998 5v4 M1003 5v8 M1008 5v4 M1013 5v4 M1018 5v4 M1023 5v4 M1028 5v13"/><path class="vernier-baseline" d="M28 5H1028"/><g class="scale-labels"><text x="28" y="31">000</text><text x="78" y="31">010</text><text x="128" y="31">020</text><text x="178" y="31">030</text><text x="228" y="31">040</text><text x="278" y="31">050</text><text x="328" y="31">060</text><text x="378" y="31">070</text><text x="428" y="31">080</text><text x="478" y="31">090</text><text x="528" y="31">100</text><text x="578" y="31">110</text><text x="628" y="31">120</text><text x="678" y="31">130</text><text x="728" y="31">140</text><text x="778" y="31">150</text><text x="828" y="31">160</text><text x="878" y="31">170</text><text x="928" y="31">180</text><text x="978" y="31">190</text><text x="1028" y="31">200</text><text x="1048" y="17">mm</text></g><path d="M478 44h45 M478.0 44v-7 M482.5 44v-4 M487.0 44v-4 M491.5 44v-4 M496.0 44v-4 M500.5 44v-7 M505.0 44v-4 M509.5 44v-4 M514.0 44v-4 M518.5 44v-4 M523.0 44v-7"/><path class="datum" d="M28 38l-4 6h8zM528 38l-4 6h8zM1028 38l-4 6h8z"/></svg></div>
+
+  <header class="title-block">
+    <svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg>
+    <div class="tb-main">
+      <svg class="instrument-register" viewBox="0 0 324 40" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="barcode"><path d="M2 5v26" stroke-width="2"/><path d="M7 5v26" stroke-width="1"/><path d="M11 5v26" stroke-width="3"/><path d="M17 5v18" stroke-width="1"/><path d="M21 5v26" stroke-width="2"/><path d="M27 5v26" stroke-width="4"/><path d="M34 5v18" stroke-width="1"/><path d="M38 5v26" stroke-width="2"/><path d="M44 5v26" stroke-width="1"/><path d="M49 5v26" stroke-width="4"/><path d="M56 5v18" stroke-width="2"/><path d="M61 5v26" stroke-width="1"/><path d="M65 5v26" stroke-width="3"/><path d="M72 5v26" stroke-width="1"/><path d="M76 5v18" stroke-width="2"/><path d="M82 5v26" stroke-width="3"/><path d="M89 5v26" stroke-width="1"/><path d="M94 5v26" stroke-width="2"/></g><path class="registration-lines" d="M108 3v32M124 9h144M124 29h144M124 6v6M196 6v6M268 6v6"/><text x="124" y="24">PLATE 02 / IDEAS ARCHIVE</text><g class="registration-reticle"><circle cx="304" cy="19" r="12"/><circle cx="304" cy="19" r="3"/><path d="M287 19h10m14 0h10M304 2v10m0 14v10"/></g></svg>
+      <div class="tb-code">DWG-NO: IDEAS-02 · 2026-10-31 · CLASSIC PRUSSIAN BLUE BLUEPRINT</div>
+      <h1>白海与双月幻想海洋</h1>
+      <p>围绕 2940×1260 宽幅概念图展开的全景、双月天体与幻想天空三重视角拆解：聚焦低饱和乳白涌浪、岩尘月面与软边晕染大气。</p>
+      <span class="merge-badge">全景海面 · 双月地貌 · 晕染天空（3 视图）</span>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><span>MEDIUM</span><b>3D 环境概念</b></div>
+      <div class="tb-cell"><span>PRINCIPAL STYLE</span><b>克制超现实 · 电影环境概念</b></div>
+      <div class="tb-cell"><span>SOURCE EXTENT</span><b>2940 × 1260 px (2.33:1)</b></div>
+      <div class="tb-cell"><span>EVIDENCE</span><b>像素实测 + 三视图拆解</b></div>
+    </div>
+  </header>
+
+  <nav class="toc-strip" aria-label="章节速览">
+    <span class="toc-label">INDEX</span>
+    <a href="#ch1">01 设计总览</a>
+    <a href="#sec-2-1">2.1 整体识别</a>
+    <a href="#sec-2-2">2.2 标注拆解</a>
+    <a href="#sec-2-3">2.3 关键词</a>
+    <a href="#sec-2-4">2.4 视觉机制</a>
+    <a href="#sec-2-5">2.5 细节维度</a>
+    <a href="#sec-2-6">2.6 描述升级</a>
+    <a href="#sec-2-7">2.7 实现提示词</a>
+  </nav>
+
+  <div class="band-head">
+    <h2>第一章：设计总览</h2>
+    <span>CHAPTER ONE · 12 SPEC ITEMS (F-01 — F-12)</span>
+  </div>
+  <ol class="bp-grid" id="ch1"><li class="bp-cell"><div class="bp-code"><span>F-01</span><span>TYPE</span></div><h3>设计类型</h3><p>一幅适合转译为实时 3D 场景的宽幅科幻海洋环境图，主体为连续流动的乳白海水与双月。</p></li><li class="bp-cell"><div class="bp-code"><span>F-02</span><span>STYLE</span></div><h3>风格</h3><p>写实光照与空间透视承载超现实的白海、双月和粉紫晕染天空，呈克制电影概念图气质。</p></li><li class="bp-cell"><div class="bp-code"><span>F-03</span><span>MOOD</span></div><h3>第一印象</h3><p>辽阔来自低而宽延的海天线，安静来自低饱和宽缓浪面，异星感来自双月与乳白海色。</p></li><li class="bp-cell"><div class="bp-code"><span>F-04</span><span>GRAMMAR</span></div><h3>视觉语言</h3><p>柔和色域之间穿插折线浪脊、局部流痕碎纹、分叉月面脊纹与右上局部云带。</p></li><li class="bp-cell"><div class="bp-code"><span>F-05</span><span>LAYOUT</span></div><h3>布局构图</h3><p>画幅约 2.33∶1，海天线在 44%–45% 高度；双月偏上偏右，右上云带聚细节、左侧舒展留白。</p></li><li class="bp-cell"><div class="bp-code"><span>F-06</span><span>HIERARCHY</span></div><h3>视觉层级</h3><p>双月清晰轮廓居首要焦点，近中景灰紫浪背与右上暗芯云带为次焦点，远海渐隐消融。</p></li><li class="bp-cell"><div class="bp-code"><span>F-07</span><span>COLOR</span></div><h3>色彩系统</h3><p>海面暖灰白受光配蓝灰紫暗坡；天空左暖粉灰、右冷紫蓝、近海玫瑰灰彼此软边渗透。</p></li><li class="bp-cell"><div class="bp-code"><span>F-08</span><span>TYPEFACE</span></div><h3>文字排印</h3><p>画面不含任何文字界面；转为实时 3D 场景时应保持画幅纯净，辅助提示宜默认退隐或支持一键隐藏。</p></li><li class="bp-cell"><div class="bp-code"><span>F-09</span><span>SURFACE</span></div><h3>形状与材质</h3><p>海水由宽缓涌浪、弯曲浪脊与局部短流痕三尺度构成；双月为低饱和岩/尘质大明暗而非光滑金属球。</p></li><li class="bp-cell"><div class="bp-code"><span>F-10</span><span>GRAPHICS</span></div><h3>图像与装饰</h3><p>右上仅少量薄云与淡蓝针尖亮点，无满天繁星、强光束或彩虹色装饰。</p></li><li class="bp-cell"><div class="bp-code"><span>F-11</span><span>MOTION</span></div><h3>动态线索</h3><p>静图不证明真实流速；转译为动态场景时宜采用缓慢推进的多尺度涌浪，保持舒缓安静的节奏。</p></li><li class="bp-cell"><div class="bp-code"><span>F-12</span><span>TAKEAWAY</span></div><h3>学习重点</h3><p>优先锁定大构图、大明暗与“局部集中细节、大片保持安静”的疏密分布，避免满铺均匀噪声。</p></li></ol>
+
+  <div class="band-head">
+    <h2>第二章：完整设计分析</h2>
+    <span>CHAPTER TWO · 7 ANALYTICAL MODULES</span>
+  </div>
+  <div class="mod-wrap" id="ch2">
+    <section class="mod" id="sec-2-1">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.1</span>1. 整体识别与第一印象</h3><span class="mod-coord">RECOGNITION &amp; PROVENANCE</span></div>
+      <p>围绕这张 2940×1260 超宽画幅环境概念图，依次从<strong>全景海面（1–8）、双月天体地貌（1–5）与幻想晕染天空（1–6）</strong>三重视角展开拆解。画面摒弃岸线、人物、建筑与船只，仅凭乳白涌浪、一大一小两颗月球与粉紫冷暖渐变天穹建立完整世界感。</p><p>三种核心观感各有明确结构来源：<strong>辽阔</strong>来自 2.33∶1 宽画幅与层层雾化的远浪；<strong>柔和安静而不空洞</strong>来自大面积低对比平缓面中局部嵌入的细微色差与折线浪脊；<strong>异星空灵</strong>则由不透明乳白海水、粉紫薄雾与双月比例节奏共同托起。</p>
+      <div class="evidence-note"><strong>图版与采样说明：</strong>色彩数据来自原图指定区域的 sRGB 像素中位数采样；三张标注图均保留原画比例与完整构图。</div>
+    </section>
+
+    <section class="mod" id="sec-2-2">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.2</span>2. 组件拆解与原图直接标注</h3><span class="mod-coord">ANNOTATED PLATES · 3 VIEW(S)</span></div>
+      <div class="plate-tabs" role="tablist" aria-label="切换标注视图"><button class="plate-tab" type="button" role="tab" aria-selected="true" data-target="panel-ws-full">视图 A · 全景白海与构图（1–8）</button><button class="plate-tab" type="button" role="tab" aria-selected="false" data-target="panel-ws-moons">视图 B · 双月表面地貌特写（1–5）</button><button class="plate-tab" type="button" role="tab" aria-selected="false" data-target="panel-ws-sky">视图 C · 幻想晕染天空分层（1–6）</button></div>
+      <div class="plate-view active" id="panel-ws-full" role="tabpanel"><div class="anatomy-stack"><figure class="draft-frame"><svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><div class="draft-inner"><img src="../assets/white-sea-annotated.jpg" alt="白海与双月参考图八大区域红框标注"></div><div class="draft-caption"><span>全景 2940×1260（2.33:1），海天线约 44%–45% 高，大月中心 (55.4%, 14.4%)、小月 (64.0%, 15.7%)。</span><a href="../assets/white-sea-annotated.jpg" target="_blank" rel="noopener">查看原尺寸标注图 ↗</a></div><figcaption class="draft-source"><b>SOURCE · 图片来源</b><span>原创环境概念参考图（2940×1260 px），由 Updream Seedance 模型生成。</span></figcaption></figure><table><thead><tr><th>编号</th><th>组件名称</th><th>所属区域</th><th>作用</th><th>可见特征</th></tr></thead><tbody><tr><td class="id-box">01</td><td><strong>左侧天光</strong></td><td>天空左半</td><td>提供柔和暖亮基底</td><td>浅粉灰 <code>#D9CBDE</code>，高明度、极淡横向云气</td></tr><tr><td class="id-box">02</td><td><strong>右上云气与星点</strong></td><td>天空右上</td><td>建立冷暖与纵深</td><td>紫蓝底 <code>#8A7EA9</code>，局部粉紫亮云、暗尘带与弱星点</td></tr><tr><td class="id-box">03</td><td><strong>大月球</strong></td><td>天空主体</td><td>首要视觉焦点</td><td>左上受光亮弧、右上暗区、下部大块浅色盆地</td></tr><tr><td class="id-box">04</td><td><strong>小月球</strong></td><td>天空次主体</td><td>与大月建立节奏</td><td>直径约为大月 46%，略偏右下且明显分离</td></tr><tr><td class="id-box">05</td><td><strong>海天过渡带</strong></td><td>海天交界</td><td>柔化远景边界</td><td>远浪低对比雾化，无锐利直线切割</td></tr><tr><td class="id-box">06</td><td><strong>中景浪脊</strong></td><td>海面中景</td><td>建立方向与体积</td><td>长短不一、略弯曲，亮脊配灰紫背坡 <code>#8A8799</code></td></tr><tr><td class="id-box">07</td><td><strong>近景碎纹</strong></td><td>海面左近</td><td>提供流动材质感</td><td>不规则短流痕与局部小反光，不铺满全水</td></tr><tr><td class="id-box">08</td><td><strong>宽缓浪面及转折</strong></td><td>海面右近</td><td>形成疏密呼吸</td><td>大片柔滑灰白面 <code>#D1CBD2</code>，仅局部边缘折起</td></tr></tbody></table></div></div><div class="plate-view" id="panel-ws-moons" role="tabpanel"><div class="anatomy-split"><figure class="draft-frame"><svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><div class="draft-inner"><img src="../assets/white-sea-moons-annotated.jpg" alt="白海大月球表面地貌与明暗五区标注"></div><div class="draft-caption"><span>大月球原图直径约 150px，重点拆解岩/尘质大结构、分叉脊纹与薄大气染色，避免光滑金属球或均匀噪点。</span><a href="../assets/white-sea-moons-annotated.jpg" target="_blank" rel="noopener">查看原尺寸标注图 ↗</a></div><figcaption class="draft-source"><b>SOURCE · 图片来源</b><span>同上 Updream Seedance 模型生成的宽幅概念图（2940×1260 px）之双月区域局部放大标注。</span></figcaption></figure><table><thead><tr><th>编号</th><th>组件名称</th><th>所属区域</th><th>作用</th><th>可见特征</th></tr></thead><tbody><tr><td class="id-box">01</td><td><strong>左侧受光高地</strong></td><td>月面左缘</td><td>确立主光源方向</td><td>暖灰白大亮区，内部保留破碎轮廓而非单一镜面高光</td></tr><tr><td class="id-box">02</td><td><strong>中尺度分叉脊纹</strong></td><td>明暗交界带</td><td>打破光滑球体观感</td><td>断续弧形层纹与分叉脊线，比均匀小坑更具识别度</td></tr><tr><td class="id-box">03</td><td><strong>右上暗色平原</strong></td><td>月面右上</td><td>拉开球体大体积</td><td>大片低饱和蓝灰紫暗区，自然融入右上冷色天空</td></tr><tr><td class="id-box">04</td><td><strong>下部浅色盆地</strong></td><td>月面中下</td><td>平衡暗区重量</td><td>中性浅灰大块面，边界不规则非标准圆斑</td></tr><tr><td class="id-box">05</td><td><strong>下缘薄大气染边</strong></td><td>月面底缘</td><td>衔接天空环境光</td><td>极克制的薄反光与大气染色，轮廓干净无厚光环或锯齿</td></tr></tbody></table></div></div><div class="plate-view" id="panel-ws-sky" role="tabpanel"><div class="anatomy-stack"><figure class="draft-frame"><svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><div class="draft-inner"><img src="../assets/white-sea-sky-annotated.jpg" alt="白海天空软边叠色与云带六区标注"></div><div class="draft-caption"><span>天空约占上方四成多，左侧舒展留白、右上集中云带细节，软边叠色避免硬轮廓或横贯银河。</span><a href="../assets/white-sea-sky-annotated.jpg" target="_blank" rel="noopener">查看原尺寸标注图 ↗</a></div><figcaption class="draft-source"><b>SOURCE · 图片来源</b><span>同上 Updream Seedance 模型生成的宽幅概念图（2940×1260 px）之天空区域分层标注。</span></figcaption></figure><table><thead><tr><th>编号</th><th>组件名称</th><th>所属区域</th><th>作用</th><th>可见特征</th></tr></thead><tbody><tr><td class="id-box">01</td><td><strong>左暖粉灰舒展区</strong></td><td>天空左中</td><td>提供安静呼吸感</td><td>宽缓过渡的浅粉灰雾，不平均塞满云朵</td></tr><tr><td class="id-box">02</td><td><strong>上中冷蓝过渡</strong></td><td>双月左侧</td><td>衔接暖左与冷右</td><td>偏冷蓝灰紫软边渗入，保持低对比</td></tr><tr><td class="id-box">03</td><td><strong>右上主云带</strong></td><td>小月右侧</td><td>天空次焦点与空间感</td><td>同时具备暗芯、亮雾与少量较清晰云带边缘</td></tr><tr><td class="id-box">04</td><td><strong>中下玫瑰灰薄雾</strong></td><td>海天上方</td><td>缓冲海面与高空色差</td><td>暖玫瑰灰横向轻抹，向下柔和收敛</td></tr><tr><td class="id-box">05</td><td><strong>海平线统一雾带</strong></td><td>海天交界</td><td>消除接缝色差</td><td>海面与天空共享方向雾色，远处对比度同步衰减</td></tr><tr><td class="id-box">06</td><td><strong>局部淡蓝亮点</strong></td><td>云带上方</td><td>极克制星点点缀</td><td>仅少量淡蓝光斑与针尖亮点，绝不喧宾夺主</td></tr></tbody></table></div></div>
+    </section>
+
+    <section class="mod" id="sec-2-3">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.3</span>3. 风格归类与检索关键词</h3><span class="mod-coord">CLICK TAG TO FILTER ARCHIVE</span></div>
+      <div class="kw-grid"><div class="kw-card"><h4>STYLE · 风格与流派</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=超现实科幻">超现实科幻</a><a class="kw-tag" href="../?tag=电影环境概念">电影环境概念</a><a class="kw-tag" href="../?tag=异星海洋场景">异星海洋场景</a></div><p>克制的超现实电影环境概念图（Cinematic Environment Concept），以空气透视与宽画幅低机位确立空间感。</p></div><div class="kw-card"><h4>TECHNIQUE · 视觉技法</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=空气透视">空气透视</a><a class="kw-tag" href="../?tag=明亮低饱和">明亮低饱和</a><a class="kw-tag" href="../?tag=乳白多尺度涌浪">乳白多尺度涌浪</a><a class="kw-tag" href="../?tag=湿画软边晕染">湿画软边晕染</a><a class="kw-tag" href="../?tag=天体大明暗分层">天体大明暗分层</a></div><p>三尺度波浪（宽缓涌浪 + 弯曲折线浪脊 + 局部短流痕）、双月颜色/凹凸/光照分离控制、天空湿画软边叠色。</p></div><div class="kw-card"><h4>MOOD · 情绪氛围</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=寂静辽阔">寂静辽阔</a><a class="kw-tag" href="../?tag=异世界空灵">异世界空灵</a><a class="kw-tag" href="../?tag=克制柔和">克制柔和</a></div><p>寂静、辽阔、柔和但不空洞的异星海洋氛围。</p></div></div>
+      <p><strong>推荐检索组合：</strong><code>milky white ocean swells twin moons cinematic environment</code> · <code>lavender pink overcast sky atmospheric perspective</code> · <code>low-contrast rocky moon terminator diffuse atmosphere</code></p>
+    </section>
+
+    <section class="mod" id="sec-2-4">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.4</span>4. 视觉语言与作用机制</h3><span class="mod-coord">TOKENS &amp; CAUSAL CHAINS</span></div>
+      <div class="chip-row"><div class="chip-item"><span class="chip-sq" style="background:#D9CBDE"></span><div><b>#D9CBDE</b><span>左侧暖粉灰天光 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#8A7EA9"></span><div><b>#8A7EA9</b><span>右上紫蓝冷天区 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#D1CBD2"></span><div><b>#D1CBD2</b><span>白海暖灰白亮面 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#8A8799"></span><div><b>#8A8799</b><span>中景灰紫暗浪背 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#C7C0C5"></span><div><b>#C7C0C5</b><span>下半海面主基调 · 实测</span></div></div></div>
+      <div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 三尺度海面</small>宽缓起伏定空间 + 长短弯曲浪脊定节奏 + 仅在部分近景坡加短流痕</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>既保持大片平滑呼吸感又有流动材质说服力</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>避免均匀正弦圆包或满铺细噪声把水变成织物</div></div><div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 左暖右冷晕染</small>左侧浅粉灰 <code>#D9CBDE</code> 向右上紫蓝 <code>#8A7EA9</code> 软边渗透，细节集中于右上云带</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>天空柔和安静却具备明暗纵深与冷暖张力</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>衬托双月清晰轮廓，同时让海面与天空共享同一方向雾色</div></div><div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 双月分明暗</small>先立左侧暖灰白亮区、右上蓝灰暗区与下部浅盆地，再补中尺度脊纹</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>近看有岩尘质感、远看体积扎实且不抢镜</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>避免程序高光造出光滑塑料/金属球或满球均匀麻点</div></div>
+    </section>
+
+    <section class="mod" id="sec-2-5">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.5</span>5. 容易忽略的描述维度</h3><span class="mod-coord">RHYTHM · INTERACTION · BOUNDARY</span></div>
+      <p><strong>静图与实时运动的边界：</strong>单张静图无法证明海浪流速、云移速度或月球自转；转为实时 3D 场景时应将运动显式视为氛围设计假设，并保留固定机位与暂停检视能力。</p><p><strong>远景网格过滤：</strong>实时海洋在远景网格变稀时需按顶点间距过滤高频细浪，避免出现折面与碎斑；远海与天空共享同一方向雾色可消除海天接缝。</p>
+    </section>
+
+    <section class="mod" id="sec-2-6">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.6</span>6. 教你准确描述这种风格</h3><span class="mod-coord">VOCABULARY UPGRADE</span></div>
+      <div class="rw-grid"><div class="rw-card"><span class="v">模糊：“浪更像参考图”</span><span class="s">具体：保持低机位与宽缓水面，让中景浪脊长短不一、略弯曲，亮脊下出现清楚但不发黑的灰紫色背坡。</span></div><div class="rw-card"><span class="v">模糊：“细节再多一点”</span><span class="s">具体：只在部分近景浪坡增加短流痕与断续小反光，保留大片平滑水面，远处细节随雾化逐渐消隐。</span></div><div class="rw-card"><span class="v">模糊：“天空梦幻一点”</span><span class="s">具体：左侧保持浅粉灰舒展留白，右上降到紫蓝色，在小月球右侧加入带暗芯与亮雾的局部粉紫薄云与少量弱星点。</span></div><div class="rw-card"><span class="v">模糊：“月球真实一点”</span><span class="s">具体：先铺左侧亮弧、右上暗区与下部不规则浅色盆地，再叠中尺度分叉脊纹，不要均匀撒满小颗粒或拉出光滑金属高光。</span></div></div>
+      <div class="guard-3">
+        <div><b>KEEP · 最值得保留</b>白海多尺度起伏与局部疏密；2.33∶1 宽幅下双月位置与 2.16∶1 半径比；左暖右冷且海天共享雾色的色调关系。</div>
+        <div><b>FLEX · 可按场景替换</b>镜头漫游速度、天空云带局部形态种子、月球次级脊纹分布，以及可选的近景观察机位。</div>
+        <div class="danger"><b>GUARDRAIL · 不可触碰底线</b>把海面改成强镜面反射、让云气均匀铺满整片天空、让波峰高度完全一致、或把月球做成均匀噪点光滑球，都会毁掉原图气质。</div>
+      </div>
+    </section>
+
+    <section class="mod" id="sec-2-7">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.7</span>7. 可直接复用的实现提示词</h3><span class="mod-coord">EXECUTABLE PROMPT SPEC</span></div>
+      <div class="prompt-bp">
+        <svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg>
+        <button class="copy-btn" type="button" onclick="copyPrompt(this)">COPY</button>
+        <pre class="prompt-content" id="impl-prompt">在实时 3D 引擎（如 Godot 4 Forward+ 或 Unreal）中构建可漫游的“白海与双月”超现实海洋环境。
+
+【构图与尺度】2.33∶1 宽画幅，低机位平视海面，海天线约在画面 44%–45% 高度；大月球中心约 (55.4%, 14.4%)，小月球约 (64.0%, 15.7%)，半径比例约 2.16∶1，两者清晰分离。主画面保持无文字干扰，辅助提示默认隐藏或支持一键开关。
+
+【白海材质与波形】不透明乳白色海水，采用三尺度连续涌浪：宽缓大起伏 + 长短不一且略弯曲的折线浪脊 + 仅分布于部分近景浪坡的短流痕与微白沫。受光面偏暖灰白 (#D1CBD2)，背坡偏蓝灰紫 (#8A8799)，远处对比度随海天共享方向雾色自然衰减，并按网格密度过滤高频细浪，避免远景出现折面与碎斑。
+
+【天空与双月】天空左侧浅粉灰 (#D9CBDE) 保持舒展留白，右上沉降至冷紫蓝 (#8A7EA9)，在小月球右侧以软边叠色布局局部粉紫薄云（含暗芯、亮雾与少量弱星点）。双月以球面反照率与法线分离控制：先确立左暖亮区、右上蓝灰暗区与下部浅色盆地，再叠中尺度分叉脊纹与极薄的大气染边，杜绝光滑塑料高光与满球均匀噪点。
+
+【验收标准】固定机位静帧与参考图在海天线高度、双月比例、左暖右冷色域及疏密分布上对齐；海天交界自然消融无色差接缝；缓慢运动状态下画面依旧舒缓不噪。</pre>
+      </div>
+    </section>
+  </div>
+
+  <footer class="sheet-footer">
+    <span>ROYENHEART · IDEAS VISUAL ARCHIVE · PLATE 02</span>
+    <span>VISUAL DESIGN REFERENCE · BLUEPRINT EDITION</span>
+  </footer>
+</article>
+
+<script>
+  document.querySelectorAll('.plate-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.mod');
+      wrap.querySelectorAll('.plate-tab').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+      wrap.querySelectorAll('.plate-view').forEach(v => v.classList.toggle('active', v.id === btn.dataset.target));
+    });
+  });
+  function copyPrompt(btn) {
+    const el = document.getElementById('impl-prompt');
+    if (!el || !navigator.clipboard) return;
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      btn.textContent = 'COPIED';
+      setTimeout(() => { btn.textContent = 'COPY'; }, 1400);
+    });
+  }
+</script>
+</body>
+</html>

@@ -17,3 +17,4 @@
 proxy/favicon.ico -filter -diff -merge -text
 
 proxy/public/favicon.ico -filter -diff -merge -text
+ideas/assets/*.jpg -filter -diff -merge -text

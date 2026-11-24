@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>黑洞引力透镜吸积盘与星云日冕 — Ideas</title>
+<style>
+:root {
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --ink: #0f1b2d;
+  --ink-2: #415167;
+  --ink-3: #5c6f88;
+  --line: #cfd9e6;
+  --blue: #1d428a;
+  --blue-soft: #e8effa;
+  --mark: #d1342f;
+  --font-sans: "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, monospace;
+  --surface-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.114 0 0 0 0 0.259 0 0 0 0 0.541 0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  --surface-matrix: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' fill='none'%3E%3Cg fill='%231d428a' fill-opacity='0.14'%3E%3Ccircle cx='12' cy='12' r='0.9'/%3E%3Ccircle cx='36' cy='12' r='0.9'/%3E%3Ccircle cx='60' cy='12' r='0.9'/%3E%3Ccircle cx='84' cy='12' r='0.9'/%3E%3Ccircle cx='12' cy='36' r='0.9'/%3E%3Ccircle cx='36' cy='36' r='0.9'/%3E%3Ccircle cx='60' cy='36' r='0.9'/%3E%3Ccircle cx='84' cy='36' r='0.9'/%3E%3Ccircle cx='12' cy='60' r='0.9'/%3E%3Ccircle cx='36' cy='60' r='0.9'/%3E%3Ccircle cx='60' cy='60' r='0.9'/%3E%3Ccircle cx='84' cy='60' r='0.9'/%3E%3Ccircle cx='12' cy='84' r='0.9'/%3E%3Ccircle cx='36' cy='84' r='0.9'/%3E%3Ccircle cx='60' cy='84' r='0.9'/%3E%3Ccircle cx='84' cy='84' r='0.9'/%3E%3C/g%3E%3Cpath d='M44 48h8M48 44v8' stroke='%231d428a' stroke-opacity='0.14' stroke-width='0.9'/%3E%3C/svg%3E");
+}
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  background-image: var(--surface-grain), var(--surface-matrix);
+  background-size: 160px 160px, 96px 96px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+body { margin: 0; padding: 24px 28px 80px; }
+::selection { background: var(--blue-soft); color: var(--blue); }
+a { color: var(--blue); text-underline-offset: 3px; }
+code { font-family: var(--font-mono); font-size: 0.86em; padding: 1px 5px; background: var(--blue-soft); color: var(--blue); }
+p { margin: 0 0 11px; color: var(--ink-2); }
+strong { color: var(--ink); font-weight: 600; }
+
+/* Top Archive Navigation Rail */
+.archive-nav {
+  max-width: 1220px;
+  margin: 0 auto 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.archive-nav a { text-decoration: none; color: var(--blue); font-weight: 600; padding: 4px 10px; border: 1px solid transparent; transition: all 0.14s; }
+.archive-nav a:hover { background: var(--blue-soft); border-color: var(--line); }
+.archive-nav .nav-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.archive-nav .nav-status { color: var(--ink-3); }
+
+.sheet {
+  max-width: 1220px;
+  margin: 0 auto;
+  background: var(--panel);
+  border: 1px solid var(--blue);
+  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--line);
+}
+.calibration-strip {
+  padding: 5px 24px 0;
+  background-color: var(--bg);
+  background-image: var(--surface-grain);
+  border-bottom: 1px solid var(--line);
+}
+.calibration-ruler { display: block; width: 100%; height: 48px; color: var(--blue); }
+.calibration-ruler path { fill: none; stroke: currentColor; stroke-width: 0.75; }
+.calibration-ruler .vernier-baseline { opacity: 0.4; }
+.calibration-ruler .datum { fill: var(--mark); stroke: none; }
+.scale-labels { fill: var(--ink-2); font: 8px var(--font-mono); text-anchor: middle; letter-spacing: 0.06em; }
+
+.frame-corner { position: absolute; width: 24px; height: 24px; pointer-events: none; fill: none; stroke: var(--blue); stroke-width: 1; z-index: 1; }
+.corner-tl { top: 5px; left: 5px; }
+.corner-tr { top: 5px; right: 5px; transform: rotate(90deg); }
+.corner-br { bottom: 5px; right: 5px; transform: rotate(180deg); }
+.corner-bl { bottom: 5px; left: 5px; transform: rotate(270deg); }
+
+.title-block { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 310px; border-bottom: 1.5px solid var(--blue); }
+.title-block > .frame-corner { opacity: 0.65; }
+.tb-main { padding: 28px 34px 32px; border-right: 1px solid var(--line); background-image: var(--surface-grain); }
+.instrument-register { width: 300px; max-width: 100%; height: 38px; display: block; margin: 0 0 18px; }
+.instrument-register .barcode { stroke: var(--blue); }
+.registration-lines { fill: none; stroke: var(--ink-3); stroke-width: 0.6; }
+.instrument-register text { fill: var(--blue); font: 9px var(--font-mono); letter-spacing: 0.6px; }
+.registration-reticle { fill: none; stroke: var(--mark); stroke-width: 0.8; }
+.tb-code { font-family: var(--font-mono); font-size: 10px; color: var(--blue); letter-spacing: 0.09em; margin-bottom: 10px; }
+.tb-main h1 { margin: 0 0 12px; font-size: clamp(22px, 2.1vw, 30px); font-weight: 700; line-height: 1.35; letter-spacing: -0.025em; }
+.tb-main p { margin: 0; font-size: 13px; line-height: 1.85; max-width: 68ch; }
+.merge-badge { display: inline-block; margin-top: 12px; font-family: var(--font-mono); font-size: 10px; padding: 3px 9px; background: var(--blue-soft); border: 1px solid #c3d5f0; color: var(--blue); letter-spacing: 0.04em; }
+
+.tb-grid { display: grid; grid-template-columns: 1fr 1fr; font-family: var(--font-mono); font-size: 11px; background-color: var(--bg); background-image: var(--surface-grain), var(--surface-matrix); }
+.tb-cell { padding: 18px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
+.tb-cell:nth-child(2n) { border-right: 0; }
+.tb-cell:nth-last-child(-n+2) { border-bottom: 0; }
+.tb-cell span { display: block; color: var(--ink-3); font-size: 9px; letter-spacing: 0.14em; margin-bottom: 6px; }
+.tb-cell b { color: var(--ink); font-family: var(--font-sans); font-size: 12px; font-weight: 600; }
+
+.toc-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 34px; background: var(--bg); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; }
+.toc-strip .toc-label { color: var(--ink-3); font-size: 9.5px; letter-spacing: 0.12em; margin-right: 4px; }
+.toc-strip a { text-decoration: none; color: var(--ink-2); padding: 3px 8px; border: 1px solid var(--line); background: var(--panel); transition: all 0.12s; }
+.toc-strip a:hover { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+
+.band-head { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 34px 14px 46px; background: var(--blue); color: #fff; border-bottom: 3px double var(--blue-soft); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; }
+.band-head h2 { margin: 0; font-family: var(--font-sans); font-size: 14.5px; font-weight: 600; letter-spacing: 0.03em; }
+.band-head::before { content: ""; position: absolute; left: 26px; top: 14px; bottom: 14px; width: 7px; background: repeating-linear-gradient(135deg, var(--mark) 0 1px, transparent 1px 4px); opacity: 0.35; }
+
+.bp-grid { list-style: none; margin: 0; padding: 12px 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1.5px solid var(--blue); background-image: var(--surface-grain); }
+.bp-cell { padding: 17px 17px 19px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+.bp-cell:nth-child(4n) { border-right: 0; }
+.bp-cell:nth-last-child(-n+4) { border-bottom: 0; }
+.bp-cell::after { content: ""; position: absolute; bottom: -3px; right: -3px; width: 5px; height: 5px; border: 1px solid var(--line); background: var(--panel); z-index: 1; }
+.bp-cell:nth-child(4n)::after, .bp-cell:nth-last-child(-n+4)::after { display: none; }
+.bp-code { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; font-weight: 700; }
+.bp-code span:first-child { border: 1px solid var(--line); padding: 1px 6px; color: var(--blue); background: var(--bg); }
+.bp-code span:last-child { font-size: 8px; color: var(--ink-3); letter-spacing: 0.12em; }
+.bp-cell h3 { margin: 0 0 6px; font-size: 13.5px; color: var(--ink); font-weight: 700; }
+.bp-cell p { margin: 0; font-size: 12px; line-height: 1.78; color: var(--ink-2); }
+
+.mod-wrap { padding: 0 36px 24px 46px; background-image: linear-gradient(to right, transparent 19px, var(--line) 19px, var(--line) 20px, transparent 20px); }
+.mod { padding: 28px 0 30px; border-bottom: 1px solid var(--line); position: relative; }
+.mod:last-child { border-bottom: 0; }
+.mod::before { content: ""; position: absolute; left: -30px; top: 34px; width: 8px; height: 8px; background: var(--panel); border: 1px solid var(--blue); }
+.mod-bar { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+.mod-bar h3 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.mod-tag { flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; color: var(--blue); background: var(--blue-soft); border: 1px solid var(--line); border-left: 3px solid var(--blue); padding: 3px 9px; letter-spacing: 0.04em; }
+.mod-coord { font-family: var(--font-mono); font-size: 9.5px; color: var(--ink-3); letter-spacing: 0.09em; text-align: right; }
+.mod > p { font-size: 13px; line-height: 1.9; }
+.evidence-note { margin-top: 10px; padding: 10px 14px; background: var(--bg); border-left: 3px solid var(--blue); font-size: 12.5px; color: var(--ink-2); }
+
+/* Multi-plate switcher for merged analyses */
+.plate-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.plate-tab { font-family: var(--font-mono); font-size: 11px; padding: 6px 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink-2); cursor: pointer; letter-spacing: 0.03em; }
+.plate-tab[aria-selected="true"] { background: var(--blue); color: #fff; border-color: var(--blue); }
+.plate-view { display: none; }
+.plate-view.active { display: block; }
+
+.anatomy-split { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.anatomy-stack { display: grid; gap: 16px; }
+.draft-frame { position: relative; margin: 0; padding: 24px; background-color: var(--bg); background-image: var(--surface-grain), var(--surface-matrix); border: 1px solid var(--line); }
+.draft-inner { position: relative; outline: 1px solid var(--line); background: #0e131a; }
+.draft-inner img { display: block; width: 100%; height: auto; }
+.draft-caption { margin-top: 10px; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.draft-source { margin-top: 8px; padding: 8px 11px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--blue); font-size: 11.5px; line-height: 1.65; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.draft-source b { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--blue); flex-shrink: 0; }
+.draft-source a { color: var(--blue); text-underline-offset: 2px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.04em; color: var(--blue); background: var(--blue-soft); padding: 9px 10px; border: 1px solid var(--line); }
+td { padding: 9px 10px; border: 1px solid var(--line); color: var(--ink-2); vertical-align: top; line-height: 1.7; }
+tbody tr:nth-child(even) { background: var(--bg); }
+.id-box { font-family: var(--font-mono); font-weight: 700; color: var(--mark); width: 40px; }
+
+.kw-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; margin-bottom: 14px; }
+.kw-card { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; }
+.kw-card h4 { margin: 0 0 8px; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+.kw-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.kw-tag { padding: 2px 8px; font-size: 11.5px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.kw-tag:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+.kw-card p { margin: 0; font-size: 12px; line-height: 1.7; }
+
+.chip-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+.chip-item { border: 1px solid var(--line); border-top: 2px solid var(--line); display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--panel); }
+.chip-sq { width: 26px; height: 26px; outline: 1px solid var(--line); outline-offset: 2px; flex-shrink: 0; }
+.chip-item b { font-family: var(--font-mono); font-size: 11px; display: block; line-height: 1.45; color: var(--ink); }
+.chip-item span { font-size: 10px; color: var(--ink-3); }
+
+.flow-row { display: grid; grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr); align-items: stretch; gap: 8px; margin-bottom: 10px; }
+.flow-node { border: 1px solid var(--line); border-top: 2px solid var(--blue); background-color: var(--bg); background-image: var(--surface-grain); padding: 14px 15px; font-size: 12px; line-height: 1.8; color: var(--ink-2); }
+.flow-node small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; color: var(--blue); margin-bottom: 6px; }
+.flow-arr { display: flex; align-items: center; justify-content: center; position: relative; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.double-leader { display: block; width: 36px; height: 24px; fill: none; stroke: var(--blue); stroke-width: 1; }
+.double-leader circle { fill: var(--panel); }
+
+.rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.rw-card { border: 1px solid var(--line); border-left: 3px solid var(--blue); padding: 15px 17px; font-size: 12px; line-height: 1.85; background: var(--panel); }
+.rw-card .v { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); text-decoration: line-through; display: block; margin-bottom: 7px; }
+.rw-card .s { color: var(--ink); }
+
+.guard-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; font-size: 12px; line-height: 1.8; }
+.guard-3 div { border: 1px solid var(--line); padding: 0 15px 15px; background: var(--panel); color: var(--ink-2); }
+.guard-3 b { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--blue); padding: 10px 0; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+.guard-3 div.danger { border-color: rgba(209, 52, 47, 0.45); }
+.guard-3 div.danger b { color: var(--mark); background: repeating-linear-gradient(135deg, rgba(209, 52, 47, 0.05) 0 1px, transparent 1px 5px); border-bottom-color: rgba(209, 52, 47, 0.25); }
+
+.prompt-bp { position: relative; padding: 58px 26px 26px; background: var(--ink); color: var(--blue-soft); border: 1px solid var(--blue); font-family: var(--font-mono); font-size: 12px; line-height: 1.95; overflow-wrap: anywhere; }
+.prompt-bp::before { content: ""; position: absolute; top: 24px; left: 26px; right: 108px; height: 7px; border-top: 1px solid var(--ink-2); border-bottom: 1px solid var(--ink-2); }
+.prompt-bp > .frame-corner { stroke: var(--ink-3); }
+.prompt-content { margin: 0; font: inherit; color: inherit; white-space: pre-wrap; }
+.copy-btn { position: absolute; top: 16px; right: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; padding: 5px 12px; background: var(--blue); color: var(--panel); border: 1px solid var(--ink-3); cursor: pointer; }
+.copy-btn:hover { background: var(--blue-soft); color: var(--ink); }
+
+.sheet-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 34px; border-top: 1px solid var(--line); background: var(--bg); font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.06em; }
+
+@media (max-width: 1100px) { .title-block { grid-template-columns: minmax(0, 1fr) 260px; } .anatomy-split { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  body { padding: 16px 12px 44px; }
+  .archive-nav { flex-direction: column; align-items: flex-start; }
+  .calibration-strip { padding: 4px 12px 0; overflow: hidden; }
+  .calibration-ruler { width: 1056px; max-width: none; }
+  .title-block, .kw-grid, .guard-3 { grid-template-columns: 1fr; }
+  .tb-main { padding: 22px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .bp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px 10px; }
+  .bp-cell:nth-child(n) { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .bp-cell:nth-child(2n) { border-right: 0; }
+  .bp-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .bp-cell::after { display: none; }
+  .mod-wrap { padding: 0 18px 16px 32px; background-position: -6px 0; }
+  .mod::before { left: -23px; }
+  .mod-bar { flex-direction: column; gap: 6px; }
+  .draft-frame { padding: 16px; }
+  .chip-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow-row { grid-template-columns: 1fr; gap: 5px; margin-bottom: 18px; }
+  .flow-arr { height: 28px; }
+  .double-leader { transform: rotate(90deg); }
+  .sheet-footer { flex-direction: column; gap: 4px; padding: 12px 18px; }
+}
+@media print {
+  body { padding: 0; }
+  .archive-nav, .copy-btn, .plate-tabs, .toc-strip { display: none; }
+  .plate-view { display: block !important; margin-bottom: 18px; }
+  html, .tb-main, .bp-grid, .draft-frame, .tb-grid, .flow-node { background-image: none; }
+  .sheet { box-shadow: none; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<nav class="archive-nav" aria-label="展台导航">
+  <div class="nav-group">
+    <a href="../">← 返回 Ideas</a>
+    <span class="nav-status">PLATE 03 / 04 · 2026-10-05</span>
+  </div>
+  <div class="nav-group">
+    <a href="white-sea-twin-moons.html">← PLATE 02</a>
+    <a href="zzz-device-ui.html">PLATE 04 →</a>
+  </div>
+</nav>
+
+<article class="sheet">
+  <div class="calibration-strip"><svg class="calibration-ruler" viewBox="0 0 1056 48" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M28 5v13 M33 5v4 M38 5v4 M43 5v4 M48 5v4 M53 5v8 M58 5v4 M63 5v4 M68 5v4 M73 5v4 M78 5v13 M83 5v4 M88 5v4 M93 5v4 M98 5v4 M103 5v8 M108 5v4 M113 5v4 M118 5v4 M123 5v4 M128 5v13 M133 5v4 M138 5v4 M143 5v4 M148 5v4 M153 5v8 M158 5v4 M163 5v4 M168 5v4 M173 5v4 M178 5v13 M183 5v4 M188 5v4 M193 5v4 M198 5v4 M203 5v8 M208 5v4 M213 5v4 M218 5v4 M223 5v4 M228 5v13 M233 5v4 M238 5v4 M243 5v4 M248 5v4 M253 5v8 M258 5v4 M263 5v4 M268 5v4 M273 5v4 M278 5v13 M283 5v4 M288 5v4 M293 5v4 M298 5v4 M303 5v8 M308 5v4 M313 5v4 M318 5v4 M323 5v4 M328 5v13 M333 5v4 M338 5v4 M343 5v4 M348 5v4 M353 5v8 M358 5v4 M363 5v4 M368 5v4 M373 5v4 M378 5v13 M383 5v4 M388 5v4 M393 5v4 M398 5v4 M403 5v8 M408 5v4 M413 5v4 M418 5v4 M423 5v4 M428 5v13 M433 5v4 M438 5v4 M443 5v4 M448 5v4 M453 5v8 M458 5v4 M463 5v4 M468 5v4 M473 5v4 M478 5v13 M483 5v4 M488 5v4 M493 5v4 M498 5v4 M503 5v8 M508 5v4 M513 5v4 M518 5v4 M523 5v4 M528 5v13 M533 5v4 M538 5v4 M543 5v4 M548 5v4 M553 5v8 M558 5v4 M563 5v4 M568 5v4 M573 5v4 M578 5v13 M583 5v4 M588 5v4 M593 5v4 M598 5v4 M603 5v8 M608 5v4 M613 5v4 M618 5v4 M623 5v4 M628 5v13 M633 5v4 M638 5v4 M643 5v4 M648 5v4 M653 5v8 M658 5v4 M663 5v4 M668 5v4 M673 5v4 M678 5v13 M683 5v4 M688 5v4 M693 5v4 M698 5v4 M703 5v8 M708 5v4 M713 5v4 M718 5v4 M723 5v4 M728 5v13 M733 5v4 M738 5v4 M743 5v4 M748 5v4 M753 5v8 M758 5v4 M763 5v4 M768 5v4 M773 5v4 M778 5v13 M783 5v4 M788 5v4 M793 5v4 M798 5v4 M803 5v8 M808 5v4 M813 5v4 M818 5v4 M823 5v4 M828 5v13 M833 5v4 M838 5v4 M843 5v4 M848 5v4 M853 5v8 M858 5v4 M863 5v4 M868 5v4 M873 5v4 M878 5v13 M883 5v4 M888 5v4 M893 5v4 M898 5v4 M903 5v8 M908 5v4 M913 5v4 M918 5v4 M923 5v4 M928 5v13 M933 5v4 M938 5v4 M943 5v4 M948 5v4 M953 5v8 M958 5v4 M963 5v4 M968 5v4 M973 5v4 M978 5v13 M983 5v4 M988 5v4 M993 5v4 M998 5v4 M1003 5v8 M1008 5v4 M1013 5v4 M1018 5v4 M1023 5v4 M1028 5v13"/><path class="vernier-baseline" d="M28 5H1028"/><g class="scale-labels"><text x="28" y="31">000</text><text x="78" y="31">010</text><text x="128" y="31">020</text><text x="178" y="31">030</text><text x="228" y="31">040</text><text x="278" y="31">050</text><text x="328" y="31">060</text><text x="378" y="31">070</text><text x="428" y="31">080</text><text x="478" y="31">090</text><text x="528" y="31">100</text><text x="578" y="31">110</text><text x="628" y="31">120</text><text x="678" y="31">130</text><text x="728" y="31">140</text><text x="778" y="31">150</text><text x="828" y="31">160</text><text x="878" y="31">170</text><text x="928" y="31">180</text><text x="978" y="31">190</text><text x="1028" y="31">200</text><text x="1048" y="17">mm</text></g><path d="M478 44h45 M478.0 44v-7 M482.5 44v-4 M487.0 44v-4 M491.5 44v-4 M496.0 44v-4 M500.5 44v-7 M505.0 44v-4 M509.5 44v-4 M514.0 44v-4 M518.5 44v-4 M523.0 44v-7"/><path class="datum" d="M28 38l-4 6h8zM528 38l-4 6h8zM1028 38l-4 6h8z"/></svg></div>
+
+  <header class="title-block">
+    <svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg>
+    <div class="tb-main">
+      <svg class="instrument-register" viewBox="0 0 324 40" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="barcode"><path d="M2 5v26" stroke-width="2"/><path d="M7 5v26" stroke-width="1"/><path d="M11 5v26" stroke-width="3"/><path d="M17 5v18" stroke-width="1"/><path d="M21 5v26" stroke-width="2"/><path d="M27 5v26" stroke-width="4"/><path d="M34 5v18" stroke-width="1"/><path d="M38 5v26" stroke-width="2"/><path d="M44 5v26" stroke-width="1"/><path d="M49 5v26" stroke-width="4"/><path d="M56 5v18" stroke-width="2"/><path d="M61 5v26" stroke-width="1"/><path d="M65 5v26" stroke-width="3"/><path d="M72 5v26" stroke-width="1"/><path d="M76 5v18" stroke-width="2"/><path d="M82 5v26" stroke-width="3"/><path d="M89 5v26" stroke-width="1"/><path d="M94 5v26" stroke-width="2"/></g><path class="registration-lines" d="M108 3v32M124 9h144M124 29h144M124 6v6M196 6v6M268 6v6"/><text x="124" y="24">PLATE 03 / IDEAS ARCHIVE</text><g class="registration-reticle"><circle cx="304" cy="19" r="12"/><circle cx="304" cy="19" r="3"/><path d="M287 19h10m14 0h10M304 2v10m0 14v10"/></g></svg>
+      <div class="tb-code">DWG-NO: IDEAS-03 · 2026-10-05 · CLASSIC PRUSSIAN BLUE BLUEPRINT</div>
+      <h1>黑洞引力透镜吸积盘与星云日冕</h1>
+      <p>拆解黑洞吸积盘弯曲细丝的连续材质衔接，以及深空星云的多尺度云团、暗尘消光与边缘辉光层次。</p>
+      <span class="merge-badge">吸积盘连续性（1–6）· 星云日冕（1–11）</span>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><span>MEDIUM</span><b>WebGL 天文视觉</b></div>
+      <div class="tb-cell"><span>PRINCIPAL STYLE</span><b>电影级天文视觉 · 深空暗场</b></div>
+      <div class="tb-cell"><span>SOURCE EXTENT</span><b>236×419 + 6 Refs</b></div>
+      <div class="tb-cell"><span>EVIDENCE</span><b>像素亮度/结构张量实测</b></div>
+    </div>
+  </header>
+
+  <nav class="toc-strip" aria-label="章节速览">
+    <span class="toc-label">INDEX</span>
+    <a href="#ch1">01 设计总览</a>
+    <a href="#sec-2-1">2.1 整体识别</a>
+    <a href="#sec-2-2">2.2 标注拆解</a>
+    <a href="#sec-2-3">2.3 关键词</a>
+    <a href="#sec-2-4">2.4 视觉机制</a>
+    <a href="#sec-2-5">2.5 细节维度</a>
+    <a href="#sec-2-6">2.6 描述升级</a>
+    <a href="#sec-2-7">2.7 实现提示词</a>
+  </nav>
+
+  <div class="band-head">
+    <h2>第一章：设计总览</h2>
+    <span>CHAPTER ONE · 12 SPEC ITEMS (F-01 — F-12)</span>
+  </div>
+  <ol class="bp-grid" id="ch1"><li class="bp-cell"><div class="bp-code"><span>F-01</span><span>TYPE</span></div><h3>设计类型</h3><p>黑洞引力透镜插图与 6 组天文星云/发光弧参考合集，用于指导实时 WebGL 宇宙场景着色器。</p></li><li class="bp-cell"><div class="bp-code"><span>F-02</span><span>STYLE</span></div><h3>风格</h3><p>电影级深空视觉：以大片纯黑暗核与高能细丝吸积盘为主体，叠加低对比多层星云背景。</p></li><li class="bp-cell"><div class="bp-code"><span>F-03</span><span>MOOD</span></div><h3>第一印象</h3><p>大片暗区托举局部集中高亮交汇区，在不把整屏提亮的前提下确立宏大尺度与定向动势。</p></li><li class="bp-cell"><div class="bp-code"><span>F-04</span><span>GRAMMAR</span></div><h3>视觉语言</h3><p>锐利内边界、不等宽细丝条带、柔和域扭曲云团、不规则暗尘遮挡与稀疏星点共构层次。</p></li><li class="bp-cell"><div class="bp-code"><span>F-05</span><span>LAYOUT</span></div><h3>布局构图</h3><p>低位圆形黑洞暗核居核心，倾斜吸积盘贯通上下，非对称星云云块环绕于广袤负空间中。</p></li><li class="bp-cell"><div class="bp-code"><span>F-06</span><span>HIERARCHY</span></div><h3>视觉层级</h3><p>先读盘环交汇亮峰与锐利细边，次读弯曲细丝与暖色云脊，最后感知微弱冷色外延雾气。</p></li><li class="bp-cell"><div class="bp-code"><span>F-07</span><span>COLOR</span></div><h3>色彩系统</h3><p>近黑基底承托象牙金/琥珀/古铜主辉光，配低饱和青蓝、青灰与柔紫冷色局部反射。</p></li><li class="bp-cell"><div class="bp-code"><span>F-08</span><span>TYPEFACE</span></div><h3>文字排印</h3><p>深空与天体参考本身不含排印元素；若叠加界面文字，宜保持独立暗场层级，避免遮压发光核心。</p></li><li class="bp-cell"><div class="bp-code"><span>F-09</span><span>SURFACE</span></div><h3>形状与材质</h3><p>不等间距细丝表现“发光薄片”而非均匀光管；星云半透明云气与锐利发光弧形成软硬反差。</p></li><li class="bp-cell"><div class="bp-code"><span>F-10</span><span>GRAPHICS</span></div><h3>图像与装饰</h3><p>稀疏针尖星点提供最精细空间尺度；绝不用密集星空或均匀彩色雾气填满暗场。</p></li><li class="bp-cell"><div class="bp-code"><span>F-11</span><span>MOTION</span></div><h3>动态线索</h3><p>细丝切向转动暗示沿流平流运动；静态图不证明真实流速，外晕可采用缓慢局部圆润隆起假设。</p></li><li class="bp-cell"><div class="bp-code"><span>F-12</span><span>TAKEAWAY</span></div><h3>学习重点</h3><p>先保证盘/环共享一套材质与相位坐标，再叠加遮挡与辉光；严格分离大云团、细丝与暗尘尺度。</p></li></ol>
+
+  <div class="band-head">
+    <h2>第二章：完整设计分析</h2>
+    <span>CHAPTER TWO · 7 ANALYTICAL MODULES</span>
+  </div>
+  <div class="mod-wrap" id="ch2">
+    <section class="mod" id="sec-2-1">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.1</span>1. 整体识别与第一印象</h3><span class="mod-coord">RECOGNITION &amp; PROVENANCE</span></div>
+      <p>从两个紧密关联的视角拆解深空天体视觉：<strong>其一为引力透镜黑洞参考</strong>（51.2% 像素亮度低于 10/255），聚焦吸积盘与弯曲光环在上下交汇处的材质连续性与线头隐藏；<strong>其二为 5 张深空星云影像与 1 张发光弧光晕参考</strong>，解析深空背景层次、暗尘消光与外层发光幔的柔和色晕。</p><p>两者的底层共性是<strong>“克制暗场 + 集中高光 + 尺度分层”</strong>——绝不靠全局提亮或平铺彩色雾气去“凑丰富度”，而是用暗尘带切开云团、用局部交汇过曝自然实现绘画中的“隐没边缘（Lost Edges）”。</p>
+      <div class="evidence-note"><strong>图版与采样说明：</strong>像素中位数与结构张量（弯曲带切向一致性 0.85–0.98、上交汇点因方向叠合降至 0.23）用于刻画画面视觉统计而非物理仿真；分析方法结合边缘隐没（Lost Edges）、域扭曲（Domain Warping）与光学点扩散函数思路。</div>
+    </section>
+
+    <section class="mod" id="sec-2-2">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.2</span>2. 组件拆解与原图直接标注</h3><span class="mod-coord">ANNOTATED PLATES · 2 VIEW(S)</span></div>
+      <div class="plate-tabs" role="tablist" aria-label="切换标注视图"><button class="plate-tab" type="button" role="tab" aria-selected="true" data-target="panel-hz-bh">视图 A · 黑洞吸积盘衔接解剖（1–6）</button><button class="plate-tab" type="button" role="tab" aria-selected="false" data-target="panel-hz-neb">视图 B · 天文星云与发光弧参考合集（1–11）</button></div>
+      <div class="plate-view active" id="panel-hz-bh" role="tabpanel"><div class="anatomy-split"><figure class="draft-frame"><svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><div class="draft-inner"><img src="../assets/horizon-accretion-annotated.jpg" alt="黑洞引力透镜吸积盘一至六号结构红框标注"></div><div class="draft-caption"><span>保留原图比例，展示内边界、弯曲带、上下交汇点、前景盘片与外围衰减六大区域。</span><a href="../assets/horizon-accretion-annotated.jpg" target="_blank" rel="noopener">查看原尺寸标注图 ↗</a></div><figcaption class="draft-source"><b>SOURCE · 图片来源</b><span>引力透镜黑洞参考图（236×419 px，网络收集竖版壁纸，原作者与原始出处暂未核实，版权归原作者所有）。延伸着色器与光学参考： <a href="https://gurneyjourney.blogspot.com/2011/08/transitioning-edges.html" target="_blank" rel="noopener noreferrer">James Gurney · Transitioning Edges</a> · <a href="https://ebruneton.github.io/black_hole_shader/black_hole/model.glsl.html" target="_blank" rel="noopener noreferrer">Eric Bruneton · Black Hole Shader</a> · <a href="https://arxiv.org/pdf/1502.03808" target="_blank" rel="noopener noreferrer">DNGR Paper (arXiv:1502.03808)</a></span></figcaption></figure><table><thead><tr><th>编号</th><th>组件名称</th><th>所属区域</th><th>作用</th><th>可见特征</th></tr></thead><tbody><tr><td class="id-box">01</td><td><strong>锐利内边界</strong></td><td>圆形暗核轮廓</td><td>界定中心黑洞暗影</td><td>比外围光带更窄更锐，呈局部圆弧拟合</td></tr><tr><td class="id-box">02</td><td><strong>宽幅引力透镜弯曲带</strong></td><td>外盘主弧</td><td>建立弯曲材质流向</td><td>多束各向异性细丝，间距与亮度不等，切向连贯转动</td></tr><tr><td class="id-box">03</td><td><strong>上交汇亮区</strong></td><td>盘/环重叠处</td><td>引导视线完成转折</td><td>亮度渐宽汇聚，多方向薄片叠加使单根边缘自然隐没</td></tr><tr><td class="id-box">04</td><td><strong>下交汇亮区</strong></td><td>盘/环回流处</td><td>将弧带收回下盘片</td><td>强高亮与多层薄雾遮蔽单个线头，杜绝截断感</td></tr><tr><td class="id-box">05</td><td><strong>倾斜前景盘片</strong></td><td>主吸积盘</td><td>确立景深与轴向流动</td><td>偏暖细密纹理横穿暗核前方</td></tr><tr><td class="id-box">06</td><td><strong>外围微弱衰减</strong></td><td>弯曲带外缘</td><td>衔接发光体与纯黑</td><td>低对比弯曲细缕与长尾亮度衰减，不需额外装饰星</td></tr></tbody></table></div></div><div class="plate-view" id="panel-hz-neb" role="tabpanel"><div class="anatomy-stack"><figure class="draft-frame"><svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><div class="draft-inner"><img src="../assets/horizon-nebula-annotated.jpg" alt="六组天文星云与发光日冕弧一至十一号区域红框标注"></div><div class="draft-caption"><span>6 张深空与发光弧参考对照：参考 1/5 定深暗基底，参考 2–4 定云团与暗尘结构，参考 6 定窄亮边与彩色肩部层次。</span><a href="../assets/horizon-nebula-annotated.jpg" target="_blank" rel="noopener">查看原尺寸标注图 ↗</a></div><figcaption class="draft-source"><b>SOURCE · 图片来源</b><span>参考 1 为 ESO/VISTA 螺旋星云红外影像（NGC 7293，Credit: ESO/VISTA/J. Emerson）；参考 3 为 NASA/ESA/CSA 詹姆斯·韦布望远镜 NIRCam 拍摄的 Pismis 24 / 龙虾星云（NGC 6357，2025-09-04）；参考 2/4/5 为深空星云影像（参考 5 为猎户座大星云 M42 区域，具体原发布页待补充）；参考 6 为《绝区零》（HoYoverse）零号空洞与式舆塔远景画面。已核验公开出处： <a href="https://www.eso.org/public/images/eso1205a/" target="_blank" rel="noopener noreferrer">参考 1 · ESO/VISTA eso1205a</a> · <a href="https://esawebb.org/images/weic2518a/" target="_blank" rel="noopener noreferrer">参考 3 · ESA/Webb weic2518a (Pismis 24)</a> · <a href="https://science.nasa.gov/wp-content/uploads/2023/07/webb-diffractionspikestranscriptstsci-01g77dqfw6pd35sh619tyxt8gt.pdf" target="_blank" rel="noopener noreferrer">衍射光学说明 · NASA Webb</a></span></figcaption></figure><table><thead><tr><th>编号</th><th>组件名称</th><th>所属区域</th><th>作用</th><th>可见特征</th></tr></thead><tbody><tr><td class="id-box">01</td><td><strong>碎片暖色壳层</strong></td><td>参考 1</td><td>大尺度环状组织</td><td>古铜/金色细丝环绕深暗中心</td></tr><tr><td class="id-box">02</td><td><strong>冷白点状高光</strong></td><td>参考 1</td><td>局部冷暖微对比</td><td>青白亮核配极小柔和光晕</td></tr><tr><td class="id-box">03</td><td><strong>分层亮云团</strong></td><td>参考 2</td><td>建立材质深度</td><td>大块冷色云体夹杂暖色发光口袋</td></tr><tr><td class="id-box">04</td><td><strong>暗尘消光带</strong></td><td>参考 2</td><td>切分空间与遮挡</td><td>不规则深暗尘带横切亮云，防止画面发灰成平雾</td></tr><tr><td class="id-box">05</td><td><strong>云气边界</strong></td><td>参考 3</td><td>分离空间尺度</td><td>宽阔淡雾与细小深色突起并置</td></tr><tr><td class="id-box">06</td><td><strong>延展星芒亮点</strong></td><td>参考 3</td><td>稀疏精细点缀</td><td>锐利星核配细长衍射芒，仅用于远景背景星</td></tr><tr><td class="id-box">07</td><td><strong>受照柱体亮边</strong></td><td>参考 4</td><td>定义暗柱体轮廓</td><td>暖色锯齿亮边包裹深暗内部</td></tr><tr><td class="id-box">08</td><td><strong>外围青绿云场</strong></td><td>参考 4</td><td>次级环境衬托</td><td>低对比青绿层次变化，避免死黑背景</td></tr><tr><td class="id-box">09</td><td><strong>集中暖光口袋</strong></td><td>参考 5</td><td>焦聚视觉能量</td><td>象牙白中心经琥珀色渐变没入暗尘</td></tr><tr><td class="id-box">10</td><td><strong>大块暗云隔断</strong></td><td>参考 5</td><td>留出深空负空间</td><td>大片暗云隔离亮区，维持低中位亮度 (38/255)</td></tr><tr><td class="id-box">11</td><td><strong>锐利白边与彩色肩部</strong></td><td>参考 6</td><td>日冕轮廓层次</td><td>极窄纯白内缘 + 宽柔粉/玫瑰外肩 + 冷色外围</td></tr></tbody></table></div></div>
+    </section>
+
+    <section class="mod" id="sec-2-3">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.3</span>3. 风格归类与检索关键词</h3><span class="mod-coord">CLICK TAG TO FILTER ARCHIVE</span></div>
+      <div class="kw-grid"><div class="kw-card"><h4>STYLE · 风格与流派</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=电影级天文视觉">电影级天文视觉</a><a class="kw-tag" href="../?tag=深空暗场">深空暗场</a><a class="kw-tag" href="../?tag=引力透镜吸积盘">引力透镜吸积盘</a><a class="kw-tag" href="../?tag=多层星云">多层星云</a></div><p>电影级空间/黑洞可视化（Cinematic Black-Hole &amp; Nebula Visualization），结合深空摄影暗场与程序化域扭曲云层。</p></div><div class="kw-card"><h4>TECHNIQUE · 视觉技法</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=各向异性细丝发光">各向异性细丝发光</a><a class="kw-tag" href="../?tag=共享纹理坐标衔接">共享纹理坐标衔接</a><a class="kw-tag" href="../?tag=暗尘消光">暗尘消光</a><a class="kw-tag" href="../?tag=边缘辉光与彩色肩部">边缘辉光与彩色肩部</a><a class="kw-tag" href="../?tag=多尺度空间分离">多尺度空间分离</a></div><p>共享坐标吸积丝（避免接缝与线头裸露）、绘画“隐没边缘（Lost Edges）”、暗尘消光带、以及窄亮边+彩色晕肩外轮廓调制。</p></div><div class="kw-card"><h4>MOOD · 情绪氛围</h4><div class="kw-tags"><a class="kw-tag" href="../?tag=深邃宏大">深邃宏大</a><a class="kw-tag" href="../?tag=定向流动">定向流动</a><a class="kw-tag" href="../?tag=克制炽热">克制炽热</a></div><p>宏大、深邃、静谧中蕴含定向流动能量的宇宙史诗感。</p></div></div>
+      <p><strong>推荐检索组合：</strong><code>procedural accretion disk shared coordinates</code> · <code>procedural nebula domain warp dust lanes</code> · <code>filamentary emission warm cool contrast</code> · <code>organic emissive contour displacement</code></p>
+    </section>
+
+    <section class="mod" id="sec-2-4">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.4</span>4. 视觉语言与作用机制</h3><span class="mod-coord">TOKENS &amp; CAUSAL CHAINS</span></div>
+      <div class="chip-row"><div class="chip-item"><span class="chip-sq" style="background:#060702"></span><div><b>#060702</b><span>视界暗核 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#18181A"></span><div><b>#18181A</b><span>外围衰减深空 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#866A5F"></span><div><b>#866A5F</b><span>暖棕前景盘面 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#9099A5"></span><div><b>#9099A5</b><span>冷蓝灰弯曲带 · 实测</span></div></div><div class="chip-item"><span class="chip-sq" style="background:#DCDBD9"></span><div><b>#DCDBD9</b><span>交汇高光峰 · 实测</span></div></div></div>
+      <div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 共享材质坐标</small>盘面、交汇处与弯曲光环采样同一套沿流/跨流坐标与时间场</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>细丝宽度、相位与方向穿过转折时自然连贯，无独立断头</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>彻底消除“两层贴片硬拼接”与时间流动接缝</div></div><div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 暗尘切分云团</small>在宽阔域扭曲星云中引入与发光场关联的暗尘消光带</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>打破均匀雾感，让大云团、扭曲细丝与针尖星点呈现三级尺度</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>在不与金色黑洞抢焦点的前提下赋予深空立体纵深</div></div><div class="flow-row"><div class="flow-node"><small>TECHNIQUE · 窄边与彩色肩</small>保持中心黑核与极细亮内缘不动，仅让外层发光幔产生缓慢圆润隆起与古铜/玫瑰色晕</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>EFFECT · 产生效果</small>边缘有有机呼吸感与层次色温，又不破坏核心剪影</div><div class="flow-arr"><span class="sr-only">→</span><svg class="double-leader" viewBox="0 0 36 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="12" r="2"/><path d="M5 9h25M5 15h25M25 4l8 8-8 8"/></svg></div><div class="flow-node"><small>ROLE · 整体作用</small>融合黑洞物理庄严感与艺术化星云日冕的视觉魅力</div></div>
+    </section>
+
+    <section class="mod" id="sec-2-5">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.5</span>5. 容易忽略的描述维度</h3><span class="mod-coord">RHYTHM · INTERACTION · BOUNDARY</span></div>
+      <p><strong>连续性层级高于单纯加模糊：</strong>几何位置、切线、曲率、带宽、纹理相位与时间平流逐层递进；无纹理的纯透明遮罩条或加重 Bloom 永远无法替代同源发光材质。</p><p><strong>工程验证顺序：</strong>审美观感之前应先检查“无 Bloom 材质视图”与“编号坐标带视图”，确认多条细丝轨迹和相位连续后再开后处理辉光，并保证 Reduced Motion 下优雅静止。</p>
+    </section>
+
+    <section class="mod" id="sec-2-6">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.6</span>6. 教你准确描述这种风格</h3><span class="mod-coord">VOCABULARY UPGRADE</span></div>
+      <div class="rw-grid"><div class="rw-card"><span class="v">模糊：“衔接再自然柔和一点”</span><span class="s">具体：让弯曲细丝束在进入前景盘片时保持切向与内部条纹相位，逐步加宽汇入更密的同源发光薄片，完全遮蔽线头且无平直遮罩带。</span></div><div class="rw-card"><span class="v">模糊：“加点星云、色彩更丰富”</span><span class="s">具体：在暗核外侧布置非对称低对比星云，结合大云团、细扭曲丝缕与暗尘切分；主环保留象牙金，肩部叠古铜与玫瑰色晕，局部点缀少量低饱和青绿反光。</span></div><div class="rw-card"><span class="v">模糊：“光环更有灵动感”</span><span class="s">具体：固定黑洞暗核与细亮内缘，仅在外层发光幔做少量轻缓、独立相位的圆润隆起并同步充盈光感，不加整环频闪或星芒射线。</span></div></div>
+      <div class="guard-3">
+        <div><b>KEEP · 最值得保留</b>大片深暗负空间与金色主体焦聚；盘环共享坐标的定向细丝连续性；大云团/细丝/暗尘/星点的多尺度分离。</div>
+        <div><b>FLEX · 可按场景替换</b>主色调（可由原图冷蓝灰转译为奶油金/香槟/琥珀）、星云分布方位与外缘隆起幅度和节奏。</div>
+        <div class="danger"><b>GUARDRAIL · 不可触碰底线</b>把暗场背景整体提亮成明亮冷青天光（如参考 6 的高曝光）、把所有环染成均匀彩虹、画成等粗均匀光管、或用无纹理半透明雾条强遮线头，都会彻底破坏这套空间美学。</div>
+      </div>
+    </section>
+
+    <section class="mod" id="sec-2-7">
+      <div class="mod-bar"><h3><span class="mod-tag">SEC 2.7</span>7. 可直接复用的实现提示词</h3><span class="mod-coord">EXECUTABLE PROMPT SPEC</span></div>
+      <div class="prompt-bp">
+        <svg class="frame-corner corner-tl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-tr" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-bl" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg><svg class="frame-corner corner-br" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M1 21V8L8 1H21M7 15V8h8"/></svg>
+        <button class="copy-btn" type="button" onclick="copyPrompt(this)">COPY</button>
+        <pre class="prompt-content" id="impl-prompt">在 WebGL / Three.js 中构建暗场深空环境下的程序化引力透镜黑洞与多层星云场景。
+
+【几何与材质连续性】
+- 保持中心纯黑圆形暗核与极窄锐利的上内缘固定不动；前景吸积盘由远及近按透视间距展开至画面底部，并叠加方向与速度不等的轻微行波起伏。
+- 前景盘片、引力透镜弯曲带与上下交汇区必须共用同一套沿流/跨流坐标（ribbon/flow coordinates）与共享时间轴，使不等宽各向异性细丝穿过转折时平滑转向、自然加宽并完全遮蔽单个线头，杜绝独立贴片拼接或无纹理半透明遮罩条。
+
+【星云、暗尘与日冕色晕】
+- 背景整体明度须显著退居金色核心之后：构建非对称域扭曲（domain-warped）大云团、细扭曲丝缕、不规则暗尘消光带与稀疏针尖星点，形成清晰的空间尺度分层。
+- 色彩以近黑深空为底，主环呈象牙金，外肩叠加不均匀的古铜/玫瑰暖色晕，并仅在局部云场点缀低饱和青绿/柔紫冷色反射。
+- 仅对外层发光幔施加少量轻缓、独立相位的圆润隆起，同时保持黑洞暗影边界与细亮内缘稳固；大范围 Bloom 严格从连贯的发光场派生。
+
+【验收标准】
+- 开启最终 Bloom 前先检查“无辉光材质视图”与“坐标带视图”，确认交汇区细丝相位连续、无断头与接缝；验证手机/平板/桌面构图适配，并在 Reduced Motion 模式下保持优雅静止。</pre>
+      </div>
+    </section>
+  </div>
+
+  <footer class="sheet-footer">
+    <span>ROYENHEART · IDEAS VISUAL ARCHIVE · PLATE 03</span>
+    <span>VISUAL DESIGN REFERENCE · BLUEPRINT EDITION</span>
+  </footer>
+</article>
+
+<script>
+  document.querySelectorAll('.plate-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.mod');
+      wrap.querySelectorAll('.plate-tab').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+      wrap.querySelectorAll('.plate-view').forEach(v => v.classList.toggle('active', v.id === btn.dataset.target));
+    });
+  });
+  function copyPrompt(btn) {
+    const el = document.getElementById('impl-prompt');
+    if (!el || !navigator.clipboard) return;
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      btn.textContent = 'COPIED';
+      setTimeout(() => { btn.textContent = 'COPY'; }, 1400);
+    });
+  }
+</script>
+</body>
+</html>
