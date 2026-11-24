@@ -40,8 +40,8 @@
     "updated_at": "2026-08-01T08:01:56Z"
   },
   "2026-07-11-Video4xAmdCoInference.md": {
-    "text": "围绕视频插帧与超分的原理、流水线编排及系统负载特征，文章分析了先插帧后超分与先超分后插帧的权衡，并讨论运动估计、空间重采样等模块在 GPU 与 NPU 间的异构映射。结合 AMD Ryzen 7 8845H、Radeon 780M 与 Ryzen AI NPU 的 Windows 环境，作者尝试构建协同推理框架，总结拆分与调优经验，同时指出当前生态下端到端加速仍有限，但具备工程参考价值。",
-    "hash": "1a708dcf03a42f1a9cb399374a60d1b1e349d2d375cedde1c03a2b7597bf01bb",
-    "updated_at": "2026-11-06T17:31:52Z"
+    "text": "围绕视频插帧与超分的基本原理及工程落地，梳理了 RIFE、Real-ESRGAN 等模型的算子特征、访存模式与流水线编排方式，并讨论在 AMD Ryzen 7 8845H 的 GPU",
+    "hash": "b986855dc6fea6227701303aac7d548c3042ede7c68a7df3c7ba7bf9e8f5dbc7",
+    "updated_at": "2026-11-24T18:12:59Z"
   }
 }
