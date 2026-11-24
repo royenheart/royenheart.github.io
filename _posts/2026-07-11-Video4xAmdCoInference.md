@@ -70,7 +70,7 @@ $$
 
 深度学习超分辨率的演进经历了从浅层重建到感知生成对抗的跨越：
 
-- **[SRCNN](http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)**：作为深度学习超分的开山之作，将传统稀疏编码超分的“图像块特征提取—非线性映射—高分重建”三阶段理论完全等价映射为三层卷积神经网络，首次验证了端到端学习 $LR \rightarrow HR$ 映射的优越性。
+- **[SRCNN](https://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)**：作为深度学习超分的开山之作，将传统稀疏编码超分的“图像块特征提取—非线性映射—高分重建”三阶段理论完全等价映射为三层卷积神经网络，首次验证了端到端学习 $LR \rightarrow HR$ 映射的优越性。
 - **[ESRGAN](https://openaccess.thecvf.com/content_ECCVW_2018/papers/11133/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.pdf) 与 [Real-ESRGAN](https://openaccess.thecvf.com/content/ICCV2021W/RealAI/html/Wang_Real-ESRGAN_Training_Real-World_Blind_Super-Resolution_With_Pure_Synthetic_Data_ICCVW_2021_paper.html)**：早期超分模型大多在“理想双三次下采样（Bicubic Downsampling）”生成的合成数据对上训练，一旦面对真实世界中历经复杂退化的视频或图片，极易产生涂抹感或刺眼的伪影。[Real-ESRGAN](https://doi.org/10.1109/ICCVW54120.2021.00217) 的核心突破在于提出了**高阶退化建模（High-Order Degradation Modeling）**——在训练阶段通过多轮随机组合模糊、非对称噪声、缩放与 JPEG/视频重压缩操作，逼真模拟真实世界的复杂低清退化过程；其生成器沿用了 ESRGAN 强大的 **RRDB（Residual-in-Residual Dense Block）** 主干网络，并针对自然影像与二次元动漫分别开源了专用权重（详见 [Real-ESRGAN 官方仓库](https://github.com/xinntao/real-esrgan)）。
 
 在工程推理落地上，Real-ESRGAN 的核心痛点在于**高分辨率显存爆炸与边界拼接**：当输入为 1080p 甚至 4K 视频帧时，深层 RRDB 特征图无法整图放入有限的显存或 NPU 片上缓存，必须采用 **Tile（分块推理）** 策略——将大图切分为固定大小的子块逐一推理后再拼接还原；同时为消除分块边界处的卷积截断伪影，相邻 Tile 之间必须保留一定宽度的重叠区（Overlap Padding），并在拼接时进行羽化或裁剪。
@@ -270,7 +270,7 @@ $$
 3. Simon Niklaus, Feng Liu. *Softmax Splatting for Video Frame Interpolation*. CVPR 2020. [Paper Link](https://openaccess.thecvf.com/content_CVPR_2020/html/Niklaus_Softmax_Splatting_for_Video_Frame_Interpolation_CVPR_2020_paper.html)
 4. Zhewei Huang, Tianyuan Zhang, Wen Heng, Boxin Shi, Shuchang Zhou. *Real-Time Intermediate Flow Estimation for Video Frame Interpolation*. ECCV 2022. [DOI Link](https://doi.org/10.1007/978-3-031-19781-9_36) · [arXiv:2011.06294](https://arxiv.org/abs/2011.06294)
 5. Fitsum Reda, Janne Kontkanen, Eric Tabellion, Deqing Sun, Caroline Pantofaru, Brian Curless. *FILM: Frame Interpolation for Large Motion*. ECCV 2022. [arXiv:2202.04901](https://arxiv.org/abs/2202.04901) · [Project Page](https://film-net.github.io/)
-6. Chao Dong, Chen Change Loy, Kaiming He, Xiaoou Tang. *Learning a Deep Convolutional Network for Image Super-Resolution*. ECCV 2014. [Project Page](http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)
+6. Chao Dong, Chen Change Loy, Kaiming He, Xiaoou Tang. *Learning a Deep Convolutional Network for Image Super-Resolution*. ECCV 2014. [Project Page](https://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html)
 7. Xintao Wang, Ke Yu, Shixiang Wu, Jinjin Gu, Yihao Liu, Chao Dong, Yu Qiao, Chen Change Loy. *ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks*. ECCVW 2018. [PDF Link](https://openaccess.thecvf.com/content_ECCVW_2018/papers/11133/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.pdf)
 8. Xintao Wang, Liangbin Xie, Chao Dong, Ying Shan. *Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data*. ICCVW 2021. [CVF Link](https://openaccess.thecvf.com/content/ICCV2021W/RealAI/html/Wang_Real-ESRGAN_Training_Real-World_Blind_Super-Resolution_With_Pure_Synthetic_Data_ICCVW_2021_paper.html) · [DOI:10.1109/ICCVW54120.2021.00217](https://doi.org/10.1109/ICCVW54120.2021.00217)
 9. Alejandro Rico et al. *AMD XDNA NPU in Ryzen AI Processors*. IEEE Micro, 44(6):73–82, 2024. [DOI Link](https://doi.org/10.1109/mm.2024.3423692)
